@@ -1,0 +1,84 @@
+#' @title Check SC Eye Meeting Eligibility Criteria assignments among DM patients
+#'
+#' @description Check if SC.SCCAT = "STUDY EYE SELECTION" and SC.SCTESTCD = "ELIGEYE",
+#' then SC.SCSTRESC should have "OS", "OD", or "OU" values. Flag if subject is in
+#' DM and without an associated SC.SCSTRESC value or the ELIGEYE Eye Meeting
+#' Eligibility Criteria value is not "OS", "OD", or "OU".
+#'
+#' @param DM Subject Demographics SDTM dataset with variable USUBJID
+#' @param SC Subject Characteristics SDTM dataset for Ophtho Study with variables
+#' USUBJID, SCTESTCD, SCTEST, SCCAT, SCSTRESC, SCDTC
+#'
+#' @importFrom dplyr %>% filter mutate select left_join
+#'
+#' @return boolean value if check failed or passed with 'msg' attribute if the test failed
+#'
+#' @export
+#'
+#' @family OPHTH
+#'
+#' @keywords OPHTH
+#'
+#' @author 1
+#'
+#' @examples
+#'
+#' dm <- data.frame(USUBJID = c(1, 2))
+#' sc <- data.frame(
+#'   USUBJID = c(1, 1, 1, 2, 2, 2),
+#'   SCTEST = c(
+#'     "Eye Meeting Eligibility Criteria",
+#'     "Focus of Study-Specific Interest",
+#'     " ",
+#'     "Eye Meeting Eligibility Criteria",
+#'     "Focus of Study-Specific Interest", " "
+#'   ),
+#'   SCTESTCD = c("ELIGEYE", "FOCID", "", "ELIGEYE", "FOCID", ""),
+#'   SCCAT = c(
+#'     "STUDY EYE SELECTION",
+#'     "STUDY EYE SELECTION",
+#'     "",
+#'     "STUDY EYE SELECTION",
+#'     "STUDY EYE SELECTION",
+#'     ""
+#'   ),
+#'   SCSTRESC = c("左", "左", "", "", "右", ""),
+#'   SCDTC = rep("2021-01-01", 6),
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' check_sc_dm_eligcrit(SC = sc, DM = dm)
+#'
+#' dm <- data.frame(USUBJID = c(1, 2, 3, 4))
+#' sc$SCSTRESC[4] <- "OS"
+#' check_sc_dm_eligcrit(SC = sc, DM = dm)
+#'
+#' sc$SCSTRESC <- NULL
+#' check_sc_dm_eligcrit(SC = sc, DM = dm)
+#'
+check_sc_dm_eligcrit <- function(DM, SC) {
+  if (DM %lacks_any% c("USUBJID")) {
+    fail(lacks_msg(DM, c("USUBJID")))
+  } else if (SC %lacks_any% c("USUBJID", "SCTEST", "SCTESTCD", "SCCAT", "SCSTRESC", "SCDTC")) {
+    fail(lacks_msg(SC, c("USUBJID", "SCTEST", "SCTESTCD", "SCCAT", "SCSTRESC", "SCDTC")))
+  } else {
+    DM <- DM %>% select(USUBJID)
+
+    SC <- SC %>%
+      select(USUBJID, SCTESTCD, SCTEST, SCCAT, SCSTRESC, SCDTC) %>%
+      mutate(MISFLAG = ifelse((grepl("ELIGEYE", SCTESTCD, ignore.case = TRUE) == TRUE) &
+        (!(SCSTRESC %in% c("右", "左", "双侧"))), 1, 0))
+
+    mydf <- left_join(DM, SC, by = "USUBJID")
+
+    mydf <- mydf %>%
+      filter(MISFLAG == 1 | is.na(SCSTRESC)) %>%
+      select(-MISFLAG)
+
+    if ((nrow(mydf) > 0) == FALSE) {
+      pass()
+    } else {
+      fail(paste0(nrow(mydf), " record(s) missing eye(s) that met study criteria in SC. "), mydf)
+    }
+  }
+}
