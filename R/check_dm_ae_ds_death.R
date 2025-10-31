@@ -58,13 +58,15 @@ check_dm_ae_ds_death <- function(DM, DS, AE) {
   } else {
     # 在两处 subset 前增加，按分支分别计算 sel
     if (AE %has_any% "AETOXGR") {
-      sel <- intersect(c("USUBJID","AEDTHDTC","AETOXGR","AESDTH","AEOUT","AEGRPID","AESPID"), names(AE))
+      sel <- intersect(c("USUBJID", "AEDTHDTC", "AETOXGR", "AESDTH", "AEOUT", "AEGRPID", "AESPID"), names(AE))
       aedth <- subset(AE, !(is_sas_na(AE$AEDTHDTC)) | AE$AESDTH == "是" | grepl("死亡", AE$AEOUT) | AE$AETOXGR == "5",
-                      select = sel)
+        select = sel
+      )
     } else {
-      sel <- intersect(c("USUBJID","AEDTHDTC","AESDTH","AEOUT","AEGRPID","AESPID"), names(AE))
+      sel <- intersect(c("USUBJID", "AEDTHDTC", "AESDTH", "AEOUT", "AEGRPID", "AESPID"), names(AE))
       aedth <- subset(AE, !(is_sas_na(AE$AEDTHDTC)) | AE$AESDTH == "是" | grepl("死亡", AE$AEOUT),
-                      select = sel)
+        select = sel
+      )
     }
     dsdth <- subset(DS, grepl("死亡", DS$DSDECOD), select = c(
       "USUBJID",

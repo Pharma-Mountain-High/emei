@@ -108,8 +108,8 @@ check_rs_rsdtc_across_visit <- function(RS, preproc = identity, ...) {
         "VISIT"
       )
       mydf <- merge(mydf0, mypairs0,
-                    by = c("USUBJID", "RSDTC"),
-                    all.x = TRUE
+        by = c("USUBJID", "RSDTC"),
+        all.x = TRUE
       ) %>%
         left_join(rs_orig, by = c(
           "USUBJID",

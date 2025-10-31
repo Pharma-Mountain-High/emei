@@ -21,5 +21,5 @@ utils::globalVariables(c(
   "lowvision_ind", "max_STDEND", "num_of_dates", "sdtmchecksmeta", "subj_discont_fl", "subject_id",
   "check", "fxn_in", "LBSTAT", "LBSTRESU",
   "category", "priority", "pdf_title", "xls_title", "domains", "pdf_subtitle", "ui", "server", "runGadget", "viewer", "req",
-  "x", "Status","ECTRT","ECDOSE","ECSTDTC","ECDOSU","RSTESTCD","TUMETHOD"
+  "x", "Status", "ECTRT", "ECDOSE", "ECSTDTC", "ECDOSU", "RSTESTCD", "TUMETHOD"
 ))

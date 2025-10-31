@@ -32,34 +32,34 @@
 #' # 示例 2：导出到指定路径
 #' \dontrun{
 #' export_metadata(
-#'     outfile = "~/my_checks_metadata.xlsx"
+#'   outfile = "~/my_checks_metadata.xlsx"
 #' )
 #' }
 #'
 #' # 示例 3：仅导出 ALL 类别的高优先级检查
 #' \dontrun{
 #' export_metadata(
-#'     outfile = "high_priority_checks.xlsx",
-#'     filter_category = "ALL",
-#'     filter_priority = "High"
+#'   outfile = "high_priority_checks.xlsx",
+#'   filter_category = "ALL",
+#'   filter_priority = "High"
 #' )
 #' }
 #'
 #' # 示例 4：导出多个类别和优先级，不添加格式化
 #' \dontrun{
 #' export_metadata(
-#'     outfile = "selected_checks.xlsx",
-#'     filter_category = c("ALL", "ONC", "PRO"),
-#'     filter_priority = c("High", "Medium"),
-#'     add_formatting = FALSE
+#'   outfile = "selected_checks.xlsx",
+#'   filter_category = c("ALL", "ONC", "PRO"),
+#'   filter_priority = c("High", "Medium"),
+#'   add_formatting = FALSE
 #' )
 #' }
 #'
 #' # 示例 5：在临时目录导出（用于测试）
 #' temp_file <- file.path(tempdir(), "test_metadata.xlsx")
 #' export_metadata(
-#'     outfile = temp_file,
-#'     verbose = TRUE
+#'   outfile = temp_file,
+#'   verbose = TRUE
 #' )
 #'
 export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
@@ -159,22 +159,22 @@ export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
     )
 
     addStyle(wb, "sdtmchecksmeta",
-             style = headerStyle,
-             rows = 1,
-             cols = seq_len(ncol(meta_data)),
-             gridExpand = TRUE
+      style = headerStyle,
+      rows = 1,
+      cols = seq_len(ncol(meta_data)),
+      gridExpand = TRUE
     )
 
     # 自动列宽
     setColWidths(wb, "sdtmchecksmeta",
-                 cols = seq_len(ncol(meta_data)),
-                 widths = "auto"
+      cols = seq_len(ncol(meta_data)),
+      widths = "auto"
     )
 
     # 添加筛选器
     addFilter(wb, "sdtmchecksmeta",
-              rows = 1,
-              cols = seq_len(ncol(meta_data))
+      rows = 1,
+      cols = seq_len(ncol(meta_data))
     )
 
     # 冻结首行
