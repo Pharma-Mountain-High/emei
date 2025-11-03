@@ -14,5 +14,11 @@ on:
 jobs:
   CLA:
     name: CLA 📝
+    runs-on: ubuntu-latest
+    # ⭐ 添加权限配置
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     uses: insightsengineering/.github/.github/workflows/cla.yaml@main
     secrets: inherit

@@ -43,6 +43,9 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip style]')
         && github.event.pull_request.draft == false
+    permissions:
+      contents: write
+      pull-requests: write
     container:
       image: ghcr.io/insightsengineering/rstudio:latest
 
