@@ -59,10 +59,12 @@ emei <- function(
     save_rds = FALSE,
     verbose = TRUE) {
   # 参数校验
-  if (missing(proj) || !is.character(proj) || length(proj) != 1 || nchar(proj) == 0) {
+  if (missing(proj) || !is.character(proj) || length(proj) != 1 || nchar(proj)
+  == 0) {
     stop("参数 'proj' 必须为非空字符串。")
   }
-  if (missing(folder) || !is.character(folder) || length(folder) != 1 || nchar(folder) == 0) {
+  if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
+    nchar(folder) == 0) {
     stop("参数 'folder' 必须为非空字符串。")
   }
   if (!dir.exists(folder)) {
@@ -98,8 +100,14 @@ emei <- function(
     unique(keep)
   }
 
-  priority <- normalize_char_opt(priority, allowed = c("High", "Medium", "Low"), case = "title")
-  type <- normalize_char_opt(type, allowed = c("ALL", "ONC", "PRO"), case = "asis")
+  priority <- normalize_char_opt(priority,
+    allowed = c("High", "Medium", "Low"),
+    case = "title"
+  )
+  type <- normalize_char_opt(type,
+    allowed = c("ALL", "ONC", "PRO"),
+    case = "asis"
+  )
 
   # 读取 .sas7bdat
   files <- list.files(folder, pattern = "(?i)\\.sas7bdat$", full.names = TRUE)
@@ -137,7 +145,11 @@ emei <- function(
 
   # 运行检查
   if (verbose) message("执行检查中...")
-  metads_obj <- if (exists("sdtmchecksmeta")) get("sdtmchecksmeta") else get("sdtmchecksmeta", envir = asNamespace("sdtmchecks"))
+  metads_obj <- if (exists("sdtmchecksmeta")) {
+    get("sdtmchecksmeta")
+  } else {
+    get("sdtmchecksmeta", envir = asNamespace("sdtmchecks"))
+  }
   sdtmreport <- run_all_checks(
     metads = metads_obj,
     priority = priority,
@@ -153,9 +165,15 @@ emei <- function(
         stop(sprintf("无法创建输出目录：%s", outdir))
       }
     }
-    outfile <- file.path(outdir, sprintf("%s_sdtm_checks_report_%s.xlsx", proj, as.character(Sys.Date())))
+    outfile <- file.path(outdir, sprintf(
+      "%s_sdtm_checks_report_%s.xlsx",
+      proj, as.character(Sys.Date())
+    ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
-    attr(sdtmreport, "outfile") <- normalizePath(outfile, winslash = "/", mustWork = FALSE)
+    attr(sdtmreport, "outfile") <- normalizePath(outfile,
+      winslash = "/",
+      mustWork = FALSE
+    )
     if (verbose) message(sprintf("报告已生成：%s", attr(sdtmreport, "outfile")))
   }
 

@@ -49,7 +49,10 @@ check_vs_vsdtc_after_dd <- function(DM, VS) {
   }
 
   if (VS %lacks_any% c("USUBJID", "VSDTC", "VSTESTCD", "VSORRES")) {
-    lacks_msgs <- c(lacks_msgs, lacks_msg(VS, c("USUBJID", "VSDTC", "VSTESTCD", "VSORRES")))
+    lacks_msgs <- c(lacks_msgs, lacks_msg(VS, c(
+      "USUBJID", "VSDTC", "VSTESTCD",
+      "VSORRES"
+    )))
   }
 
   if (length(lacks_msgs) > 0) {
@@ -73,7 +76,10 @@ check_vs_vsdtc_after_dd <- function(DM, VS) {
     } else {
       suppressWarnings(
         df0 <- VS %>%
-          filter(USUBJID %in% death_dates[["USUBJID"]], !is_sas_na(VSDTC), !is_sas_na(VSORRES)) %>%
+          filter(
+            USUBJID %in% death_dates[["USUBJID"]], !is_sas_na(VSDTC),
+            !is_sas_na(VSORRES)
+          ) %>%
           select(USUBJID, VSDTC, VSTESTCD) %>%
           left_join(death_dates, by = "USUBJID")
       )
