@@ -27,8 +27,6 @@ fail <- function(msg, data = NULL) {
 }
 
 
-
-
 #' Check if the elements could be of any SAS missing data variant
 #'
 #' Missing Data from sas7bdat imported datesets could be imported in different

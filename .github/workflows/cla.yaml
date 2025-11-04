@@ -10,8 +10,6 @@ on:
       - opened
       - closed
       - synchronize
----
-name: CLA 🔏
 
 jobs:
   CLA:

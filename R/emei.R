@@ -16,7 +16,6 @@
 #' @param outdir 字符串，报告输出目录，默认 `"report"`；不存在将尝试创建。
 #' @param save_rds 逻辑值，是否额外保存读取到的源数据列表为
 #'  \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
-#' ，默认 `FALSE`。
 #' @param verbose 逻辑值，是否输出运行信息，默认 `TRUE`。
 #'
 #'
