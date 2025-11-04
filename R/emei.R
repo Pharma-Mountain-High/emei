@@ -18,10 +18,8 @@
 #'  \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
 #' @param verbose 逻辑值，是否输出运行信息，默认 `TRUE`。
 #'
-#'
 #' @return 返回 `run_all_checks()` 的结果对象。若 `export_excel = TRUE`，
 #'   将为返回对象附加属性 `outfile`，其值为生成的 Excel 文件的完整路径。
-#'
 #'
 #' @examples
 #' \dontrun{
@@ -49,8 +47,6 @@
 #' )
 #' }
 #' @export
-#'
-#'
 emei <- function(
     proj,
     folder,
