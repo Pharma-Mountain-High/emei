@@ -21,8 +21,8 @@ emei(
 \item{folder}{字符串，必填。SDTM 数据目录，函数会读取目录下所有 \code{.sas7bdat}
 文件。}
 
-\item{priority}{字符向量或单个逗号分隔字符串。默认 \code{c("High","Medium","Low")}。
-若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。}
+\item{priority}{字符向量或单个逗号分隔字符串。默认 \code{c("High","Medium","Low")}
+。若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。}
 
 \item{type}{字符向量或单个逗号分隔字符串。默认 \code{c("ALL","ONC","PRO")}。
 若传入单个字符串（如 "ALL,ONC"），会自动拆分、去重并保序。}
@@ -32,8 +32,7 @@ emei(
 \item{outdir}{字符串，报告输出目录，默认 \code{"report"}；不存在将尝试创建。}
 
 \item{save_rds}{逻辑值，是否额外保存读取到的源数据列表为
-\code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
-，默认 \code{FALSE}。}
+\code{source_data_\{proj\}.rds}，默认 \code{FALSE}。}
 
 \item{verbose}{逻辑值，是否输出运行信息，默认 \code{TRUE}。}
 }
@@ -42,8 +41,8 @@ emei(
 将为返回对象附加属性 \code{outfile}，其值为生成的 Excel 文件的完整路径。
 }
 \description{
-从指定目录读取 SDTM \code{.sas7bdat} 文件，自动合并各域的 SUPP 数据集，按既定规则对
-\code{dm}、\code{ae}、\code{vs} 进行轻量标准化预处理，随后调用 \code{run_all_checks()} 执行
+从指定目录读取 SDTM \code{.sas7bdat} 文件，自动合并各域的 SUPP 数据集，按既定规则
+对\code{dm}、\code{ae}、\code{vs} 进行轻量标准化预处理，随后调用 \code{run_all_checks()} 执行
 全量数据检查；可选将检查结果导出为 Excel 文件（文件名与命令行工具保持一致）。
 }
 \examples{
@@ -51,7 +50,8 @@ emei(
 # 最小示例：指定项目编号与 SDTM 目录
 res <- emei(
   proj = "QLG2198_301",
-  folder = "~/development/Projects02/QLG2198/QLG2198-301/SP/ole_csr/data/sdtm"
+  folder = "~/development/Projects02/QLG2198/
+  QLG2198-301/SP/ole_csr/data/sdtm"
 )
 
 # 自定义 priority/type（支持向量或逗号分隔字符串）

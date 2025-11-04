@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{\%lacks_any\%}
 \alias{\%lacks_any\%}
-\title{Check if data frame has at least one variable from a set of specified variables}
+\title{Check if data frame has at least one variable from a set of specified
+variables}
 \usage{
 df \%lacks_any\% varnames
 }
@@ -15,6 +16,7 @@ df \%lacks_any\% varnames
 boolean
 }
 \description{
-Check if data frame has at least one variable from a set of specified variables
+Check if data frame has at least one variable from a set of specified
+variables
 }
 \keyword{internal}

@@ -46,9 +46,9 @@ fail <- function(msg, data = NULL) {
 #' is_sas_na(c("a", NA, "NA", ""))
 is_sas_na <- function(x) {
   x <- trimws(x)
-  is.na(x) ||
+  is.na(x) |
     vapply(x, function(xi) {
-      identical(xi, "") || identical(xi, "NA") || identical(xi, ".")
+      identical(xi, "") | identical(xi, "NA") | identical(xi, ".")
     }, logical(1))
 }
 
