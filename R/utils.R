@@ -629,7 +629,7 @@ report_to_xlsx <- function(
 #' ae$AEDECOD[1] <- NA
 #'
 #' # Step 2: Use the run_all_checks() function to generate list of check results
-#'  on this "old" data
+#' # on this "old" data
 #'
 #' # Filter sdtmchecksmeta so that only one check is present
 #' data(sdtmchecksmeta)
@@ -639,7 +639,7 @@ report_to_xlsx <- function(
 #'
 #'
 #' # Step 3: Simulate a newer, updated AE dataset with another record with a
-#' new missing preferred term
+#' # new missing preferred term
 #'
 #' ae <- data.frame(
 #'   USUBJID = 1:6,
@@ -663,7 +663,7 @@ report_to_xlsx <- function(
 #' ae$AEDECOD[6] <- NA
 #'
 #' # Step 4: use the run_all_checks() function to generate list of check results
-#'   on this "new" data
+#' #  on this "new" data
 #'
 #' new <- run_all_checks(metads = metads)
 #'
