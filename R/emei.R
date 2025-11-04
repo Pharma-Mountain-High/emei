@@ -1,15 +1,15 @@
 #' @title SDTM 数据检查一键执行（合并 SUPP、预处理、生成报告）
 #'
 #' @description
-#' 从指定目录读取 SDTM `.sas7bdat` 文件，自动合并各域的 SUPP 数据集，按既定规则对
-#' `dm`、`ae`、`vs` 进行轻量标准化预处理，随后调用 `run_all_checks()` 执行
+#' 从指定目录读取 SDTM `.sas7bdat` 文件，自动合并各域的 SUPP 数据集，按既定规则
+#' 对`dm`、`ae`、`vs` 进行轻量标准化预处理，随后调用 `run_all_checks()` 执行
 #' 全量数据检查；可选将检查结果导出为 Excel 文件（文件名与命令行工具保持一致）。
 #'
 #' @param proj 字符串，必填。项目编号，用于输出文件命名（例如 `QLG2198_301`）。
 #' @param folder 字符串，必填。SDTM 数据目录，函数会读取目录下所有 `.sas7bdat`
 #' 文件。
-#' @param priority 字符向量或单个逗号分隔字符串。默认 `c("High","Medium","Low")`。
-#'   若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。
+#' @param priority 字符向量或单个逗号分隔字符串。默认 `c("High","Medium","Low")`
+#'   。若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。
 #' @param type 字符向量或单个逗号分隔字符串。默认 `c("ALL","ONC","PRO")`。
 #'   若传入单个字符串（如 "ALL,ONC"），会自动拆分、去重并保序。
 #' @param export_excel 逻辑值，是否导出 Excel 报告，默认 `TRUE`。
@@ -29,7 +29,8 @@
 #' # 最小示例：指定项目编号与 SDTM 目录
 #' res <- emei(
 #'   proj = "QLG2198_301",
-#'   folder = "~/development/Projects02/QLG2198/QLG2198-301/SP/ole_csr/data/sdtm"
+#'   folder = "~/development/Projects02/QLG2198/
+#'   QLG2198-301/SP/ole_csr/data/sdtm"
 #' )
 #'
 #' # 自定义 priority/type（支持向量或逗号分隔字符串）
@@ -106,7 +107,10 @@ emei <- function(
     allowed = c("High", "Medium", "Low"),
     case = "title"
   )
-  type <- normalize_char_opt(type, allowed = c("ALL", "ONC", "PRO"), case = "asis")
+  type <- normalize_char_opt(type,
+    allowed = c("ALL", "ONC", "PRO"),
+    case = "asis"
+  )
 
   # 读取 .sas7bdat
   files <- list.files(folder, pattern = "(?i)\\.sas7bdat$", full.names = TRUE)
@@ -116,7 +120,9 @@ emei <- function(
   if (verbose) message(sprintf("读取 %d 个 .sas7bdat 文件...", length(files)))
 
   datasets <- lapply(files, function(f) haven::read_sas(f))
-  names(datasets) <- stringr::str_to_lower(tools::file_path_sans_ext(basename(files)))
+  names(datasets) <- stringr::str_to_lower(
+    tools::file_path_sans_ext(basename(files))
+  )
 
   if (isTRUE(save_rds)) {
     rds_path <- file.path(getwd(), sprintf("source_data_%s.rds", proj))
