@@ -66,8 +66,8 @@ is_sas_na <- function(x) {
   all(!(varnames %in% names(df)))
 }
 
-#' Check if data frame has at least one variable from a set of specified variables
-#'
+#' Check if data frame has at least one variable from a set of specified
+#' variables
 #' @inheritParams %lacks_all%
 #' @return boolean
 #' @export
@@ -164,16 +164,18 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   # dots are for ordering variables
   ### Subset to only records without missing DTC
   mydf <- dts[!is_sas_na(dts[[dtc]]) &
-                !is_sas_na(dts[["VISIT"]]) &
-                !is_sas_na(dts[["VISITNUM"]]) &
-                substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
+    !is_sas_na(dts[["VISIT"]]) &
+    !is_sas_na(dts[["VISITNUM"]]) &
+    substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
 
   ### Subset no duplicated records
   mydf1 <- mydf[!duplicated(mydf[, vars]), ]
 
   ### Sort by
-  ord <- paste0("order(", paste0("mydf1[['", list(...), "']]", collapse = ", "),
-                ")")
+  ord <- paste0(
+    "order(", paste0("mydf1[['", list(...), "']]", collapse = ", "),
+    ")"
+  )
   mydf2 <- mydf1[eval(parse(text = ord)), ]
 
   ### Add Vis_order
@@ -216,7 +218,8 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   mydf2$check.flag <- ifelse(
     mydf2$visit.order != 1 & mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
     ifelse(mydf2$visit.order != 1 & mydf2$last.vis.dtc > mydf2[[dtc]],
-           "Datetime earlier than last Visit", NA)
+      "Datetime earlier than last Visit", NA
+    )
   )
   mydf2
 }
@@ -329,10 +332,10 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
   dt <- mutate(
     dt,
     !!(var_name) := ifelse(nchar(get(var_name)) > trunc_length,
-                           unlist(lapply(get(var_name), function(x) {
-                      paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
-                           })),
-                           get(var_name)
+      unlist(lapply(get(var_name), function(x) {
+        paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
+      })),
+      get(var_name)
     )
   )
 
@@ -414,8 +417,10 @@ report_to_xlsx <- function(
   # prepare summary page
   # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
   # a summary data frame
-  summary_cols <- lapply(res, "[", c("xls_title", "pdf_title", "nrec", "notes",
-                                     "pdf_subtitle"))
+  summary_cols <- lapply(res, "[", c(
+    "xls_title", "pdf_title", "nrec", "notes",
+    "pdf_subtitle"
+  ))
   summary_data_0 <- as.data.frame(do.call(rbind, summary_cols))
   summary_data <- summary_data_0 %>%
     mutate(version = "") %>%
@@ -526,7 +531,8 @@ report_to_xlsx <- function(
       # writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
       # startRow = 2, startCol = 1)
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-                startRow = 1, startCol = 1)
+        startRow = 1, startCol = 1
+      )
 
       # create a HYPERLINK between a row on 'Summary results' sheet and individual tab
       # need to have i+1 because the 1st row on 'Summary results' sheet has column names
@@ -672,7 +678,7 @@ report_to_xlsx <- function(
 #'
 #' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
 #' # report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
-#' Sys.Date(),".xlsx"))
+#' # Sys.Date(),".xlsx"))
 #'
 #' @keywords ex_rpt
 #' @family ex_rpt
@@ -741,7 +747,7 @@ diff_reports <- function(old_report, new_report) {
 
         res_new$data <- res_new$data %>%
           left_join(res_old$data, relationship = "many-to-many") %>%
-      # behold the magic of dplyr automatically identifying columns to join on
+          # behold the magic of dplyr automatically identifying columns to join on
           mutate(Status = ifelse(is.na(Status), "NEW", Status))
 
         res_new
