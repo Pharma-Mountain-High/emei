@@ -62,11 +62,11 @@ emei <- function(
     verbose = TRUE) {
   # 参数校验
   if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
-      nchar(proj) == 0) {
+    nchar(proj) == 0) {
     stop("参数 'proj' 必须为非空字符串。")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-      nchar(folder) == 0) {
+    nchar(folder) == 0) {
     stop("参数 'folder' 必须为非空字符串。")
   }
   if (!dir.exists(folder)) {
@@ -102,8 +102,10 @@ emei <- function(
     unique(keep)
   }
 
-  priority <- normalize_char_opt(priority, allowed = c("High", "Medium", "Low"),
-                                 case = "title")
+  priority <- normalize_char_opt(priority,
+    allowed = c("High", "Medium", "Low"),
+    case = "title"
+  )
   type <- normalize_char_opt(type, allowed = c("ALL", "ONC", "PRO"), case = "asis")
 
   # 读取 .sas7bdat
@@ -129,8 +131,10 @@ emei <- function(
       main_name <- sub("^supp", "", supp_name)
       if (!main_name %in% names(datasets)) next
       if (verbose) message(sprintf("合并 SUPP：%s -> %s", supp_name, main_name))
-      datasets[[main_name]] <- merge_supp(datasets[[main_name]],
-                                          datasets[[supp_name]])
+      datasets[[main_name]] <- merge_supp(
+        datasets[[main_name]],
+        datasets[[supp_name]]
+      )
     }
     # 移除所有 supp*
     datasets <- datasets[setdiff(names(datasets), supp_names)]
@@ -161,11 +165,15 @@ emei <- function(
         stop(sprintf("无法创建输出目录：%s", outdir))
       }
     }
-    outfile <- file.path(outdir, sprintf("%s_sdtm_checks_report_%s.xlsx",
-                                         proj, as.character(Sys.Date())))
+    outfile <- file.path(outdir, sprintf(
+      "%s_sdtm_checks_report_%s.xlsx",
+      proj, as.character(Sys.Date())
+    ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
-    attr(sdtmreport, "outfile") <- normalizePath(outfile, winslash = "/",
-                                                 mustWork = FALSE)
+    attr(sdtmreport, "outfile") <- normalizePath(outfile,
+      winslash = "/",
+      mustWork = FALSE
+    )
     if (verbose) message(sprintf("报告已生成：%s", attr(sdtmreport, "outfile")))
   }
 

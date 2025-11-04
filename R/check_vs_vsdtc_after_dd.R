@@ -49,8 +49,10 @@ check_vs_vsdtc_after_dd <- function(DM, VS) {
   }
 
   if (VS %lacks_any% c("USUBJID", "VSDTC", "VSTESTCD", "VSORRES")) {
-    lacks_msgs <- c(lacks_msgs, lacks_msg(VS, c("USUBJID", "VSDTC", "VSTESTCD",
-                                                "VSORRES")))
+    lacks_msgs <- c(lacks_msgs, lacks_msg(VS, c(
+      "USUBJID", "VSDTC", "VSTESTCD",
+      "VSORRES"
+    )))
   }
 
   if (length(lacks_msgs) > 0) {
