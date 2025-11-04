@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{diff_reports}
 \alias{diff_reports}
-\title{Create a sdtmchecks list object with column indicating whether the issue was previously seen}
+\title{Create a sdtmchecks list object with column indicating whether
+the issue was previously seen}
 \usage{
 diff_reports(old_report, new_report)
 }
@@ -54,7 +55,8 @@ ae <- data.frame(
 
 ae$AEDECOD[1] <- NA
 
-# Step 2: Use the run_all_checks() function to generate list of check results on this "old" data
+# Step 2: Use the run_all_checks() function to generate list of check results
+ on this "old" data
 
 # Filter sdtmchecksmeta so that only one check is present
 data(sdtmchecksmeta)
@@ -63,7 +65,8 @@ old <- run_all_checks(metads = metads)
 
 
 
-# Step 3: Simulate a newer, updated AE dataset with another record with a new missing preferred term
+# Step 3: Simulate a newer, updated AE dataset with another record with a
+new missing preferred term
 
 ae <- data.frame(
   USUBJID = 1:6,
@@ -86,7 +89,8 @@ ae <- data.frame(
 ae$AEDECOD[1] <- NA
 ae$AEDECOD[6] <- NA
 
-# Step 4: use the run_all_checks() function to generate list of check results  on this "new" data
+# Step 4: use the run_all_checks() function to generate list of check results
+  on this "new" data
 
 new <- run_all_checks(metads = metads)
 
@@ -94,7 +98,8 @@ new <- run_all_checks(metads = metads)
 res <- diff_reports(old_report = old, new_report = new)
 
 ## optionally output results as spreadsheet with Emei::report_to_xlsx()
-# report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",Sys.Date(),".xlsx"))
+# report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
+Sys.Date(),".xlsx"))
 
 }
 \seealso{

@@ -18,7 +18,8 @@ emei(
 \arguments{
 \item{proj}{字符串，必填。项目编号，用于输出文件命名（例如 \code{QLG2198_301}）。}
 
-\item{folder}{字符串，必填。SDTM 数据目录，函数会读取目录下所有 \code{.sas7bdat} 文件。}
+\item{folder}{字符串，必填。SDTM 数据目录，函数会读取目录下所有 \code{.sas7bdat}
+文件。}
 
 \item{priority}{字符向量或单个逗号分隔字符串。默认 \code{c("High","Medium","Low")}。
 若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。}
@@ -30,7 +31,8 @@ emei(
 
 \item{outdir}{字符串，报告输出目录，默认 \code{"report"}；不存在将尝试创建。}
 
-\item{save_rds}{逻辑值，是否额外保存读取到的源数据列表为 \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
+\item{save_rds}{逻辑值，是否额外保存读取到的源数据列表为
+\code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
 ，默认 \code{FALSE}。}
 
 \item{verbose}{逻辑值，是否输出运行信息，默认 \code{TRUE}。}

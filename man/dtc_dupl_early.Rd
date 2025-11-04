@@ -9,7 +9,8 @@ dtc_dupl_early(dts, vars, groupby, dtc, ...)
 \arguments{
 \item{dts}{dataset, e.g. EX}
 
-\item{vars}{variables in a form c("USUBJID", "EXTRT", "VISITNUM", "VISIT", "EXSTDTC")}
+\item{vars}{variables in a form c("USUBJID", "EXTRT", "VISITNUM", "VISIT",
+"EXSTDTC")}
 
 \item{groupby}{variables used for grouping and visit.order derivation}
 

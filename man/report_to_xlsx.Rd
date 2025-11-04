@@ -16,7 +16,8 @@ report_to_xlsx(
 
 \item{outfile}{file path/name to write to}
 
-\item{extrastring}{optionally display extra info alongside version info, e.g. diff info}
+\item{extrastring}{optionally display extra info alongside version info,
+e.g. diff info}
 }
 \value{
 xlsx file

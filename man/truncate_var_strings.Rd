@@ -17,7 +17,8 @@ truncate_var_strings(dt, var_name, trunc_length)
 dataset with truncated variable
 }
 \description{
-This function will truncate the strings in variables according to the length specified
+This function will truncate the strings in variables according
+to the length specified
 }
 \examples{
 
@@ -37,7 +38,8 @@ truncate_var_strings(AE, var_name = "AETERM", trunc_length = 50)
 
 # Testing: Truncation
 
-AE$AETERM[4] <- "THIS IS A SUPER LONG AE TERM, SO LONG IN FACT THAT ITS OVER 50 CHARACTERS."
+AE$AETERM[4] <- "THIS IS A SUPER LONG AE TERM, SO LONG IN FACT THAT ITS OVER
+50 CHARACTERS."
 AE$AETERM[5] <- "THIS AE TERM IS WAY TOO LONG FOR A NICELY FORMATTED REPORT"
 
 truncate_var_strings(AE, var_name = "AETERM", trunc_length = 50)

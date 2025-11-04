@@ -15,6 +15,7 @@ fail(msg, data = NULL)
 Boolean with msg and data attributes
 }
 \description{
-With fail message and dataframe portion responsible for the check failure result
+With fail message and dataframe portion responsible for the check failure
+result
 }
 \keyword{internal}

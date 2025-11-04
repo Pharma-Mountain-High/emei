@@ -6,14 +6,16 @@
 #' 全量数据检查；可选将检查结果导出为 Excel 文件（文件名与命令行工具保持一致）。
 #'
 #' @param proj 字符串，必填。项目编号，用于输出文件命名（例如 `QLG2198_301`）。
-#' @param folder 字符串，必填。SDTM 数据目录，函数会读取目录下所有 `.sas7bdat` 文件。
+#' @param folder 字符串，必填。SDTM 数据目录，函数会读取目录下所有 `.sas7bdat`
+#' 文件。
 #' @param priority 字符向量或单个逗号分隔字符串。默认 `c("High","Medium","Low")`。
 #'   若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。
 #' @param type 字符向量或单个逗号分隔字符串。默认 `c("ALL","ONC","PRO")`。
 #'   若传入单个字符串（如 "ALL,ONC"），会自动拆分、去重并保序。
 #' @param export_excel 逻辑值，是否导出 Excel 报告，默认 `TRUE`。
 #' @param outdir 字符串，报告输出目录，默认 `"report"`；不存在将尝试创建。
-#' @param save_rds 逻辑值，是否额外保存读取到的源数据列表为 \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
+#' @param save_rds 逻辑值，是否额外保存读取到的源数据列表为
+#'  \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
 #' ，默认 `FALSE`。
 #' @param verbose 逻辑值，是否输出运行信息，默认 `TRUE`。
 #'
@@ -59,12 +61,12 @@ emei <- function(
     save_rds = FALSE,
     verbose = TRUE) {
   # 参数校验
-  if (missing(proj) || !is.character(proj) || length(proj) != 1 || nchar(proj)
-  == 0) {
+  if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
+      nchar(proj) == 0) {
     stop("参数 'proj' 必须为非空字符串。")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-    nchar(folder) == 0) {
+      nchar(folder) == 0) {
     stop("参数 'folder' 必须为非空字符串。")
   }
   if (!dir.exists(folder)) {
@@ -100,14 +102,9 @@ emei <- function(
     unique(keep)
   }
 
-  priority <- normalize_char_opt(priority,
-    allowed = c("High", "Medium", "Low"),
-    case = "title"
-  )
-  type <- normalize_char_opt(type,
-    allowed = c("ALL", "ONC", "PRO"),
-    case = "asis"
-  )
+  priority <- normalize_char_opt(priority, allowed = c("High", "Medium", "Low"),
+                                 case = "title")
+  type <- normalize_char_opt(type, allowed = c("ALL", "ONC", "PRO"), case = "asis")
 
   # 读取 .sas7bdat
   files <- list.files(folder, pattern = "(?i)\\.sas7bdat$", full.names = TRUE)
@@ -132,7 +129,8 @@ emei <- function(
       main_name <- sub("^supp", "", supp_name)
       if (!main_name %in% names(datasets)) next
       if (verbose) message(sprintf("合并 SUPP：%s -> %s", supp_name, main_name))
-      datasets[[main_name]] <- merge_supp(datasets[[main_name]], datasets[[supp_name]])
+      datasets[[main_name]] <- merge_supp(datasets[[main_name]],
+                                          datasets[[supp_name]])
     }
     # 移除所有 supp*
     datasets <- datasets[setdiff(names(datasets), supp_names)]
@@ -140,8 +138,6 @@ emei <- function(
 
   # 注入 .GlobalEnv 以兼容 sdtmchecks
   list2env(datasets, envir = .GlobalEnv)
-
-
 
   # 运行检查
   if (verbose) message("执行检查中...")
@@ -165,15 +161,11 @@ emei <- function(
         stop(sprintf("无法创建输出目录：%s", outdir))
       }
     }
-    outfile <- file.path(outdir, sprintf(
-      "%s_sdtm_checks_report_%s.xlsx",
-      proj, as.character(Sys.Date())
-    ))
+    outfile <- file.path(outdir, sprintf("%s_sdtm_checks_report_%s.xlsx",
+                                         proj, as.character(Sys.Date())))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
-    attr(sdtmreport, "outfile") <- normalizePath(outfile,
-      winslash = "/",
-      mustWork = FALSE
-    )
+    attr(sdtmreport, "outfile") <- normalizePath(outfile, winslash = "/",
+                                                 mustWork = FALSE)
     if (verbose) message(sprintf("报告已生成：%s", attr(sdtmreport, "outfile")))
   }
 

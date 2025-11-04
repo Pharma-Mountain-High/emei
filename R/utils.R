@@ -66,8 +66,7 @@ is_sas_na <- function(x) {
   all(!(varnames %in% names(df)))
 }
 
-#' Check if data frame has at least one variable from a set of specified
-#' variables
+#' Check if data frame has at least one variable from a set of specified variables
 #'
 #' @inheritParams %lacks_all%
 #' @return boolean
@@ -96,10 +95,7 @@ lacks_msg <- function(df, varnames) {
   } else if (length(lacking) == 1) {
     paste(data_name, "is missing the variable:", lacking)
   } else {
-    paste(
-      data_name, "is missing the variables:",
-      paste(lacking, collapse = ", ")
-    )
+    paste(data_name, "is missing the variables:", paste(lacking, collapse = ", "))
   }
 }
 
@@ -152,7 +148,7 @@ impute_day01 <- function(dates) {
 #'
 #' @param dts dataset, e.g. EX
 #' @param vars variables in a form c("USUBJID", "EXTRT", "VISITNUM", "VISIT",
-#'  "EXSTDTC")
+#' "EXSTDTC")
 #' @param groupby variables used for grouping and visit.order derivation
 #' @param dtc the date variable
 #' @param ... variables used for ordering before visit.order derivation
@@ -167,16 +163,17 @@ impute_day01 <- function(dates) {
 dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   # dots are for ordering variables
   ### Subset to only records without missing DTC
-  mydf <- dts[!is_sas_na(dts[[dtc]]) & !is_sas_na(dts[["VISIT"]]) &
-    !is_sas_na(dts[["VISITNUM"]]) & substr(dts[["VISIT"]], 1, 5)
-  != "UNSCH", vars]
+  mydf <- dts[!is_sas_na(dts[[dtc]]) &
+                !is_sas_na(dts[["VISIT"]]) &
+                !is_sas_na(dts[["VISITNUM"]]) &
+                substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
 
   ### Subset no duplicated records
   mydf1 <- mydf[!duplicated(mydf[, vars]), ]
 
   ### Sort by
-  ord <- paste0("order(", paste0("mydf1[['", list(...), "']]", collapse = ",
-                                 "), ")")
+  ord <- paste0("order(", paste0("mydf1[['", list(...), "']]", collapse = ", "),
+                ")")
   mydf2 <- mydf1[eval(parse(text = ord)), ]
 
   ### Add Vis_order
@@ -185,22 +182,30 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
     row.names(x) <- NULL
     # if 1 record then no need for lagging
     if (identical(nrow(x), as.integer(1))) {
-      cbind(x,
-        last.vis.dtc = NA, last.vis = NA, visit.order = 1,
+      cbind(
+        x,
+        last.vis.dtc = NA,
+        last.vis = NA,
+        visit.order = 1,
         stringsAsFactors = FALSE
       )
       # if 2 records then just lag using the first record
     } else if (identical(nrow(x), as.integer(2))) {
-      cbind(x,
-        last.vis.dtc = c(NA, x[1, dtc]), last.vis = c(NA, x[1, "VISIT"]),
-        visit.order = seq(1, nrow(x)), stringsAsFactors = FALSE
+      cbind(
+        x,
+        last.vis.dtc = c(NA, x[1, dtc]),
+        last.vis = c(NA, x[1, "VISIT"]),
+        visit.order = seq(1, nrow(x)),
+        stringsAsFactors = FALSE
       )
       # if more than 2 records then lag and create as many records as in original
     } else {
-      cbind(x,
+      cbind(
+        x,
         last.vis.dtc = c(NA, x[2:nrow(x) - 1, dtc]),
         last.vis = c(NA, x[2:nrow(x) - 1, "VISIT"]),
-        visit.order = seq(1, nrow(x)), stringsAsFactors = FALSE
+        visit.order = seq(1, nrow(x)),
+        stringsAsFactors = FALSE
       )
     }
   })
@@ -208,11 +213,10 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   # need to stack all chunks together
   mydf2 <- Reduce(rbind, mydf2l)
 
-  mydf2$check.flag <- ifelse(mydf2$visit.order != 1 &
-    mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
-  ifelse(mydf2$visit.order != 1 & mydf2$last.vis.dtc > mydf2[[dtc]],
-    "Datetime earlier than last Visit", NA
-  )
+  mydf2$check.flag <- ifelse(
+    mydf2$visit.order != 1 & mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
+    ifelse(mydf2$visit.order != 1 & mydf2$last.vis.dtc > mydf2[[dtc]],
+           "Datetime earlier than last Visit", NA)
   )
   mydf2
 }
@@ -284,7 +288,7 @@ convert_var_to_ascii <- function(df, var) {
 #' @title Utility function to truncate data in var_name
 #'
 #' @description This function will truncate the strings in variables according
-#'  to the length specified
+#' to the length specified
 #' @param dt dataset e.g. AE
 #'
 #' @param var_name variable name e.g. AETERM
@@ -316,7 +320,7 @@ convert_var_to_ascii <- function(df, var) {
 #' # Testing: Truncation
 #'
 #' AE$AETERM[4] <- "THIS IS A SUPER LONG AE TERM, SO LONG IN FACT THAT ITS OVER
-#'  50 CHARACTERS."
+#' 50 CHARACTERS."
 #' AE$AETERM[5] <- "THIS AE TERM IS WAY TOO LONG FOR A NICELY FORMATTED REPORT"
 #'
 #' truncate_var_strings(AE, var_name = "AETERM", trunc_length = 50)
@@ -325,10 +329,10 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
   dt <- mutate(
     dt,
     !!(var_name) := ifelse(nchar(get(var_name)) > trunc_length,
-      unlist(lapply(get(var_name), function(x) {
-        paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
-      })),
-      get(var_name)
+                           unlist(lapply(get(var_name), function(x) {
+                      paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
+                           })),
+                           get(var_name)
     )
   )
 
@@ -344,8 +348,8 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #'
 #' @param res results list created by run_all_checks
 #' @param outfile file path/name to write to
-#' @param extrastring optionally display extra info alongside version info, e.g.
-#' diff info
+#' @param extrastring optionally display extra info alongside version info,
+#'  e.g. diff info
 #'
 #' @import openxlsx
 #' @importFrom utils packageDescription
@@ -402,15 +406,16 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #' fileName <- file.path(tempdir(), "check_results.xlsx")
 #' report_to_xlsx(res = res, outfile = fileName)
 #'
-report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
-                           ("Emei")["Version"], extrastring = "") {
+report_to_xlsx <- function(
+    res,
+    outfile,
+    nickname = utils::packageDescription("Emei")["Version"],
+    extrastring = "") {
   # prepare summary page
-  # pull columns (xls_title, pdf_title, nrec, notes) from the list
-  # and create a summary data frame
-  summary_cols <- lapply(res, "[", c(
-    "xls_title", "pdf_title", "nrec", "notes",
-    "pdf_subtitle"
-  ))
+  # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
+  # a summary data frame
+  summary_cols <- lapply(res, "[", c("xls_title", "pdf_title", "nrec", "notes",
+                                     "pdf_subtitle"))
   summary_data_0 <- as.data.frame(do.call(rbind, summary_cols))
   summary_data <- summary_data_0 %>%
     mutate(version = "") %>%
@@ -458,40 +463,45 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
   addFilter(wb, "Summary results", cols = 1:ncol(summary_data), rows = 1)
 
   # write summary data on the 1st page of XLS file
-  writeData(wb, "Summary results", as.data.frame(summary_data),
+  writeData(
+    wb, "Summary results",
+    as.data.frame(summary_data),
     startRow = 1,
-    startCol = 1, headerStyle = createStyle(textDecoration = "bold")
+    startCol = 1,
+    headerStyle = createStyle(textDecoration = "bold")
   )
 
-  # Highlight the rows with problematic queries ( i.e.
-  # have non-missing comments at column D)
+  # Highlight the rows with problematic queries
+  # ( i.e. have non-missing comments at column D)
   redStyle <- createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE")
   orangeStyle <- createStyle(fontColour = "#000000", bgFill = "#fac966")
   boldnickname <- createStyle(textDecoration = "bold")
 
-  conditionalFormatting(wb, "Summary results",
-    cols = 1:4,
-    rows = 1:nrow(summary_data) + 1,
+  conditionalFormatting(
+    wb, "Summary results",
+    cols = 1:4, rows = 1:nrow(summary_data) + 1,
     rule = '$D2!=" "', style = redStyle
   )
-  conditionalFormatting(wb, "Summary results",
-    cols = 2:4,
-    rows = 1:nrow(summary_data) + 1,
+  conditionalFormatting(
+    wb, "Summary results",
+    cols = 2:4, rows = 1:nrow(summary_data) + 1,
     rule = "$C2>0", style = orangeStyle
   )
-  conditionalFormatting(wb, "Summary results",
-    cols = 1,
-    rows = 1:nrow(summary_data) + 1,
+  conditionalFormatting(
+    wb, "Summary results",
+    cols = 1, rows = 1:nrow(summary_data) + 1,
     rule = "$C2>0", style = orangeStyle
   )
-  conditionalFormatting(wb, "Summary results",
-    cols = 5,
-    rows = 1:3, rule = '!=""', style = boldnickname
+  conditionalFormatting(
+    wb, "Summary results",
+    cols = 5, rows = 1:3,
+    rule = '!=""', style = boldnickname
   )
 
   # Add comments with PDF subtitles to summary results page
   for (i in 1:nrow(summary_data_0)) {
-    writeComment(wb, "Summary results",
+    writeComment(
+      wb, "Summary results",
       col = 2, row = i + 1,
       comment = createComment(
         unlist(summary_data_0[i, "pdf_subtitle"]),
@@ -503,8 +513,8 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
     )
   }
 
-  # loop through the data checks results and write them into separated sheet in
-  # xls file.
+  # loop through the data checks results and write them into separated sheet
+  # in xls file.
   for (i in 1:length(res)) {
     # do not create xls sheet for data checks with 0 results
     if (res[[i]]$nrec != 0) {
@@ -513,22 +523,23 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 
       # Begin writing individual xls tab at row 2.
       # Row=1 will be used to create a HYPERLINK back to 'Summary results' sheet.
-      # writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data), startRow
-      # = 2, startCol = 1)
+      # writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
+      # startRow = 2, startCol = 1)
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-        startRow = 1, startCol = 1
-      )
+                startRow = 1, startCol = 1)
 
-      # create a HYPERLINK between a row on 'Summary results' sheet and
-      # individual tab need to have i+1 because the 1st row on 'Summary results'
-      # sheet has column names
+      # create a HYPERLINK between a row on 'Summary results' sheet and individual tab
+      # need to have i+1 because the 1st row on 'Summary results' sheet has column names
 
       # writeFormula(wb, sheet="Summary results", startRow=i+1, startCol=1,
       #              x=makeHyperlinkString(sheet=res[[i]]$xls_title, row=1,
       # col=1, text=res[[i]]$xls_title ))
 
-      writeData(wb,
-        sheet = "Summary results", startRow = i + 1, startCol = 1,
+      writeData(
+        wb,
+        sheet = "Summary results",
+        startRow = i + 1,
+        startCol = 1,
         x = res[[i]]$xls_title
       )
 
@@ -537,11 +548,12 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
       # 'Summary results' sheet need to have i+1 because the 1st row on
       # 'Summary results' sheet has column names
       # writeFormula(wb, sheet=res[[i]]$xls_title, startRow=1,
-      #              x=makeHyperlinkString(sheet="Summary results", row=i+1,
-      #             col=5, text="Link to Summary Tab" ))
+      #              x=makeHyperlinkString(sheet="Summary results",
+      # row=i+1, col=5, text="Link to Summary Tab" ))
 
       # Add comments with PDF sub titles to each individual page
-      writeComment(wb, res[[i]]$xls_title,
+      writeComment(
+        wb, res[[i]]$xls_title,
         col = 1, row = 1,
         comment = createComment(
           unlist(summary_data_0[i, "pdf_subtitle"]),
@@ -566,29 +578,25 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 
 
 
-#' @title Create a sdtmchecks list object with column indicating whether the
-#' issue was previously seen
+#' @title Create a sdtmchecks list object with column indicating whether
+#'  the issue was previously seen
 #'
-#' @description This report will identify flagged records from an sdtmchecks
-#' report that are "new" and those that are "old" for a study. This will help
-#' quickly target newly emergent issues that may require a new query or
-#' investigation while indicating issues that were encountered from a prior
-#' report and may have already been queried.
+#' @description This report will identify flagged records from an sdtmchecks report
+#' that are "new" and those that are "old" for a study. This will help quickly target
+#' newly emergent issues that may require a new query or investigation while indicating
+#' issues that were encountered from a prior report and may have already been queried.
 #'
 #' This `diff_reports()` function requires a newer and older set of results from
 #' `sdtmchecks::run_all_checks()`, which will generate a list of check results.
 #' An added column "Status" is created with values of "NEW" and "OLD"
 #' in the list of check results, flagging whether a given record that is present
-#' in the new result (ie `new_report`) is also present in the old result
-#' (ie `old_report`).
+#' in the new result (ie `new_report`) is also present in the old result (ie `old_report`).
 #' It makes a difference which report is defined as "new" and "old".
 #' This code only keeps results flagged in the new report and drops
 #' old results not in the new report because they were presumably resolved.
 #'
-#' @param old_report an older sdtmchecks list object as created
-#' by `run_all_checks`
-#' @param new_report a newer sdtmchecks list object as created
-#' by `run_all_checks`
+#' @param old_report an older sdtmchecks list object as created by `run_all_checks`
+#' @param new_report a newer sdtmchecks list object as created by `run_all_checks`
 #'
 #' @return list of sdtmchecks results based on new_report with Status indicator
 #'
@@ -621,7 +629,7 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 #' ae$AEDECOD[1] <- NA
 #'
 #' # Step 2: Use the run_all_checks() function to generate list of check results
-#' # on this "old" data
+#'  on this "old" data
 #'
 #' # Filter sdtmchecksmeta so that only one check is present
 #' data(sdtmchecksmeta)
@@ -630,8 +638,8 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 #'
 #'
 #'
-#' # Step 3: Simulate a newer, updated AE dataset with another record with a new
-#' # missing preferred term
+#' # Step 3: Simulate a newer, updated AE dataset with another record with a
+#' new missing preferred term
 #'
 #' ae <- data.frame(
 #'   USUBJID = 1:6,
@@ -655,7 +663,7 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 #' ae$AEDECOD[6] <- NA
 #'
 #' # Step 4: use the run_all_checks() function to generate list of check results
-#' # on this "new" data
+#'   on this "new" data
 #'
 #' new <- run_all_checks(metads = metads)
 #'
@@ -664,7 +672,7 @@ report_to_xlsx <- function(res, outfile, nickname = utils::packageDescription
 #'
 #' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
 #' # report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
-#' # Sys.Date(),".xlsx"))
+#' Sys.Date(),".xlsx"))
 #'
 #' @keywords ex_rpt
 #' @family ex_rpt
@@ -718,14 +726,14 @@ diff_reports <- function(old_report, new_report) {
         res_new$data$Status <- "NEW"
         res_new
       } else if (nrow(old_report[[check_name]]$data) == 0) {
-        # if check in the old report but old report didn't
-        # have any issues then these issues are new
+        # if check in the old report but old report didn't have any issues
+        # then these issues are new
 
         res_new <- new_report[[check_name]]
         res_new$data$Status <- "NEW"
         res_new
-      } else {
-        # else both old and new report have some issues flagged, so we diff them
+      } else { # else both old and new report have some issues flagged,
+        # so we diff them
 
         res_new <- new_report[[check_name]]
         res_old <- old_report[[check_name]]
@@ -733,7 +741,7 @@ diff_reports <- function(old_report, new_report) {
 
         res_new$data <- res_new$data %>%
           left_join(res_old$data, relationship = "many-to-many") %>%
-          # behold the magic of dplyr automatically identifying columns to join on
+      # behold the magic of dplyr automatically identifying columns to join on
           mutate(Status = ifelse(is.na(Status), "NEW", Status))
 
         res_new
