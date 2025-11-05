@@ -7,7 +7,7 @@
 report_to_xlsx(
   res,
   outfile,
-  nickname = utils::packageDescription("Emei")["Version"],
+  nickname = utils::packageDescription("Emei")[["Version"]],
   extrastring = ""
 )
 }

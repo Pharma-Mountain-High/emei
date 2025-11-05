@@ -380,8 +380,7 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #'
 report_to_xlsx <- function(res,
                            outfile,
-                           nickname = utils::packageDescription("Emei")
-                           ["Version"],
+                           nickname = utils::packageDescription("Emei")[["Version"]],
                            extrastring = "") {
   # prepare summary page
   # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
