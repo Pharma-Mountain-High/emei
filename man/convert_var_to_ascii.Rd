@@ -3,6 +3,8 @@
 \name{convert_var_to_ascii}
 \alias{convert_var_to_ascii}
 \title{Remove non-ASCII characters from reported term in order
+Remove non-ASCII characters from reported term in order
+Remove non-ASCII characters from reported term in order
 for Pandoc to create PDF file}
 \usage{
 convert_var_to_ascii(df, var)
@@ -16,6 +18,8 @@ convert_var_to_ascii(df, var)
 dataframe
 }
 \description{
+Remove non-ASCII characters from reported term in order
+Remove non-ASCII characters from reported term in order
 Remove non-ASCII characters from reported term in order
 for Pandoc to create PDF file
 }

@@ -8,7 +8,6 @@ pass <- function() {
   TRUE
 }
 
-
 #' Fail object
 #'
 #' With fail message and dataframe portion responsible for the check failure
@@ -25,9 +24,6 @@ pass <- function() {
 fail <- function(msg, data = NULL) {
   structure(FALSE, msg = msg, data = data)
 }
-
-
-
 
 #' Check if the elements could be of any SAS missing data variant
 #'
@@ -51,7 +47,6 @@ is_sas_na <- function(x) {
       identical(xi, "") | identical(xi, "NA") | identical(xi, ".")
     }, logical(1))
 }
-
 
 #' Check if data frame is missing any of the specified variables
 #'
@@ -99,7 +94,6 @@ lacks_msg <- function(df, varnames) {
   }
 }
 
-
 #' Check if data frame has all specified variables
 #'
 #' @inheritParams %lacks_all%
@@ -121,8 +115,6 @@ lacks_msg <- function(df, varnames) {
   any(varnames %in% names(df))
 }
 
-
-
 #'
 #' Add day of "01" to dates that are in the format of "yyyy-mm"
 #' @return string
@@ -132,13 +124,6 @@ lacks_msg <- function(df, varnames) {
 impute_day01 <- function(dates) {
   ifelse(nchar(dates) == 7, paste0(dates, "-01"), dates)
 }
-
-
-
-
-
-
-
 
 #' @title Check if start dates are duplicated or earlier than prior visit date
 #'
@@ -224,9 +209,6 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   mydf2
 }
 
-
-
-
 #' Function to check if month is missing while year and day are non-missing
 #' (i.e. would be in the format of "yyyy---dd")
 #'
@@ -240,13 +222,8 @@ missing_month <- function(date) {
   substr(date, 5, 7) == "---"
 }
 
-
-
-
-
-
-
-
+#' Remove non-ASCII characters from reported term in order
+#' Remove non-ASCII characters from reported term in order
 #' Remove non-ASCII characters from reported term in order
 #' for Pandoc to create PDF file
 #'
@@ -281,12 +258,6 @@ convert_var_to_ascii <- function(df, var) {
   df[[var]] <- iconv(df[[var]], "latin1", "ASCII", sub = "")
   return(df)
 }
-
-
-
-
-
-
 
 #' @title Utility function to truncate data in var_name
 #'
@@ -341,11 +312,6 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 
   return(dt)
 }
-
-
-
-
-
 
 #' @title Save report as an xlsx file
 #'
@@ -574,14 +540,6 @@ report_to_xlsx <- function(res,
   saveWorkbook(wb, file = outfile, overwrite = TRUE)
   return(invisible())
 }
-
-
-
-
-
-
-
-
 
 #' @title Create a sdtmchecks list object with column indicating whether
 #'  the issue was previously seen
