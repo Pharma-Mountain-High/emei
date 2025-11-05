@@ -188,7 +188,8 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
         visit.order = seq(1, nrow(x)),
         stringsAsFactors = FALSE
       )
-      # if more than 2 records then lag and create as many records as in original
+      # if more than 2 records then lag and create as many records as in
+      # original
     } else {
       cbind(
         x,
@@ -380,7 +381,8 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #'
 report_to_xlsx <- function(res,
                            outfile,
-                           nickname = utils::packageDescription("Emei")[["Version"]],
+                           nickname =
+                             utils::packageDescription("Emei")[["Version"]],
                            extrastring = "") {
   # prepare summary page
   # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
