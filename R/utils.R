@@ -90,7 +90,10 @@ lacks_msg <- function(df, varnames) {
   } else if (length(lacking) == 1) {
     paste(data_name, "is missing the variable:", lacking)
   } else {
-    paste(data_name, "is missing the variables:", paste(lacking, collapse = ", "))
+    paste(
+      data_name, "is missing the variables:",
+      paste(lacking, collapse = ", ")
+    )
   }
 }
 
@@ -115,7 +118,7 @@ lacks_msg <- function(df, varnames) {
   any(varnames %in% names(df))
 }
 
-#'
+
 #' Add day of "01" to dates that are in the format of "yyyy-mm"
 #' @return string
 #' @export
@@ -147,23 +150,23 @@ impute_day01 <- function(dates) {
 #'
 dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   # dots are for ordering variables
-  ### Subset to only records without missing DTC
+  # Subset to only records without missing DTC
   mydf <- dts[!is_sas_na(dts[[dtc]]) &
     !is_sas_na(dts[["VISIT"]]) &
     !is_sas_na(dts[["VISITNUM"]]) &
     substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
 
-  ### Subset no duplicated records
+  # Subset no duplicated records
   mydf1 <- mydf[!duplicated(mydf[, vars]), ]
 
-  ### Sort by
+  # Sort by
   ord <- paste0(
     "order(", paste0("mydf1[['", list(...), "']]", collapse = ", "),
     ")"
   )
   mydf2 <- mydf1[eval(parse(text = ord)), ]
 
-  ### Add Vis_order
+  # Add Vis_order
   splitter <- mydf2[groupby]
   mydf2l <- lapply(split(mydf2, splitter, drop = TRUE), function(x) {
     row.names(x) <- NULL
@@ -377,7 +380,8 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #'
 report_to_xlsx <- function(res,
                            outfile,
-                           nickname = utils::packageDescription("Emei")["Version"],
+                           nickname = utils::packageDescription("Emei")
+                           ["Version"],
                            extrastring = "") {
   # prepare summary page
   # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
@@ -492,15 +496,17 @@ report_to_xlsx <- function(res,
 
 
       # Begin writing individual xls tab at row 2.
-      # Row=1 will be used to create a HYPERLINK back to 'Summary results' sheet.
-      # writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
+      # Row=1 will be used to create a HYPERLINK back to 'Summary results'
+      # sheet. writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
       # startRow = 2, startCol = 1)
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
         startRow = 1, startCol = 1
       )
 
-      # create a HYPERLINK between a row on 'Summary results' sheet and individual tab
-      # need to have i+1 because the 1st row on 'Summary results' sheet has column names
+      # create a HYPERLINK between a row on 'Summary results'
+      # sheet and individual tab
+      # need to have i+1 because the 1st row on 'Summary results' sheet
+      # has column names
 
       # writeFormula(wb, sheet="Summary results", startRow=i+1, startCol=1,
       #              x=makeHyperlinkString(sheet=res[[i]]$xls_title, row=1,
@@ -544,22 +550,24 @@ report_to_xlsx <- function(res,
 #' @title Create a sdtmchecks list object with column indicating whether
 #'  the issue was previously seen
 #'
-#' @description This report will identify flagged records from an sdtmchecks report
-#' that are "new" and those that are "old" for a study. This will help quickly target
-#' newly emergent issues that may require a new query or investigation while indicating
-#' issues that were encountered from a prior report and may have already been queried.
-#'
-#' This `diff_reports()` function requires a newer and older set of results from
-#' `sdtmchecks::run_all_checks()`, which will generate a list of check results.
-#' An added column "Status" is created with values of "NEW" and "OLD"
-#' in the list of check results, flagging whether a given record that is present
-#' in the new result (ie `new_report`) is also present in the old result (ie `old_report`).
+#' @description This report will identify flagged records from an sdtmchecks
+#' report that are "new" and those that are "old" for a study. This will help
+#' quickly target newly emergent issues that may require a new query or
+#' investigation while indicating issues that were encountered from a prior
+#' report and may have already been queried. This `diff_reports()` function
+#' requires a newer and older set of results from `sdtmchecks::run_all_checks()`
+#' , which will generate a list of check results. An added column "Status" is
+#' created with values of "NEW" and "OLD" in the list of check results,
+#' flagging whether a given record that is present in the new result
+#'  (ie `new_report`) is also present in the old result (ie `old_report`).
 #' It makes a difference which report is defined as "new" and "old".
 #' This code only keeps results flagged in the new report and drops
 #' old results not in the new report because they were presumably resolved.
 #'
-#' @param old_report an older sdtmchecks list object as created by `run_all_checks`
-#' @param new_report a newer sdtmchecks list object as created by `run_all_checks`
+#' @param old_report an older sdtmchecks list object as created
+#' by `run_all_checks`
+#' @param new_report a newer sdtmchecks list object as created
+#' by `run_all_checks`
 #'
 #' @return list of sdtmchecks results based on new_report with Status indicator
 #'
@@ -591,8 +599,8 @@ report_to_xlsx <- function(res,
 #'
 #' ae$AEDECOD[1] <- NA
 #'
-#' # Step 2: Use the run_all_checks() function to generate list of check results
-#' # on this "old" data
+#' # Step 2: Use the run_all_checks() function to generate list of check
+#' # results on this "old" data
 #'
 #' # Filter sdtmchecksmeta so that only one check is present
 #' data(sdtmchecksmeta)
@@ -633,7 +641,7 @@ report_to_xlsx <- function(res,
 #' # Step 5: Diff to create a column indicating if the finding is new
 #' res <- diff_reports(old_report = old, new_report = new)
 #'
-#' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
+#' # optionally output results as spreadsheet with Emei::report_to_xlsx()
 #' # report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
 #' # Sys.Date(),".xlsx"))
 #'
@@ -642,8 +650,8 @@ report_to_xlsx <- function(res,
 #'
 
 diff_reports <- function(old_report, new_report) {
-  # it makes a difference which report is defined as "new_report" and "old_report"
-  # this code only keeps results flagged in the new report
+  # it makes a difference which report is defined as "new_report" and
+  # "old_report" this code only keeps results flagged in the new report
   # it ignore old results not in new report (because they were resolved)
 
   if (!is.list(old_report) | !is.list(new_report)) {
@@ -672,14 +680,12 @@ diff_reports <- function(old_report, new_report) {
     new_report <- new_report[new_issues]
     # subset new report to just flagged records
 
-    ### -------------------------
+
     # Second: Do the diff
-    #
     #    i.e., Compare the flagged records in the new vs. old report.
     #          A new column "Status" will be added to all results of the
     #          "new_report" based on the flagged record comparison.
     #          The new column will have either "NEW" or "OLD" populated.
-    ### -------------------------
 
     res <- sapply(new_issues, function(check_name) {
       if (!(check_name %in% names(old_report))) {
@@ -704,7 +710,8 @@ diff_reports <- function(old_report, new_report) {
 
         res_new$data <- res_new$data %>%
           left_join(res_old$data, relationship = "many-to-many") %>%
-          # behold the magic of dplyr automatically identifying columns to join on
+          # behold the magic of dplyr automatically identifying columns
+          # to join on
           mutate(Status = ifelse(is.na(Status), "NEW", Status))
 
         res_new
