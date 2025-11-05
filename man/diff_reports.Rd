@@ -8,24 +8,26 @@ the issue was previously seen}
 diff_reports(old_report, new_report)
 }
 \arguments{
-\item{old_report}{an older sdtmchecks list object as created by \code{run_all_checks}}
+\item{old_report}{an older sdtmchecks list object as created
+by \code{run_all_checks}}
 
-\item{new_report}{a newer sdtmchecks list object as created by \code{run_all_checks}}
+\item{new_report}{a newer sdtmchecks list object as created
+by \code{run_all_checks}}
 }
 \value{
 list of sdtmchecks results based on new_report with Status indicator
 }
 \description{
-This report will identify flagged records from an sdtmchecks report
-that are "new" and those that are "old" for a study. This will help quickly target
-newly emergent issues that may require a new query or investigation while indicating
-issues that were encountered from a prior report and may have already been queried.
-
-This \code{diff_reports()} function requires a newer and older set of results from
-\code{sdtmchecks::run_all_checks()}, which will generate a list of check results.
-An added column "Status" is created with values of "NEW" and "OLD"
-in the list of check results, flagging whether a given record that is present
-in the new result (ie \code{new_report}) is also present in the old result (ie \code{old_report}).
+This report will identify flagged records from an sdtmchecks
+report that are "new" and those that are "old" for a study. This will help
+quickly target newly emergent issues that may require a new query or
+investigation while indicating issues that were encountered from a prior
+report and may have already been queried. This \code{diff_reports()} function
+requires a newer and older set of results from \code{sdtmchecks::run_all_checks()}
+, which will generate a list of check results. An added column "Status" is
+created with values of "NEW" and "OLD" in the list of check results,
+flagging whether a given record that is present in the new result
+(ie \code{new_report}) is also present in the old result (ie \code{old_report}).
 It makes a difference which report is defined as "new" and "old".
 This code only keeps results flagged in the new report and drops
 old results not in the new report because they were presumably resolved.
@@ -55,8 +57,8 @@ ae <- data.frame(
 
 ae$AEDECOD[1] <- NA
 
-# Step 2: Use the run_all_checks() function to generate list of check results
-# on this "old" data
+# Step 2: Use the run_all_checks() function to generate list of check
+# results on this "old" data
 
 # Filter sdtmchecksmeta so that only one check is present
 data(sdtmchecksmeta)
@@ -97,7 +99,7 @@ new <- run_all_checks(metads = metads)
 # Step 5: Diff to create a column indicating if the finding is new
 res <- diff_reports(old_report = old, new_report = new)
 
-## optionally output results as spreadsheet with Emei::report_to_xlsx()
+# optionally output results as spreadsheet with Emei::report_to_xlsx()
 # report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
 # Sys.Date(),".xlsx"))
 
