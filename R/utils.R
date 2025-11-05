@@ -164,9 +164,9 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   # dots are for ordering variables
   ### Subset to only records without missing DTC
   mydf <- dts[!is_sas_na(dts[[dtc]]) &
-    !is_sas_na(dts[["VISIT"]]) &
-    !is_sas_na(dts[["VISITNUM"]]) &
-    substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
+                !is_sas_na(dts[["VISIT"]]) &
+                !is_sas_na(dts[["VISITNUM"]]) &
+                substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
 
   ### Subset no duplicated records
   mydf1 <- mydf[!duplicated(mydf[, vars]), ]
@@ -218,7 +218,7 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   mydf2$check.flag <- ifelse(
     mydf2$visit.order != 1 & mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
     ifelse(mydf2$visit.order != 1 & mydf2$last.vis.dtc > mydf2[[dtc]],
-      "Datetime earlier than last Visit", NA
+           "Datetime earlier than last Visit", NA
     )
   )
   mydf2
@@ -332,10 +332,10 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
   dt <- mutate(
     dt,
     !!(var_name) := ifelse(nchar(get(var_name)) > trunc_length,
-      unlist(lapply(get(var_name), function(x) {
-        paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
-      })),
-      get(var_name)
+                           unlist(lapply(get(var_name), function(x) {
+                             paste0(strwrap(x, width = (trunc_length - 3))[1], "...")
+                           })),
+                           get(var_name)
     )
   )
 
@@ -409,11 +409,10 @@ truncate_var_strings <- function(dt, var_name, trunc_length) {
 #' fileName <- file.path(tempdir(), "check_results.xlsx")
 #' report_to_xlsx(res = res, outfile = fileName)
 #'
-report_to_xlsx <- function(
-    res,
-    outfile,
-    nickname = utils::packageDescription("Emei")["Version"],
-    extrastring = "") {
+report_to_xlsx <- function(res,
+                           outfile,
+                           nickname = utils::packageDescription("Emei")["Version"],
+                           extrastring = "") {
   # prepare summary page
   # pull columns (xls_title, pdf_title, nrec, notes) from the list and create
   # a summary data frame
@@ -531,7 +530,7 @@ report_to_xlsx <- function(
       # writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
       # startRow = 2, startCol = 1)
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-        startRow = 1, startCol = 1
+                startRow = 1, startCol = 1
       )
 
       # create a HYPERLINK between a row on 'Summary results' sheet and individual tab

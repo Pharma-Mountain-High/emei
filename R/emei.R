@@ -47,22 +47,21 @@
 #' )
 #' }
 #' @export
-emei <- function(
-    proj,
-    folder,
-    priority = c("High", "Medium", "Low"),
-    type = c("ALL", "ONC", "PRO"),
-    export_excel = TRUE,
-    outdir = "report",
-    save_rds = FALSE,
-    verbose = TRUE) {
+emei <- function(proj,
+                 folder,
+                 priority = c("High", "Medium", "Low"),
+                 type = c("ALL", "ONC", "PRO"),
+                 export_excel = TRUE,
+                 outdir = "report",
+                 save_rds = FALSE,
+                 verbose = TRUE) {
   # 参数校验
   if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
-    nchar(proj) == 0) {
+      nchar(proj) == 0) {
     stop("参数 'proj' 必须为非空字符串。")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-    nchar(folder) == 0) {
+      nchar(folder) == 0) {
     stop("参数 'folder' 必须为非空字符串。")
   }
   if (!dir.exists(folder)) {
@@ -99,12 +98,12 @@ emei <- function(
   }
 
   priority <- normalize_char_opt(priority,
-    allowed = c("High", "Medium", "Low"),
-    case = "title"
+                                 allowed = c("High", "Medium", "Low"),
+                                 case = "title"
   )
   type <- normalize_char_opt(type,
-    allowed = c("ALL", "ONC", "PRO"),
-    case = "asis"
+                             allowed = c("ALL", "ONC", "PRO"),
+                             case = "asis"
   )
 
   # 读取 .sas7bdat
@@ -172,8 +171,8 @@ emei <- function(
     ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
     attr(sdtmreport, "outfile") <- normalizePath(outfile,
-      winslash = "/",
-      mustWork = FALSE
+                                                 winslash = "/",
+                                                 mustWork = FALSE
     )
     if (verbose) message(sprintf("报告已生成：%s", attr(sdtmreport, "outfile")))
   }
