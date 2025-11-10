@@ -556,7 +556,7 @@ report_to_xlsx <- function(res,
 #' quickly target newly emergent issues that may require a new query or
 #' investigation while indicating issues that were encountered from a prior
 #' report and may have already been queried. This `diff_reports()` function
-#' requires a newer and older set of results from `sdtmchecks::run_all_checks()`
+#' requires a newer and older set of results from `Emei::run_all_checks()`
 #' , which will generate a list of check results. An added column "Status" is
 #' created with values of "NEW" and "OLD" in the list of check results,
 #' flagging whether a given record that is present in the new result
@@ -642,8 +642,8 @@ report_to_xlsx <- function(res,
 #' # Step 5: Diff to create a column indicating if the finding is new
 #' res <- diff_reports(old_report = old, new_report = new)
 #'
-#' # optionally output results as spreadsheet with Emei::report_to_xlsx()
-#' # report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
+#' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
+#' # report_to_xlsx(res, outfile=paste0("reports/sdtmchecks_diff_",
 #' # Sys.Date(),".xlsx"))
 #'
 #' @keywords ex_rpt
@@ -681,13 +681,13 @@ diff_reports <- function(old_report, new_report) {
     new_report <- new_report[new_issues]
     # subset new report to just flagged records
 
-
+    ### -------------------------
     # Second: Do the diff
     #    i.e., Compare the flagged records in the new vs. old report.
     #          A new column "Status" will be added to all results of the
     #          "new_report" based on the flagged record comparison.
     #          The new column will have either "NEW" or "OLD" populated.
-
+    ### -------------------------
     res <- sapply(new_issues, function(check_name) {
       if (!(check_name %in% names(old_report))) {
         # if check not in old report then these issues are new

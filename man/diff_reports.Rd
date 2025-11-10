@@ -23,7 +23,7 @@ report that are "new" and those that are "old" for a study. This will help
 quickly target newly emergent issues that may require a new query or
 investigation while indicating issues that were encountered from a prior
 report and may have already been queried. This \code{diff_reports()} function
-requires a newer and older set of results from \code{sdtmchecks::run_all_checks()}
+requires a newer and older set of results from \code{Emei::run_all_checks()}
 , which will generate a list of check results. An added column "Status" is
 created with values of "NEW" and "OLD" in the list of check results,
 flagging whether a given record that is present in the new result
@@ -99,8 +99,8 @@ new <- run_all_checks(metads = metads)
 # Step 5: Diff to create a column indicating if the finding is new
 res <- diff_reports(old_report = old, new_report = new)
 
-# optionally output results as spreadsheet with Emei::report_to_xlsx()
-# report_to_xlsx(res, outfile=paste0("saved_reports/sdtmchecks_diff_",
+## optionally output results as spreadsheet with Emei::report_to_xlsx()
+# report_to_xlsx(res, outfile=paste0("reports/sdtmchecks_diff_",
 # Sys.Date(),".xlsx"))
 
 }
