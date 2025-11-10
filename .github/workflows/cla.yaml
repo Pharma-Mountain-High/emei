@@ -21,6 +21,7 @@ jobs:
       checks: read
       issues: write
       metadata: read
+      organization: read
     steps:
       - name: Run Contributor Assistant
         uses: contributor-assistant/github-action@v2.4.0
