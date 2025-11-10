@@ -7,7 +7,7 @@
 #' investigation while indicating issues that were encountered from a prior
 #' report and may have already been queried.
 #'
-#' @param old_report an older sdtmchecks list object as created by run_all_checks
+#' @param old_report an older sdtmchecks list  as created by run_all_checks
 #' @param new_report a newer sdtmchecks list object as created by run_all_checks
 #'
 #' @return list of sdtmchecks results based on new_report with Status indicator
@@ -87,26 +87,18 @@
 #'   Sys.Date(), ".xlsx"
 #' ))
 #'
-#' @keywords ex_rpt
-#' @family ex_rpt
-#'
-
 diff_reports <- function(old_report, new_report) {
   if (!is.list(old_report) | !is.list(new_report)) {
-    stop("Inputs are expected to be lists as created by Emei::run_all_checks")
+    stop("Inputs are expected to be lists as created by run_all_checks")
   } else {
     new_issues <- sapply(names(new_report), function(check_name) {
       if ("data" %in% names(new_report[[check_name]])) {
-        # if the check has a "data" attributes
         if (nrow(new_report[[check_name]]$data) > 0) {
-          # TRUE if data has any records
           TRUE
         } else {
-          # FALSE if data exists but no records
           FALSE
         }
       } else {
-        # FALSE if no data attributes
         FALSE
       }
     }, USE.NAMES = TRUE)
@@ -132,7 +124,6 @@ diff_reports <- function(old_report, new_report) {
         res_new$data <- res_new$data %>%
           left_join(res_old$data, relationship = "many-to-many") %>%
           mutate(Status = ifelse(is.na(Status), "NEW", Status))
-
         res_new
       }
     }, USE.NAMES = TRUE, simplify = FALSE)

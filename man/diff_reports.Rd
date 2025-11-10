@@ -8,7 +8,7 @@ the issue was previously seen}
 diff_reports(old_report, new_report)
 }
 \arguments{
-\item{old_report}{an older sdtmchecks list object as created by run_all_checks}
+\item{old_report}{an older sdtmchecks list  as created by run_all_checks}
 
 \item{new_report}{a newer sdtmchecks list object as created by run_all_checks}
 }
@@ -95,11 +95,3 @@ report_to_xlsx(res, outfile = paste0(
 ))
 
 }
-\seealso{
-Other ex_rpt: 
-\code{\link{report_to_xlsx}()},
-\code{\link{run_all_checks}()},
-\code{\link{run_check}()}
-}
-\concept{ex_rpt}
-\keyword{ex_rpt}

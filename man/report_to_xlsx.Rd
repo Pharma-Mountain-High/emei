@@ -73,7 +73,6 @@ report_to_xlsx(res = res, outfile = fileName)
 }
 \seealso{
 Other ex_rpt: 
-\code{\link{diff_reports}()},
 \code{\link{run_all_checks}()},
 \code{\link{run_check}()}
 }

@@ -76,7 +76,6 @@ all_rec <- run_all_checks(
 }
 \seealso{
 Other ex_rpt: 
-\code{\link{diff_reports}()},
 \code{\link{report_to_xlsx}()},
 \code{\link{run_check}()}
 }
