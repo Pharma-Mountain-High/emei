@@ -8,7 +8,7 @@ the issue was previously seen}
 diff_reports(old_report, new_report)
 }
 \arguments{
-\item{old_report}{an older sdtmchecks list  as created by run_all_checks}
+\item{old_report}{an older sdtmchecks list as created by run_all_checks}
 
 \item{new_report}{a newer sdtmchecks list object as created by run_all_checks}
 }
@@ -53,8 +53,6 @@ ae$AEDECOD[1] <- NA
 # Filter sdtmchecksmeta so that only one check is present
 metads <- subset(sdtmchecksmeta, check == "check_ae_aedecod")
 old <- run_all_checks(metads = metads)
-
-
 
 # Step 3: Simulate a newer, updated AE dataset with another record with a
 # new missing preferred term

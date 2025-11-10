@@ -7,7 +7,7 @@
 #' investigation while indicating issues that were encountered from a prior
 #' report and may have already been queried.
 #'
-#' @param old_report an older sdtmchecks list  as created by run_all_checks
+#' @param old_report an older sdtmchecks list as created by run_all_checks
 #' @param new_report a newer sdtmchecks list object as created by run_all_checks
 #'
 #' @return list of sdtmchecks results based on new_report with Status indicator
@@ -46,8 +46,6 @@
 #' # Filter sdtmchecksmeta so that only one check is present
 #' metads <- subset(sdtmchecksmeta, check == "check_ae_aedecod")
 #' old <- run_all_checks(metads = metads)
-#'
-#'
 #'
 #' # Step 3: Simulate a newer, updated AE dataset with another record with a
 #' # new missing preferred term
