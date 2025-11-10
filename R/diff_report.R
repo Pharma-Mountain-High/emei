@@ -5,20 +5,10 @@
 #' report that are "new" and those that are "old" for a study. This will help
 #' quickly target newly emergent issues that may require a new query or
 #' investigation while indicating issues that were encountered from a prior
-#' report and may have already been queried. This `diff_reports()` function
-#' requires a newer and older set of results from `Emei::run_all_checks()`
-#' , which will generate a list of check results. An added column "Status" is
-#' created with values of "NEW" and "OLD" in the list of check results,
-#' flagging whether a given record that is present in the new result
-#'  (ie `new_report`) is also present in the old result (ie `old_report`).
-#' It makes a difference which report is defined as "new" and "old".
-#' This code only keeps results flagged in the new report and drops
-#' old results not in the new report because they were presumably resolved.
+#' report and may have already been queried.
 #'
-#' @param old_report an older sdtmchecks list object as created
-#' by `run_all_checks`
-#' @param new_report a newer sdtmchecks list object as created
-#' by `run_all_checks`
+#' @param old_report an older sdtmchecks list object as created by run_all_checks
+#' @param new_report a newer sdtmchecks list object as created by run_all_checks
 #'
 #' @return list of sdtmchecks results based on new_report with Status indicator
 #'
@@ -91,7 +81,7 @@
 #' # Step 5: Diff to create a column indicating if the finding is new
 #' res <- diff_reports(old_report = old, new_report = new)
 #'
-#' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
+#' # optionally output results as spreadsheet with report_to_xlsx()
 #' report_to_xlsx(res, outfile = paste0(
 #'   "reports/sdtmchecks_diff_",
 #'   Sys.Date(), ".xlsx"
@@ -102,11 +92,9 @@
 #'
 
 diff_reports <- function(old_report, new_report) {
-
   if (!is.list(old_report) | !is.list(new_report)) {
     stop("Inputs are expected to be lists as created by Emei::run_all_checks")
   } else {
-
     new_issues <- sapply(names(new_report), function(check_name) {
       if ("data" %in% names(new_report[[check_name]])) {
         # if the check has a "data" attributes
@@ -129,17 +117,14 @@ diff_reports <- function(old_report, new_report) {
 
     res <- sapply(new_issues, function(check_name) {
       if (!(check_name %in% names(old_report))) {
-
         res_new <- new_report[[check_name]]
         res_new$data$Status <- "NEW"
         res_new
       } else if (nrow(old_report[[check_name]]$data) == 0) {
-
         res_new <- new_report[[check_name]]
         res_new$data$Status <- "NEW"
         res_new
       } else {
-
         res_new <- new_report[[check_name]]
         res_old <- old_report[[check_name]]
         res_old$data$Status <- "OLD"
