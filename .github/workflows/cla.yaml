@@ -23,6 +23,21 @@ jobs:
       metadata: read
       organization: read
     steps:
+      - name: Setup token 🔑
+        id: github-token
+        run: |
+          if [ "${{ secrets.REPO_GITHUB_TOKEN }}" != "" ]; then
+            echo "Using REPO_GITHUB_TOKEN as PERSONAL_ACCESS_TOKEN."
+            echo "token=${{ secrets.REPO_GITHUB_TOKEN }}" >> $GITHUB_ENV
+          elif [ "${{ secrets.PERSONAL_ACCESS_TOKEN }}" != "" ]; then
+            echo "Using PERSONAL_ACCESS_TOKEN."
+            echo "token=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "Warning: Neither REPO_GITHUB_TOKEN nor PERSONAL_ACCESS_TOKEN is set."
+            echo "token=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          fi
+        shell: bash
+
       - name: Run Contributor Assistant
         uses: contributor-assistant/github-action@v2.4.0
         with:
@@ -41,5 +56,5 @@ jobs:
           lock-pullrequest-aftermerge: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ env.token }}
 
