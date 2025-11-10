@@ -54,8 +54,7 @@
 #' # results on this "old" data
 #'
 #' # Filter sdtmchecksmeta so that only one check is present
-#' data(sdtmchecksmeta)
-#' metads <- sdtmchecksmeta[sdtmchecksmeta$check == "check_ae_aedecod", ]
+#' metads <- subset(sdtmchecksmeta, check == "check_ae_aedecod")
 #' old <- run_all_checks(metads = metads)
 #'
 #'
@@ -103,16 +102,10 @@
 #'
 
 diff_reports <- function(old_report, new_report) {
-  # it makes a difference which report is defined as "new_report" and
-  # "old_report" this code only keeps results flagged in the new report
-  # it ignore old results not in new report (because they were resolved)
 
   if (!is.list(old_report) | !is.list(new_report)) {
     stop("Inputs are expected to be lists as created by Emei::run_all_checks")
   } else {
-    ###
-    # First: subset to only results with flagged issues in the new report
-    ###
 
     new_issues <- sapply(names(new_report), function(check_name) {
       if ("data" %in% names(new_report[[check_name]])) {
@@ -120,42 +113,32 @@ diff_reports <- function(old_report, new_report) {
         if (nrow(new_report[[check_name]]$data) > 0) {
           # TRUE if data has any records
           TRUE
-        } else { # FALSE if data exists but no records
+        } else {
+          # FALSE if data exists but no records
           FALSE
         }
-      } else { # FALSE if no data attributes
+      } else {
+        # FALSE if no data attributes
         FALSE
       }
     }, USE.NAMES = TRUE)
 
     new_issues <- names(new_issues[new_issues == TRUE])
-    # filter to just flagged records
-    new_report <- new_report[new_issues]
-    # subset new report to just flagged records
 
-    ### -------------------------
-    # Second: Do the diff
-    #    i.e., Compare the flagged records in the new vs. old report.
-    #          A new column "Status" will be added to all results of the
-    #          "new_report" based on the flagged record comparison.
-    #          The new column will have either "NEW" or "OLD" populated.
-    ### -------------------------
+    new_report <- new_report[new_issues]
+
     res <- sapply(new_issues, function(check_name) {
       if (!(check_name %in% names(old_report))) {
-        # if check not in old report then these issues are new
 
         res_new <- new_report[[check_name]]
         res_new$data$Status <- "NEW"
         res_new
       } else if (nrow(old_report[[check_name]]$data) == 0) {
-        # if check in the old report but old report didn't have any issues
-        # then these issues are new
 
         res_new <- new_report[[check_name]]
         res_new$data$Status <- "NEW"
         res_new
-      } else { # else both old and new report have some issues flagged,
-        # so we diff them
+      } else {
 
         res_new <- new_report[[check_name]]
         res_old <- old_report[[check_name]]
@@ -163,8 +146,6 @@ diff_reports <- function(old_report, new_report) {
 
         res_new$data <- res_new$data %>%
           left_join(res_old$data, relationship = "many-to-many") %>%
-          # behold the magic of dplyr automatically identifying columns
-          # to join on
           mutate(Status = ifelse(is.na(Status), "NEW", Status))
 
         res_new
