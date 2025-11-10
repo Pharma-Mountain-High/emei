@@ -93,8 +93,10 @@
 #' res <- diff_reports(old_report = old, new_report = new)
 #'
 #' ## optionally output results as spreadsheet with Emei::report_to_xlsx()
-#' # report_to_xlsx(res, outfile=paste0("reports/sdtmchecks_diff_",
-#' # Sys.Date(),".xlsx"))
+#' report_to_xlsx(res, outfile = paste0(
+#'   "reports/sdtmchecks_diff_",
+#'   Sys.Date(), ".xlsx"
+#' ))
 #'
 #' @keywords ex_rpt
 #' @family ex_rpt
