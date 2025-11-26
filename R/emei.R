@@ -61,32 +61,32 @@ emei <- function(proj,
                  outdir = "report",
                  save_rds = FALSE,
                  verbose = TRUE) {
-  # 参数校验
+  # Parameter validation
   if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
-    nchar(proj) == 0) {
-    stop("参数 'proj' 必须为非空字符串。")
+      nchar(proj) == 0) {
+    stop("Parameter 'proj' must be a non-empty character string.")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-    nchar(folder) == 0) {
-    stop("参数 'folder' 必须为非空字符串。")
+      nchar(folder) == 0) {
+    stop("Parameter 'folder' must be a non-empty character string.")
   }
   if (!dir.exists(folder)) {
-    stop(sprintf("数据目录不存在：%s", folder))
+    stop(sprintf("Data directory does not exist: %s", folder))
   }
   if (!is.logical(export_excel) || length(export_excel) != 1) {
-    stop("参数 'export_excel' 必须为逻辑标量。")
+    stop("Parameter 'export_excel' must be a logical scalar.")
   }
   if (!is.logical(save_rds) || length(save_rds) != 1) {
-    stop("参数 'save_rds' 必须为逻辑标量。")
+    stop("Parameter 'save_rds' must be a logical scalar.")
   }
   if (!is.logical(verbose) || length(verbose) != 1) {
-    stop("参数 'verbose' 必须为逻辑标量。")
+    stop("Parameter 'verbose' must be a logical scalar.")
   }
   if (!is.character(outdir) || length(outdir) != 1 || nchar(outdir) == 0) {
-    stop("参数 'outdir' 必须为非空字符串。")
+    stop("Parameter 'outdir' must be a non-empty character string.")
   }
 
-  # 归一化 priority/type：支持向量或逗号分隔字符串
+  # Normalize priority/type: support vector or comma-separated string
   normalize_char_opt <- function(x, allowed, case = c("asis", "title")) {
     case <- match.arg(case)
     if (length(x) == 1L && grepl(",", x, fixed = TRUE)) {
@@ -97,27 +97,27 @@ emei <- function(proj,
     if (case == "title") {
       x <- paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
     }
-    # 仅保留允许集，去重保序
+    # Keep only allowed values, deduplicate and preserve order
     keep <- x[x %in% allowed]
     if (length(keep) == 0L) keep <- allowed
     unique(keep)
   }
 
   priority <- normalize_char_opt(priority,
-    allowed = c("High", "Medium", "Low"),
-    case = "title"
+                                 allowed = c("High", "Medium", "Low"),
+                                 case = "title"
   )
   type <- normalize_char_opt(type,
-    allowed = c("ALL", "ONC", "PRO"),
-    case = "asis"
+                             allowed = c("ALL", "ONC", "PRO"),
+                             case = "asis"
   )
 
-  # 读取 .sas7bdat
+  # Read .sas7bdat files
   files <- list.files(folder, pattern = "(?i)\\.sas7bdat$", full.names = TRUE)
   if (length(files) == 0L) {
-    stop(sprintf("目录下未找到 .sas7bdat 文件：%s", folder))
+    stop(sprintf("No .sas7bdat files found in directory: %s", folder))
   }
-  if (verbose) message(sprintf("读取 %d 个 .sas7bdat 文件...", length(files)))
+  if (verbose) message(sprintf("Reading %d .sas7bdat file(s)...", length(files)))
 
   datasets <- lapply(files, function(f) haven::read_sas(f))
   names(datasets) <- stringr::str_to_lower(
@@ -127,30 +127,30 @@ emei <- function(proj,
   if (isTRUE(save_rds)) {
     rds_path <- file.path(getwd(), sprintf("source_data_%s.rds", proj))
     saveRDS(datasets, file = rds_path)
-    if (verbose) message(sprintf("已保存源数据 RDS：%s", rds_path))
+    if (verbose) message(sprintf("Source data RDS saved: %s", rds_path))
   }
 
-  # 合并 SUPP → 主域
+  # Merge SUPP -> main domain
   supp_names <- grep("^supp", names(datasets), value = TRUE)
   if (length(supp_names) > 0L) {
     for (supp_name in supp_names) {
       main_name <- sub("^supp", "", supp_name)
       if (!main_name %in% names(datasets)) next
-      if (verbose) message(sprintf("合并 SUPP：%s -> %s", supp_name, main_name))
+      if (verbose) message(sprintf("Merging SUPP: %s -> %s", supp_name, main_name))
       datasets[[main_name]] <- merge_supp(
         datasets[[main_name]],
         datasets[[supp_name]]
       )
     }
-    # 移除所有 supp*
+    # Remove all supp*
     datasets <- datasets[setdiff(names(datasets), supp_names)]
   }
 
-  # 注入 .GlobalEnv 以兼容 sdtmchecks
+  # Inject into .GlobalEnv for sdtmchecks compatibility
   list2env(datasets, envir = .GlobalEnv)
 
-  # 运行检查
-  if (verbose) message("执行检查中...")
+  # Run checks
+  if (verbose) message("Running checks...")
   metads_obj <- if (exists("sdtmchecksmeta")) {
     get("sdtmchecksmeta")
   } else {
@@ -163,12 +163,12 @@ emei <- function(proj,
     verbose = verbose
   )
 
-  # 可选导出 Excel
+  # Optional Excel export
   if (isTRUE(export_excel)) {
     if (!dir.exists(outdir)) {
       ok <- try(dir.create(outdir, recursive = TRUE), silent = TRUE)
       if (inherits(ok, "try-error") || !dir.exists(outdir)) {
-        stop(sprintf("无法创建输出目录：%s", outdir))
+        stop(sprintf("Cannot create output directory: %s", outdir))
       }
     }
     outfile <- file.path(outdir, sprintf(
@@ -177,10 +177,10 @@ emei <- function(proj,
     ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
     attr(sdtmreport, "outfile") <- normalizePath(outfile,
-      winslash = "/",
-      mustWork = FALSE
+                                                 winslash = "/",
+                                                 mustWork = FALSE
     )
-    if (verbose) message(sprintf("报告已生成：%s", attr(sdtmreport, "outfile")))
+    if (verbose) message(sprintf("Report generated: %s", attr(sdtmreport, "outfile")))
   }
 
   return(sdtmreport)

@@ -58,7 +58,7 @@ merge_supp <- function(data, supp) {
   data_domain_vals <- data_domain_vals[!is.na(data_domain_vals)]
   if (length(data_domain_vals) != 1) {
     stop(sprintf(
-      "`data$DOMAIN` 应为单一取值，当前检测到: %s",
+      "`data$DOMAIN` should have a single value, but found: %s",
       paste(data_domain_vals, collapse = ", ")
     ))
   }
@@ -69,7 +69,7 @@ merge_supp <- function(data, supp) {
   missing_cols <- setdiff(required_cols, names(supp))
   if (length(missing_cols) > 0) {
     stop(sprintf(
-      "SUPP 缺少关键列: %s；请确保包含列: %s",
+      "SUPP missing required columns: %s; please ensure columns are included: %s",
       paste(missing_cols, collapse = ", "),
       paste(required_cols, collapse = ", ")
     ))
@@ -79,7 +79,7 @@ merge_supp <- function(data, supp) {
     missing_ndm <- setdiff(required_non_dm, names(supp))
     if (length(missing_ndm) > 0) {
       stop(sprintf(
-        "SUPP（非 DM）缺少关键列: %s；请确保包含列: %s",
+        "SUPP (non-DM) missing required columns: %s; please ensure columns are included: %s",
         paste(missing_ndm, collapse = ", "),
         paste(c(required_cols, required_non_dm), collapse = ", ")
       ))
@@ -91,14 +91,14 @@ merge_supp <- function(data, supp) {
   supp_domain_vals <- supp_domain_vals[!is.na(supp_domain_vals)]
   if (length(supp_domain_vals) != 1) {
     stop(sprintf(
-      "`supp$RDOMAIN` 应为单一取值，当前检测到: %s",
+      "`supp$RDOMAIN` should have a single value, but found: %s",
       paste(supp_domain_vals, collapse = ", ")
     ))
   }
   supp_domain <- supp_domain_vals
   if (data_domain != supp_domain) {
     stop(sprintf(
-      "域不匹配：主域为 %s，但 SUPP 的 RDOMAIN 为 %s",
+      "Domain mismatch: main domain is %s, but SUPP RDOMAIN is %s",
       data_domain, supp_domain
     ))
   }
@@ -116,7 +116,7 @@ merge_supp <- function(data, supp) {
     seqvar_vals <- seqvar_vals[!is.na(seqvar_vals)]
     if (length(seqvar_vals) != 1) {
       stop(sprintf(
-        "`supp$IDVAR` 应为单一取值以确定序列变量，当前检测到: %s",
+        "`supp$IDVAR` should have a single value to determine sequence variable, but found: %s",
         paste(seqvar_vals, collapse = ", ")
       ))
     }

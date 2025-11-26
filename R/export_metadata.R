@@ -69,38 +69,38 @@ export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
                             filter_priority = NULL,
                             add_formatting = TRUE,
                             verbose = TRUE) {
-  # 参数校验
+  # Parameter validation
   if (!is.character(outfile) || length(outfile) != 1 || nchar(outfile) == 0) {
-    stop("参数 'outfile' 必须为非空字符串。")
+    stop("Parameter 'outfile' must be a non-empty character string.")
   }
 
   if (!is.logical(add_formatting) || length(add_formatting) != 1) {
-    stop("参数 'add_formatting' 必须为逻辑标量。")
+    stop("Parameter 'add_formatting' must be a logical scalar.")
   }
 
   if (!is.logical(verbose) || length(verbose) != 1) {
-    stop("参数 'verbose' 必须为逻辑标量。")
+    stop("Parameter 'verbose' must be a logical scalar.")
   }
 
-  # 加载元数据
-  if (verbose) message("正在加载 sdtmchecksmeta 元数据...")
+  # Load metadata
+  if (verbose) message("Loading sdtmchecksmeta metadata...")
   data(sdtmchecksmeta, envir = environment())
 
-  # 复制数据以避免修改原始对象
+  # Copy data to avoid modifying original object
   meta_data <- sdtmchecksmeta
   total_count <- nrow(meta_data)
 
-  if (verbose) message(sprintf("元数据总记录数：%d", total_count))
+  if (verbose) message(sprintf("Total metadata records: %d", total_count))
 
-  # 应用筛选
+  # Apply filters
   if (!is.null(filter_category)) {
     if (!is.character(filter_category)) {
-      stop("参数 'filter_category' 必须为字符向量。")
+      stop("Parameter 'filter_category' must be a character vector.")
     }
     meta_data <- meta_data[meta_data$category %in% filter_category, ]
     if (verbose) {
       message(sprintf(
-        "按 category 筛选：%s -> %d 条记录",
+        "Filtered by category: %s -> %d record(s)",
         paste(filter_category, collapse = ", "),
         nrow(meta_data)
       ))
@@ -109,48 +109,48 @@ export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
 
   if (!is.null(filter_priority)) {
     if (!is.character(filter_priority)) {
-      stop("参数 'filter_priority' 必须为字符向量。")
+      stop("Parameter 'filter_priority' must be a character vector.")
     }
     meta_data <- meta_data[meta_data$priority %in% filter_priority, ]
     if (verbose) {
       message(sprintf(
-        "按 priority 筛选：%s -> %d 条记录",
+        "Filtered by priority: %s -> %d record(s)",
         paste(filter_priority, collapse = ", "),
         nrow(meta_data)
       ))
     }
   }
 
-  # 如果没有筛选，提示正在导出全部数据
+  # If no filters, prompt that all data will be exported
   if (is.null(filter_category) && is.null(filter_priority) && verbose) {
-    message("未指定筛选条件，将导出全部元数据")
+    message("No filter specified, exporting all metadata")
   }
 
-  # 检查是否有数据
+  # Check if there is data
   if (nrow(meta_data) == 0) {
-    stop("筛选后没有数据可导出。请检查 filter_category 和 filter_priority 参数。")
+    stop("No data to export after filtering. Please check filter_category and filter_priority parameters.")
   }
 
-  # 创建输出目录（如果不存在）
+  # Create output directory (if it doesn't exist)
   outdir <- dirname(outfile)
   if (!dir.exists(outdir) && outdir != ".") {
-    if (verbose) message(sprintf("创建输出目录：%s", outdir))
+    if (verbose) message(sprintf("Creating output directory: %s", outdir))
     dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
   }
 
-  # 创建工作簿
-  if (verbose) message(sprintf("正在创建 Excel 文件：%s", outfile))
+  # Create workbook
+  if (verbose) message(sprintf("Creating Excel file: %s", outfile))
   wb <- createWorkbook()
 
-  # 添加工作表
+  # Add worksheet
   addWorksheet(wb, "sdtmchecksmeta")
 
-  # 写入数据
+  # Write data
   writeData(wb, "sdtmchecksmeta", meta_data, startRow = 1, startCol = 1)
 
-  # 添加格式化
+  # Add formatting
   if (add_formatting) {
-    # 表头样式（加粗）
+    # Header style (bold)
     headerStyle <- createStyle(
       textDecoration = "bold",
       fontSize = 11,
@@ -161,42 +161,42 @@ export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
     )
 
     addStyle(wb, "sdtmchecksmeta",
-      style = headerStyle,
-      rows = 1,
-      cols = seq_len(ncol(meta_data)),
-      gridExpand = TRUE
+             style = headerStyle,
+             rows = 1,
+             cols = seq_len(ncol(meta_data)),
+             gridExpand = TRUE
     )
 
-    # 自动列宽
+    # Auto column width
     setColWidths(wb, "sdtmchecksmeta",
-      cols = seq_len(ncol(meta_data)),
-      widths = "auto"
+                 cols = seq_len(ncol(meta_data)),
+                 widths = "auto"
     )
 
-    # 添加筛选器
+    # Add filters
     addFilter(wb, "sdtmchecksmeta",
-      rows = 1,
-      cols = seq_len(ncol(meta_data))
+              rows = 1,
+              cols = seq_len(ncol(meta_data))
     )
 
-    # 冻结首行
+    # Freeze first row
     freezePane(wb, "sdtmchecksmeta", firstRow = TRUE)
 
-    if (verbose) message("已添加格式化样式（表头加粗、自动列宽、筛选器、冻结首行）")
+    if (verbose) message("Formatting styles added (bold headers, auto column width, filters, freeze first row)")
   }
 
-  # 保存工作簿
+  # Save workbook
   saveWorkbook(wb, file = outfile, overwrite = TRUE)
 
-  # 成功消息
+  # Success message
   if (verbose) {
     message(sprintf(
-      "成功导出 %d 条记录到：%s",
+      "Successfully exported %d record(s) to: %s",
       nrow(meta_data),
       normalizePath(outfile, winslash = "/", mustWork = FALSE)
     ))
   }
 
-  # 返回数据（不可见）
+  # Return data (invisible)
   return(invisible(meta_data))
 }

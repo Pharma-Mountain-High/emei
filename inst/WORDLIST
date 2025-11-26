@@ -205,6 +205,7 @@ SCTEST
 SCTESTCD
 SDTM
 SDTMv
+SEQUELAE
 SITEID
 SPGRAV
 SSDTC
@@ -267,6 +268,7 @@ dateparts
 datesets
 datetime
 datetimes
+deduplicated
 discon
 dm
 eCRF
@@ -296,4 +298,3 @@ www
 xlsx
 xxSPID
 yyyy
-一
