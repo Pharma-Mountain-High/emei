@@ -3,7 +3,7 @@
 #' @description This check identifies records where the same date TRDTC occurs
 #'  across multiple visits for Longest Diameter measurements (TRTESTCD is "LDIAM").
 #'  Only applies to assessments by investigator, selected based on uppercased
-#'  TREVAL = "研究者" or missing or TREVAL variable does not exist.
+#'  TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
 #'
 #' @param TR Tumor Result SDTM dataset with variables USUBJID, TRDTC, TRTESTCD, VISIT,
 #' TREVAL (optional)

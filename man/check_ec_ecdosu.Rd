@@ -14,7 +14,7 @@ boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for missing ECODOSU values for valid doses(ECMOOD="是" and ECOCCUR = "是")
+This check looks for missing ECODOSU values for valid doses(ECMOOD="Y" and ECOCCUR = "Y")
 }
 \examples{
 

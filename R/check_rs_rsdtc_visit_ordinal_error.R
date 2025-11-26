@@ -3,7 +3,7 @@
 #'
 #' @description This check identifies RSDTC values when RSEVAL == 'INVESTIGATOR'
 #' and RSTESTCD == 'OVRLRESP' that are duplicated or earlier than last visit's.
-#' Unscheduled and '未查' visits are excluded.
+#' Unscheduled and 'NOT DONE' visits are excluded.
 #'
 #' @param RS Response SDTM dataset with variables USUBJID, VISITNUM, VISIT,
 #' RSDTC, RSTESTCD, RSEVAL, RSSTAT

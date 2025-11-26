@@ -1,36 +1,42 @@
-#' @title SDTM 数据检查一键执行（合并 SUPP、预处理、生成报告）
+#' @title One-Click SDTM Data Check Execution (Merge SUPP, Preprocessing, Generate Report)
 #'
 #' @description
-#' 从指定目录读取 SDTM `.sas7bdat` 文件，自动合并各域的 SUPP 数据集，按既定规则
-#' 对`dm`、`ae`、`vs` 进行轻量标准化预处理，随后调用 `run_all_checks()` 执行
-#' 全量数据检查；可选将检查结果导出为 Excel 文件（文件名与命令行工具保持一致）。
+#' Reads SDTM `.sas7bdat` files from a specified directory, automatically merges SUPP datasets
+#' for each domain, performs lightweight standardized preprocessing on `dm`, `ae`, and `vs`
+#' according to established rules, then calls `run_all_checks()` to execute comprehensive
+#' data checks. Optionally exports check results to an Excel file (filename consistent with
+#' command-line tools).
 #'
-#' @param proj 字符串，必填。项目编号，用于输出文件命名（例如 `QLG2198_301`）。
-#' @param folder 字符串，必填。SDTM 数据目录，函数会读取目录下所有 `.sas7bdat`
-#' 文件。
-#' @param priority 字符向量或单个逗号分隔字符串。默认 `c("High","Medium","Low")`
-#'   。若传入单个字符串（如 "High,Medium"），会自动拆分、去重并保序。
-#' @param type 字符向量或单个逗号分隔字符串。默认 `c("ALL","ONC","PRO")`。
-#'   若传入单个字符串（如 "ALL,ONC"），会自动拆分、去重并保序。
-#' @param export_excel 逻辑值，是否导出 Excel 报告，默认 `TRUE`。
-#' @param outdir 字符串，报告输出目录，默认 `"report"`；不存在将尝试创建。
-#' @param save_rds 逻辑值，是否额外保存读取到的源数据列表为
-#'  \code{source_data_\{proj\}.rds}，默认 \code{FALSE}。
-#' @param verbose 逻辑值，是否输出运行信息，默认 `TRUE`。
+#' @param proj Character string, required. Project number used for output file naming (e.g., `QLG2198_301`).
+#' @param folder Character string, required. SDTM data directory. The function will read all
+#' `.sas7bdat` files in the directory.
+#' @param priority Character vector or single comma-separated string. Default `c("High","Medium","Low")`.
+#'   If a single string is provided (e.g., "High,Medium"), it will be automatically split,
+#'   deduplicated, and ordered.
+#' @param type Character vector or single comma-separated string. Default `c("ALL","ONC","PRO")`.
+#'   If a single string is provided (e.g., "ALL,ONC"), it will be automatically split,
+#'   deduplicated, and ordered.
+#' @param export_excel Logical value, whether to export Excel report. Default `TRUE`.
+#' @param outdir Character string, report output directory. Default `"report"`; will attempt
+#'   to create if it doesn't exist.
+#' @param save_rds Logical value, whether to additionally save the read source data list as
+#'  \code{source_data_\{proj\}.rds}. Default \code{FALSE}.
+#' @param verbose Logical value, whether to output runtime information. Default `TRUE`.
 #'
-#' @return 返回 `run_all_checks()` 的结果对象。若 `export_excel = TRUE`，
-#'   将为返回对象附加属性 `outfile`，其值为生成的 Excel 文件的完整路径。
+#' @return Returns the result object from `run_all_checks()`. If `export_excel = TRUE`,
+#'   the returned object will have an `outfile` attribute containing the full path to
+#'   the generated Excel file.
 #'
 #' @examples
 #' \dontrun{
-#' # 最小示例：指定项目编号与 SDTM 目录
+#' # Minimal example: specify project number and SDTM directory
 #' res <- emei(
 #'   proj = "QLG2198_301",
 #'   folder = "~/development/Projects02/QLG2198/
 #'   QLG2198-301/SP/ole_csr/data/sdtm"
 #' )
 #'
-#' # 自定义 priority/type（支持向量或逗号分隔字符串）
+#' # Custom priority/type (supports vector or comma-separated string)
 #' res <- emei(
 #'   proj = "QL1706_308",
 #'   folder = "~/development/Projects02/QL1706-308/SP/dryrun_ph2/data/sdtm",
@@ -38,7 +44,7 @@
 #'   type = "ALL,ONC"
 #' )
 #'
-#' # 仅返回对象，不导出 Excel；同时保存源数据 RDS
+#' # Return object only, no Excel export; also save source data RDS
 #' res <- emei(
 #'   proj = "QL1706_308",
 #'   folder = "~/development/Projects02/QL1706-308/SP/dryrun_ph2/data/sdtm",

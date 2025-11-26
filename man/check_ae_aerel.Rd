@@ -20,7 +20,7 @@ test failed
 }
 \description{
 Flag if patient has a record with null value of AEREL
-but AEREL1 - AERELN contain '是'/'否'/'不适用', so a likely mapping issue
+but AEREL1 - AERELN contain 'Y'/'N'/'N/A', so a likely mapping issue
 or if AEREL is missing and there is no any AERELn variable
 or if AEREL has unexpected value
 }

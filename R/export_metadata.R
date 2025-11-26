@@ -1,19 +1,21 @@
-#' @title 导出 sdtmchecksmeta 元数据到 Excel 文件
+#' @title Export sdtmchecksmeta Metadata to Excel File
 #'
 #' @description
-#' 将包内置的 `sdtmchecksmeta` 元数据导出为 Excel 文件，方便查看和编辑。
-#' 支持按类别（category）和优先级（priority）筛选，并可添加格式化样式。
+#' Exports the built-in `sdtmchecksmeta` metadata to an Excel file for easy viewing and editing.
+#' Supports filtering by category and priority, and can add formatting styles.
 #'
-#' @param outfile 字符串，输出文件路径。默认为当前工作目录下的 `"sdtmchecksmeta.xlsx"`。
-#' @param filter_category 字符向量，可选。按 category 筛选，如 `c("ALL", "ONC")`。
-#'   默认 `NULL` 表示不筛选，导出所有类别。
-#' @param filter_priority 字符向量，可选。按 priority 筛选，如 `c("High", "Medium")`。
-#'   默认 `NULL` 表示不筛选，导出所有优先级。
-#' @param add_formatting 逻辑值，是否添加 Excel 格式化（表头加粗、自动列宽、筛选器等）。
-#'   默认 `TRUE`。
-#' @param verbose 逻辑值，是否打印详细信息。默认 `TRUE`。
+#' @param outfile Character string, output file path. Defaults to `"sdtmchecksmeta.xlsx"` in
+#'   the current working directory.
+#' @param filter_category Character vector, optional. Filter by category, e.g., `c("ALL", "ONC")`.
+#'   Default `NULL` means no filtering, export all categories.
+#' @param filter_priority Character vector, optional. Filter by priority, e.g., `c("High", "Medium")`.
+#'   Default `NULL` means no filtering, export all priorities.
+#' @param add_formatting Logical value, whether to add Excel formatting (bold headers, auto column
+#'   width, filters, etc.). Default `TRUE`.
+#' @param verbose Logical value, whether to print detailed information. Default `TRUE`.
 #'
-#' @return 不可见地返回导出的数据框。成功时会打印消息显示导出的文件路径和记录数。
+#' @return Invisibly returns the exported data frame. On success, prints a message showing the
+#'   exported file path and number of records.
 #'
 #' @export
 #'
@@ -24,19 +26,19 @@
 #'
 #' @examples
 #'
-#' # 示例 1：导出所有元数据到默认文件
+#' # Example 1: Export all metadata to default file
 #' \dontrun{
 #' export_metadata()
 #' }
 #'
-#' # 示例 2：导出到指定路径
+#' # Example 2: Export to specified path
 #' \dontrun{
 #' export_metadata(
 #'   outfile = "~/my_checks_metadata.xlsx"
 #' )
 #' }
 #'
-#' # 示例 3：仅导出 ALL 类别的高优先级检查
+#' # Example 3: Export only high-priority checks for ALL category
 #' \dontrun{
 #' export_metadata(
 #'   outfile = "high_priority_checks.xlsx",
@@ -45,7 +47,7 @@
 #' )
 #' }
 #'
-#' # 示例 4：导出多个类别和优先级，不添加格式化
+#' # Example 4: Export multiple categories and priorities without formatting
 #' \dontrun{
 #' export_metadata(
 #'   outfile = "selected_checks.xlsx",
@@ -55,7 +57,7 @@
 #' )
 #' }
 #'
-#' # 示例 5：在临时目录导出（用于测试）
+#' # Example 5: Export to temporary directory (for testing)
 #' temp_file <- file.path(tempdir(), "test_metadata.xlsx")
 #' export_metadata(
 #'   outfile = temp_file,

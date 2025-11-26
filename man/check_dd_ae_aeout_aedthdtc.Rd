@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_dd_ae_aeout_aedthdtc.R
 \name{check_dd_ae_aeout_aedthdtc}
 \alias{check_dd_ae_aeout_aedthdtc}
-\title{Check if there is a death date and AEOUT='死亡' agreement}
+\title{Check if there is a death date and AEOUT='DEATH' agreement}
 \usage{
 check_dd_ae_aeout_aedthdtc(AE, preproc = identity, ...)
 }
@@ -19,9 +19,9 @@ boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for AE death dates if AEOUT='死亡' and for the
+This check looks for AE death dates if AEOUT='DEATH' and for the
 reverse, i.e if there is an AE death date, then AEOUT should have the value
-"死亡".
+"DEATH".
 }
 \examples{
 

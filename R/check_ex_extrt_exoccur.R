@@ -1,6 +1,6 @@
 #' @title Check for EX records where EXTRT is missing
 #'
-#' @description This check looks for EX records where EXTRT is missing but EXOCCUR=是 (or EXOCCUR doesn't exist) and returns a data frame
+#' @description This check looks for EX records where EXTRT is missing but EXOCCUR=Y (or EXOCCUR doesn't exist) and returns a data frame
 #'
 #' @param EX Exposure domain with variables USUBJID, EXSTDTC, EXTRT, EXDOSE
 #'

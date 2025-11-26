@@ -23,7 +23,7 @@ attribute if the check failed
 This checks looks for TR records with missing values in numeric
 result/finding for the Longest Diameter (TRTESTCD is LDIAM) tumor measurement.
 Only applies to assessments by investigator, selected based on uppercased
-TREVAL = "研究者" or missing or TREVAL variable does not exist.
+TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
 }
 \examples{
 

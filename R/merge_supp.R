@@ -1,23 +1,14 @@
 #' Merge SUPP with main SDTM domain; return `data` when SUPP is empty
-#' 合并 SDTM SUPP 与主域；当 SUPP 为空时直接返回原始 `data`
 #'
 #' This function merges a supplemental qualifiers dataset (SUPPxx) into its
 #' corresponding parent SDTM domain. If `supp` has 0 rows, the original `data`
 #' is returned unchanged.
 #'
-#' 本函数用于将补充限定符数据集（SUPPxx）合并到对应的主域。若 `supp`
-#' 行数为 0，则直接返回未修改的 `data`。
-#'
 #' Required columns in `supp`:
 #' - STUDYID, RDOMAIN, USUBJID, QNAM, QVAL
 #' - For non-DM domains also require: IDVAR, IDVARVAL (used to recover SEQ)
 #'
-#' `supp` 必需列：
-#' - STUDYID, RDOMAIN, USUBJID, QNAM, QVAL
-#' - 非 DM 额外需要：IDVAR, IDVARVAL（用于恢复序列变量 SEQ）
-#'
 #' If `QLABEL` exists in `supp`, variable labels are applied to the new columns.
-#' 若 `supp` 中存在 `QLABEL`，将把其作为新列的标签。
 #'
 #' @param data data frame. Parent SDTM domain (e.g., AE, CM, DM, ...)
 #' @param supp data frame. Supplemental qualifiers for the domain (e.g., SUPPAE)

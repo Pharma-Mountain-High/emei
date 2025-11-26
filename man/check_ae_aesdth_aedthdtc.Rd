@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_ae_aesdth_aedthdtc.R
 \name{check_ae_aesdth_aedthdtc}
 \alias{check_ae_aesdth_aedthdtc}
-\title{Check AEs with AESDTH of "是" but No AEDTHDTC Value}
+\title{Check AEs with AESDTH of "Y" but No AEDTHDTC Value}
 \usage{
 check_ae_aesdth_aedthdtc(AE, preproc = identity, ...)
 }
@@ -19,7 +19,7 @@ Boolean value for whether the check passed or failed, with 'msg'
 attribute if the check failed
 }
 \description{
-This check looks for AE entries with AESDTH of "是"
+This check looks for AE entries with AESDTH of "Y"
 but no AEDTHDTC (death date) value
 }
 \examples{

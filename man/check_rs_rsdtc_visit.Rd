@@ -16,7 +16,7 @@ test failed
 }
 \description{
 This check looks for missing RSDTC or VISIT values when
-RSORRES is not missing and RSSTAT not equal to "未查" in RS dataset
+RSORRES is not missing and RSSTAT not equal to "NOT DONE" in RS dataset
 and returns a data frame. Only applies to assessments by investigator.
 }
 \examples{

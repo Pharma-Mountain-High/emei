@@ -2,9 +2,9 @@
 #' @description Records with missing drug administration occurrence info but non-missing dose value
 
 #'
-#' @param EC EC 域数据框，包含 USUBJID, ECTRT, ECOCCUR, ECDOSE, ECSTDTC, ECMOOD
+#' @param EC EC domain data frame containing USUBJID, ECTRT, ECOCCUR, ECDOSE, ECSTDTC, ECMOOD
 #'
-#' @return 带属性的布尔值，存在问题返回 FALSE 并附带数据
+#' @return Boolean value with attributes; returns FALSE with attached data if issues are found
 #' @export
 #' @importFrom dplyr %>% filter select
 #' @examples

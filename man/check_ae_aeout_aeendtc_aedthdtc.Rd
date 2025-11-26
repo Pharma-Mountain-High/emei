@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_ae_aeout_aeendtc_aedthdtc.R
 \name{check_ae_aeout_aeendtc_aedthdtc}
 \alias{check_ae_aeout_aeendtc_aedthdtc}
-\title{Check for AE outcome (AEOUT) of '死亡' with non-missing resolution
+\title{Check for AE outcome (AEOUT) of 'DEATH' with non-missing resolution
 date that is not equal to the death date}
 \usage{
 check_ae_aeout_aeendtc_aedthdtc(AE, preproc = identity, ...)
@@ -20,7 +20,7 @@ boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for AEs with outcome of '死亡' but AE
+This check looks for AEs with outcome of 'DEATH' but AE
 resolution date is not equal to AE death date.
 Note that these datapoints are not collected the same way for all trials -
 some trials leave AEENDTC missing if it was unresolved at death date. Confirm

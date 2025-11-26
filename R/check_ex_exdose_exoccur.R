@@ -1,6 +1,6 @@
 #' @title Check for Missing EXDOSE.
 #'
-#' @description This checks looks for missing EXDOSE values when EXOCCUR="是"
+#' @description This checks looks for missing EXDOSE values when EXOCCUR="Y"
 #'   or when EXOCCUR does not exist.
 #'   It could be for a specified drug/treatment, or for all drugs/treatments
 #'   in the dataset

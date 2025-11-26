@@ -1,7 +1,7 @@
-#' @title Check AEs with AEDTHDTC value but AESDTH not "是"
+#' @title Check AEs with AEDTHDTC value but AESDTH not "Y"
 #'
 #' @description This check looks for AE entries with an AEDTHDTC (death date)
-#'   value and AESDTH not equal to "是"
+#'   value and AESDTH not equal to "Y"
 #'
 #' @param AE Adverse Event SDTM dataset with variables USUBJID, AEDTHDTC,
 #'   AESDTH, AEDECOD, AETERM, and AESTDTC

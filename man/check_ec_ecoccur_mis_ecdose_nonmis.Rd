@@ -7,10 +7,10 @@
 check_ec_ecoccur_mis_ecdose_nonmis(EC)
 }
 \arguments{
-\item{EC}{EC 域数据框，包含 USUBJID, ECTRT, ECOCCUR, ECDOSE, ECSTDTC, ECMOOD}
+\item{EC}{EC domain data frame containing USUBJID, ECTRT, ECOCCUR, ECDOSE, ECSTDTC, ECMOOD}
 }
 \value{
-带属性的布尔值，存在问题返回 FALSE 并附带数据
+Boolean value with attributes; returns FALSE with attached data if issues are found
 }
 \description{
 Records with missing drug administration occurrence info but non-missing dose value

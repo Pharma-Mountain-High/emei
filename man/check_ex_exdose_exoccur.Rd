@@ -18,7 +18,7 @@ Boolean value for whether the check passed or failed, with 'msg'
 attribute if the test failed
 }
 \description{
-This checks looks for missing EXDOSE values when EXOCCUR="是"
+This checks looks for missing EXDOSE values when EXOCCUR="Y"
 or when EXOCCUR does not exist.
 It could be for a specified drug/treatment, or for all drugs/treatments
 in the dataset

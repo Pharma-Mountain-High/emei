@@ -1,6 +1,6 @@
 #' @title Check for missing ECDOSU records
 #'
-#' @description This check looks for missing ECODOSU values for valid doses(ECMOOD="是" and ECOCCUR = "是")
+#' @description This check looks for missing ECODOSU values for valid doses(ECMOOD="Y" and ECOCCUR = "Y")
 #'
 #' @param EC  SDTM dataset with variables USUBJID,ECTRT,ECSTDTC,ECDOSU
 #'
