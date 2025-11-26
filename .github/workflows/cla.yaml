@@ -14,5 +14,47 @@ on:
 jobs:
   CLA:
     name: CLA 📝
-    uses: insightsengineering/.github/.github/workflows/cla.yaml@main
-    secrets: inherit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      issues: write
+      metadata: read
+      organization: read
+    steps:
+      - name: Setup token 🔑
+        id: github-token
+        run: |
+          if [ "${{ secrets.REPO_GITHUB_TOKEN }}" != "" ]; then
+            echo "Using REPO_GITHUB_TOKEN as PERSONAL_ACCESS_TOKEN."
+            echo "token=${{ secrets.REPO_GITHUB_TOKEN }}" >> $GITHUB_ENV
+          elif [ "${{ secrets.PERSONAL_ACCESS_TOKEN }}" != "" ]; then
+            echo "Using PERSONAL_ACCESS_TOKEN."
+            echo "token=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "Warning: Neither REPO_GITHUB_TOKEN nor PERSONAL_ACCESS_TOKEN is set."
+            echo "token=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Run Contributor Assistant
+        uses: contributor-assistant/github-action@v2.4.0
+        with:
+          path-to-signatures: Pharma-Mountain-High/emei/cla.json
+          path-to-document: https://github.com/Pharma-Mountain-High/.github/blob/main/CLA.md
+          branch: cla-signatures
+          allowlist: github-actions[bot], dependabot-preview[bot], insights-engineering-bot, dependabot[bot], copilot, github-copilot[bot], copilot[bot], Copilot
+          create-file-commit-message: 🛠 Init CLA Signatures
+          remote-organization-name: Pharma-Mountain-High
+          remote-repository-name: .github-private
+          signed-commit-message: ✍️ CLA signed by $contributorName in Pharma-Mountain-High/Pharma-Mountain-High/emei
+          custom-allsigned-prcomment: ✅ All contributors have signed the CLA
+          custom-notsigned-prcomment: <br/> 🎉 Thank you for your contribution! Before this PR can be accepted, we require that $you read and agree to our [Contributor License Agreement](https://github.com/Pharma-Mountain-High/.github/blob/main/CLA.md). <br/> You can digitally sign the CLA by posting a comment on this Pull Request in the format shown below. This agreement will apply to this PR _as well as_ all future contributions on this repository. <br/>
+          custom-pr-sign-comment: I have read the CLA Document and I hereby sign the CLA
+          use-dco-flag: false
+          lock-pullrequest-aftermerge: true
+        env:
+          GITHUB_TOKEN: ${{ env.token }}
+          PERSONAL_ACCESS_TOKEN: ${{ env.token }}
+
