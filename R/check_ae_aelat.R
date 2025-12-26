@@ -56,7 +56,7 @@ check_ae_aelat <- function(AE, preproc = identity, ...) {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
 
-    perm_var <- c("AESTDTC", "AEGRPID", "AESPID","AESEQ")
+    perm_var <- c("AESTDTC", "AEGRPID", "AESPID", "AESEQ")
     int_var <- intersect(names(AE), perm_var)
 
     mydf <- AE %>%

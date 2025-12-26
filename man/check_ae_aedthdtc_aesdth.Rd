@@ -38,29 +38,29 @@ AE <- data.frame(
 
 # expect pass
 check_ae_aedthdtc_aesdth(AE)
-check_ae_aedthdtc_aesdth(AE, preproc = roche_derive_rave_row)
+check_ae_aedthdtc_aesdth(AE, preproc = ql_derive_seq)
 
 # expect fail
 AE1 <- AE
 AE1$AESDTH[3] <- "否"
 check_ae_aedthdtc_aesdth(AE1)
-check_ae_aedthdtc_aesdth(AE1, preproc = roche_derive_rave_row)
+check_ae_aedthdtc_aesdth(AE1, preproc = ql_derive_seq)
 
 # expect fail with AESDTH = NA
 AE2 <- AE
 AE2$AESDTH[4] <- NA
 check_ae_aedthdtc_aesdth(AE2)
-check_ae_aedthdtc_aesdth(AE2, preproc = roche_derive_rave_row)
+check_ae_aedthdtc_aesdth(AE2, preproc = ql_derive_seq)
 
 # non-required variable missing
 AE2$AESPID <- NULL
 check_ae_aedthdtc_aesdth(AE2)
-check_ae_aedthdtc_aesdth(AE2, preproc = roche_derive_rave_row)
+check_ae_aedthdtc_aesdth(AE2, preproc = ql_derive_seq)
 
 # required variable missing
 AE2$AESDTH <- NULL
 check_ae_aedthdtc_aesdth(AE2)
-check_ae_aedthdtc_aesdth(AE2, preproc = roche_derive_rave_row)
+check_ae_aedthdtc_aesdth(AE2, preproc = ql_derive_seq)
 
 }
 \author{
