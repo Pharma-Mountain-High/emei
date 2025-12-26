@@ -40,7 +40,7 @@
 #' AE$AEDECOD[2] <- "NA"
 #' AE$AEDECOD[3:5] <- ""
 #' check_ae_aedecod(AE)
-#' check_ae_aedecod(AE, preproc = roche_derive_rave_row)
+#' check_ae_aedecod(AE, preproc = ql_derive_seq)
 #'
 #' AE$AEDECOD <- NULL
 #' check_ae_aedecod(AE)
@@ -55,7 +55,7 @@ check_ae_aedecod <- function(AE, preproc = identity, ...) {
 
     ### Subset AE to only records with missing AEDECOD
     mydf <- AE %>%
-      select(any_of(c("USUBJID", "RAVE", "AESTDTC", "AETERM", "AEDECOD"))) %>%
+      select(any_of(c("USUBJID", "SEQ", "AESTDTC", "AETERM", "AEDECOD"))) %>%
       filter(is_sas_na(AEDECOD))
 
     rownames(mydf) <- NULL

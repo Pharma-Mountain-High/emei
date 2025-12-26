@@ -161,22 +161,22 @@ export_metadata <- function(outfile = "sdtmchecksmeta.xlsx",
     )
 
     addStyle(wb, "sdtmchecksmeta",
-             style = headerStyle,
-             rows = 1,
-             cols = seq_len(ncol(meta_data)),
-             gridExpand = TRUE
+      style = headerStyle,
+      rows = 1,
+      cols = seq_len(ncol(meta_data)),
+      gridExpand = TRUE
     )
 
     # Auto column width
     setColWidths(wb, "sdtmchecksmeta",
-                 cols = seq_len(ncol(meta_data)),
-                 widths = "auto"
+      cols = seq_len(ncol(meta_data)),
+      widths = "auto"
     )
 
     # Add filters
     addFilter(wb, "sdtmchecksmeta",
-              rows = 1,
-              cols = seq_len(ncol(meta_data))
+      rows = 1,
+      cols = seq_len(ncol(meta_data))
     )
 
     # Freeze first row

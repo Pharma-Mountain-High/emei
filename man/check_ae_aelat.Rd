@@ -35,7 +35,7 @@ AE <- data.frame(
 )
 
 check_ae_aelat(AE)
-check_ae_aelat(AE, preproc = roche_derive_rave_row)
+check_ae_aelat(AE, preproc = ql_derive_seq)
 
 AE <- data.frame(
   USUBJID = 1:5,
@@ -43,12 +43,12 @@ AE <- data.frame(
   AELAT = c("Left", "", "Bilateral", "", ""),
   AETERM = c("A", "B", "A", "B", "A"),
   AEDECOD = c("A", "B", "A", "B", "A"),
-  AESOC = c("Eye", "Eye", "Eye Disorder", "Eye Disorder", "Eye"),
+  AESOC = c("眼", "眼", "Eye Disorder", "Eye Disorder", "Eye"),
   stringsAsFactors = FALSE
 )
 
 check_ae_aelat(AE)
-check_ae_aelat(AE, preproc = roche_derive_rave_row)
+check_ae_aelat(AE, preproc = ql_derive_seq)
 
 }
 \seealso{

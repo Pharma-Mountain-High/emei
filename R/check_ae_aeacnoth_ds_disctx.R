@@ -44,7 +44,7 @@
 #' )
 #'
 #' check_ae_aeacnoth_ds_disctx(AE, DS)
-#' check_ae_aeacnoth_ds_disctx(AE, DS, preproc = roche_derive_rave_row)
+#' check_ae_aeacnoth_ds_disctx(AE, DS, preproc = ql_derive_seq)
 #'
 check_ae_aeacnoth_ds_disctx <- function(AE, DS, preproc = identity, ...) {
   # First check that required variables exist and return a message if they don't
@@ -61,7 +61,7 @@ check_ae_aeacnoth_ds_disctx <- function(AE, DS, preproc = identity, ...) {
 
     # Keep only AE columns that are needed
     ae1 <- AE %>%
-      select(any_of(c("USUBJID", "AEDECOD", "AESTDTC", aeacnotx_cols, "AEGRPID", "AESPID")))
+      select(any_of(c("USUBJID", "AESEQ", "AEDECOD", "AESTDTC", aeacnotx_cols, "AEGRPID", "AESPID")))
 
     # Filter for AE records where any of AEACNOTHx (x = "", "1", "2", etc) is "SUBJECT DISCONTINUED FROM STUDY"
     ae1$subj_discont_fl <- apply(ae1[aeacnotx_cols] == "SUBJECT DISCONTINUED FROM STUDY", 1, any)

@@ -50,7 +50,7 @@ DS <- data.frame(
 )
 
 check_ae_aeacnoth_ds_disctx(AE, DS)
-check_ae_aeacnoth_ds_disctx(AE, DS, preproc = roche_derive_rave_row)
+check_ae_aeacnoth_ds_disctx(AE, DS, preproc = ql_derive_seq)
 
 }
 \author{
