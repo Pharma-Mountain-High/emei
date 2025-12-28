@@ -41,14 +41,14 @@ check_ds_dsdecod_dsstdtc <- function(DS) {
   } else {
     # Get all patients with a death date
     has_death_date <- DS %>%
-      filter(DSDECOD == "DEATH" & !is_sas_na(DSSTDTC)) %>%
-      select("USUBJID", "DSDECOD", "DSSTDTC") %>%
+      filter(DSDECOD == "死亡" & !is_sas_na(DSSTDTC)) %>%
+      select("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC") %>%
       unique()
 
     # Get all patients with a death record that aren't in the list of patients with a death date
     df <- DS %>%
-      filter(DSDECOD == "DEATH" & !(USUBJID %in% has_death_date$USUBJID)) %>%
-      select("USUBJID", "DSDECOD", "DSSTDTC") %>%
+      filter(DSDECOD == "死亡" & !(USUBJID %in% has_death_date$USUBJID)) %>%
+      select("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC") %>%
       unique()
 
 
