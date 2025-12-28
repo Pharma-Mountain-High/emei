@@ -28,19 +28,21 @@
 #'   USUBJID = 1,
 #'   TUDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
 #'   VISIT = c(rep("C1D1", 3), rep("C1D2", 3), rep("C2D1", 4)),
-#'   TUSPID = "FORMNAME-R:13/L:13XXXX",
+#'   TUSEQ = 1:10,
+#'   TULNKID = c(sprintf("T%02d", 1:6), "T01", sprintf("T%02d", 1:3)),
+#'   TUSPID = c(sprintf("%02d", 1:6), "01", sprintf("%02d", 1:3)),
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' check_tu_tudtc_across_visit(TU)
-#' check_tu_tudtc_across_visit(TU, preproc = roche_derive_rave_row)
+#' check_tu_tudtc_across_visit(TU, preproc = ql_derive_seq)
 #'
 #' # no records flagged because non-Investigator results
 #' TU2 <- TU
 #' TU2$TUEVAL <- "INDEPENDENT ASSESSOR"
 #'
 #' check_tu_tudtc_across_visit(TU2)
-#' check_tu_tudtc_across_visit(TU2, preproc = roche_derive_rave_row)
+#' check_tu_tudtc_across_visit(TU2, preproc = ql_derive_seq)
 #'
 #' # example with TUTESTCD and with records flagged
 #' TU3 <- TU
@@ -49,7 +51,7 @@
 #'   rep("TUMIDENT", 2), rep("OTHER", 2), rep("TUMIDENT", 2)
 #' )
 #' check_tu_tudtc_across_visit(TU3)
-#' check_tu_tudtc_across_visit(TU3, preproc = roche_derive_rave_row)
+#' check_tu_tudtc_across_visit(TU3, preproc = ql_derive_seq)
 #'
 #'
 #' # example without TUSPID and with records flagged
@@ -57,14 +59,14 @@
 #' TU4$TUSPID <- NULL
 #'
 #' check_tu_tudtc_across_visit(TU4)
-#' check_tu_tudtc_across_visit(TU4, preproc = roche_derive_rave_row)
+#' check_tu_tudtc_across_visit(TU4, preproc = ql_derive_seq)
 #'
 #' # example with required variable missing
 #' TU5 <- TU
 #' TU5$VISIT <- NULL
 #'
 #' check_tu_tudtc_across_visit(TU5)
-#' check_tu_tudtc_across_visit(TU5, preproc = roche_derive_rave_row)
+#' check_tu_tudtc_across_visit(TU5, preproc = ql_derive_seq)
 #'
 check_tu_tudtc_across_visit <- function(TU, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
@@ -78,16 +80,16 @@ check_tu_tudtc_across_visit <- function(TU, preproc = identity, ...) {
 
     if (TU %lacks_any% "TUEVAL") {
       tusub <- TU %>%
-        select(USUBJID, TUDTC, VISIT, any_of(c("TUTESTCD", "RAVE")))
+        select(USUBJID, TUDTC, VISIT, any_of(c("SEQ", "TUTESTCD", "TULNKID", "TUSPID")))
     } else {
       tusub <- TU %>%
         filter(toupper(TUEVAL) == "研究者" | is_sas_na(TUEVAL)) %>%
-        select(USUBJID, TUDTC, VISIT, any_of(c("TUTESTCD", "RAVE")))
+        select(USUBJID, TUDTC, VISIT, any_of(c("SEQ", "TUTESTCD", "TULNKID", "TUSPID")))
     }
 
-    tu_orig <- tusub # Save RAVE for merging in later
+    tu_orig <- tusub # Save additional columns for merging in later
     tusub <- tusub %>%
-      select(-any_of(c("TUTESTCD", "RAVE"))) # dont want to unique on RAVE var
+      select(-any_of(c("SEQ", "TUTESTCD", "TULNKID", "TUSPID"))) # dont want to unique on these vars
 
     if (nrow(tusub) > 0) {
       # get unique visit/date pairs per patients

@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_tr_trdtc_across_visit.R
 \name{check_tr_trdtc_across_visit}
 \alias{check_tr_trdtc_across_visit}
-\title{Check TR Longest Diameter Records where the same date occurs across multiple visits}
+\title{Check TR Longest/Sum Diameter Records where the same date occurs across multiple visits}
 \usage{
 check_tr_trdtc_across_visit(TR, preproc = identity, ...)
 }
@@ -20,7 +20,7 @@ test failed
 }
 \description{
 This check identifies records where the same date TRDTC occurs
-across multiple visits for Longest Diameter measurements (TRTESTCD is "LDIAM").
+across multiple visits for Longest Diameter and Sum of Diameters measurements (TRTESTCD is "LDIAM" or "SUMDIAM").
 Only applies to assessments by investigator, selected based on uppercased
 TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
 }
@@ -30,33 +30,35 @@ TR <- data.frame(
   USUBJID = 1,
   TRDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
   VISIT = c(rep("C1D1", 3), rep("C1D2", 3), rep("C2D1", 4)),
-  TRTESTCD = c(rep("LDIAM", 7), rep("SAXIS", 3)),
-  TRSPID = "FORMNAME-R:13/L:13XXXX",
+  TRTESTCD = c(rep("LDIAM", 5), rep("SUMDIAM", 2), rep("SAXIS", 3)),
+  TRSEQ = 1:10,
+  TRLNKID = c(sprintf("T\%02d", 1:6), "T01", sprintf("T\%02d", 1:3)),
+  TRSPID = c(sprintf("\%02d", 1:6), "01", sprintf("\%02d", 1:3)),
   stringsAsFactors = FALSE
 )
 
 check_tr_trdtc_across_visit(TR)
-check_tr_trdtc_across_visit(TR, preproc = roche_derive_rave_row)
+check_tr_trdtc_across_visit(TR, preproc = ql_derive_seq)
 
 TR2 <- TR
-TR2$TRSPID[4:5] <- c("FORMNAME2-R:5/L:13XXXX", "FORMNAME3-R:0/L:13XXXX")
+TR2$TRSPID[4:5] <- c("04", "05")
 
 check_tr_trdtc_across_visit(TR2)
-check_tr_trdtc_across_visit(TR2, preproc = roche_derive_rave_row)
+check_tr_trdtc_across_visit(TR2, preproc = ql_derive_seq)
 
 # missing optional variable
 TR3 <- TR
 TR3$TRSPID <- NULL
 
 check_tr_trdtc_across_visit(TR3)
-check_tr_trdtc_across_visit(TR3, preproc = roche_derive_rave_row)
+check_tr_trdtc_across_visit(TR3, preproc = ql_derive_seq)
 
 # missing required variable
 TR4 <- TR
 TR4$TRTESTCD <- NULL
 
 check_tr_trdtc_across_visit(TR4)
-check_tr_trdtc_across_visit(TR4, preproc = roche_derive_rave_row)
+check_tr_trdtc_across_visit(TR4, preproc = ql_derive_seq)
 
 }
 \author{

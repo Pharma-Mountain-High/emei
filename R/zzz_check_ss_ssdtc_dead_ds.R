@@ -6,8 +6,8 @@
 #'              if Subject Status Date/Time of Assessments is less than
 #'              Start Date/Time of Disposition Event(SS.SSDTC < DS.DSSTDTC)
 #'
-#' @param SS Subject Status SDTM dataset with variables USUBJID, SSDTC, SSSTRESC, VISIT
-#' @param DS Disposition SDTM dataset with variables USUBJID, DSSTDTC, DSDECOD, DSCAT
+#' @param SS Subject Status SDTM dataset with variables USUBJID, SSDTC, SSSTRESC, VISIT, SSSPID (optional)
+#' @param DS Disposition SDTM dataset with variables USUBJID, DSSTDTC, DSDECOD, DSCAT, DSSPID (optional)
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
 #'
@@ -28,19 +28,21 @@
 #'   SSDTC = "2020-01-02",
 #'   SSSTRESC = c("死亡", "死亡", "存活", "死亡", "存活"),
 #'   VISIT = "FOLLOW-UP",
-#'   SSSPID = "FORMNAME-R:13/L:13XXXX"
+#'   SSSEQ = 1:5,
+#'   SSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' DS <- data.frame(
 #'   USUBJID = 1:5,
 #'   DSSTDTC = c("2020-01-02", "2020-01-02", "2020-01-01", "2020-01-03", "2020-01-01"),
 #'   DSDECOD = c(rep("死亡", 5)),
-#'   DSSPID = "FORMNAME-R:13/L:13XXXX",
-#'   DSCAT = c("OTHER EVENT", rep("DISPOSITION EVENT", 4))
+#'   DSCAT = c("OTHER EVENT", rep("DISPOSITION EVENT", 4)),
+#'   DSSEQ = 1:5,
+#'   DSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' check_ss_ssdtc_dead_ds(SS, DS)
-#' check_ss_ssdtc_dead_ds(SS, DS, preproc = roche_derive_rave_row)
+#' check_ss_ssdtc_dead_ds(SS, DS, preproc = ql_derive_seq)
 #'
 #'
 #' SS <- data.frame(
@@ -48,19 +50,21 @@
 #'   SSDTC = "2020-01-02",
 #'   SSSTRESC = c(rep("", 5)),
 #'   VISIT = "FOLLOW-UP",
-#'   SSSPID = "FORMNAME-R:13/L:13XXXX"
+#'   SSSEQ = 1:5,
+#'   SSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' DS <- data.frame(
 #'   USUBJID = 1:5,
 #'   DSSTDTC = c("2020-01-02", "2020-01-02", "2020-01-01", "2020-01-03", "2020-01-01"),
 #'   DSDECOD = c(rep("死亡", 5)),
-#'   DSSPID = "FORMNAME-R:13/L:13XXXX",
-#'   DSCAT = c(rep("DISPOSITION EVENT", 5))
+#'   DSCAT = c(rep("DISPOSITION EVENT", 5)),
+#'   DSSEQ = 1:5,
+#'   DSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' check_ss_ssdtc_dead_ds(SS, DS)
-#' check_ss_ssdtc_dead_ds(SS, DS, preproc = roche_derive_rave_row)
+#' check_ss_ssdtc_dead_ds(SS, DS, preproc = ql_derive_seq)
 #'
 #'
 #' SS <- data.frame(
@@ -68,15 +72,17 @@
 #'   SSDTC = "2020-01-02",
 #'   SSSTRESC = c(rep("", 5)),
 #'   VISIT = "FOLLOW-UP",
-#'   SSSPID = "FORMNAME-R:13/L:13XXXX"
+#'   SSSEQ = 1:5,
+#'   SSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' DS <- data.frame(
 #'   USUBJID = 1:5,
 #'   DSSTDTC = 2,
 #'   DSDECOD = c(rep("死亡", 5)),
-#'   DSSPID = "FORMNAME-R:13/L:13XXXX",
-#'   DSCAT = c(rep("DISPOSITION EVENT", 5))
+#'   DSCAT = c(rep("DISPOSITION EVENT", 5)),
+#'   DSSEQ = 1:5,
+#'   DSSPID = sprintf("%02d", 1:5)
 #' )
 #'
 #' check_ss_ssdtc_dead_ds(SS, DS)
@@ -93,15 +99,15 @@ check_ss_ssdtc_dead_ds <- function(SS, DS, preproc = identity, ...) {
     SS <- preproc(SS, ...)
 
     myss <- subset(SS, !is_sas_na(SS$SSDTC) & toupper(SS$SSSTRESC) == "死亡") %>%
-      select(any_of(c("USUBJID", "SSDTC", "SSSTRESC", "VISIT", "RAVE")))
+      select(any_of(c("USUBJID", "SSDTC", "SSSTRESC", "VISIT", "SEQ", "SSSPID")))
     myds <- subset(DS, !is_sas_na(DS$DSSTDTC) & toupper(DS$DSDECOD) == "死亡" & toupper(DS$DSCAT) == "DISPOSITION EVENT") %>%
-      select(any_of(c("USUBJID", "DSSTDTC", "DSDECOD", "DSCAT", "RAVE")))
+      select(any_of(c("USUBJID", "DSSTDTC", "DSDECOD", "DSCAT", "SEQ", "DSSPID")))
 
-    if ("RAVE" %in% names(myds)) {
-      myds <- myds %>% rename(DS_RAVE = RAVE)
+    if ("SEQ" %in% names(myds)) {
+      myds <- myds %>% rename(DS_SEQ = SEQ)
     }
-    if ("RAVE" %in% names(myss)) {
-      myss <- myss %>% rename(SS_RAVE = RAVE)
+    if ("SEQ" %in% names(myss)) {
+      myss <- myss %>% rename(SS_SEQ = SEQ)
     }
 
     mydf <- myss %>%

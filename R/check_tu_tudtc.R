@@ -4,7 +4,7 @@
 #'   Only applies to assessments by investigator.
 #'
 #' @param TU Tumor Identification SDTM dataset with variables USUBJID, TUDTC,
-#' VISIT, TUORRES, TUSPID (optional), TUTESTCD (optional)
+#' VISIT, TUORRES, TUEVAL (optional), TUTESTCD (optional), TULNKID (optional), TUSPID (optional)
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
 #'
@@ -23,8 +23,10 @@
 #'   TUDTC = "2020-05-05",
 #'   VISIT = "C1D1",
 #'   TUORRES = 1:10,
-#'   TUSPID = "FORMNAME-R:19/L:19XXXX",
-#'   TUEVAL = "INVESTIGATOR",
+#'   TUSEQ = 1:10,
+#'   TULNKID = sprintf("T%02d", 1:10),
+#'   TUSPID = sprintf("%02d", 1:10),
+#'   TUEVAL = "研究者",
 #'   TUTESTCD = "TUMIDENT",
 #'   stringsAsFactors = FALSE
 #' )
@@ -33,14 +35,14 @@
 #' TU$TUDTC[2] <- "NA"
 #' TU$TUDTC[3] <- NA
 #'
-#' check_tu_tudtc(TU, preproc = roche_derive_rave_row)
+#' check_tu_tudtc(TU, preproc = ql_derive_seq)
 #'
 #' TU$TUEVAL[1] <- ""
 #' TU$TUTESTCD <- NULL
-#' check_tu_tudtc(TU, preproc = roche_derive_rave_row)
+#' check_tu_tudtc(TU, preproc = ql_derive_seq)
 #'
-#' TU$TUEVAL[2] <- "INDEPENDENT ASSESSOR"
-#' TU$TUEVAL[3] <- "INDEPENDENT ASSESSOR"
+#' TU$TUEVAL[2] <- "独立评估者"
+#' TU$TUEVAL[3] <- "独立评估者"
 #' TU$TUDTC[4] <- ""
 #' check_tu_tudtc(TU)
 #'
@@ -57,7 +59,7 @@ check_tu_tudtc <- function(TU, preproc = identity, ...) {
   } else {
     # Apply company specific preprocessing function
     TU <- preproc(TU, ...)
-    myvars <- c("USUBJID", "VISIT", "TUDTC", "TUORRES", names(TU)[names(TU) %in% c("RAVE", "TUEVAL", "TUTESTCD")])
+    myvars <- c("USUBJID", "VISIT", "TUDTC", "TUORRES", names(TU)[names(TU) %in% c("SEQ", "TUEVAL", "TUTESTCD", "TULNKID", "TUSPID")])
 
     TU <- subset(TU, select = myvars)
 

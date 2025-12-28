@@ -31,19 +31,21 @@ TU <- data.frame(
   USUBJID = 1,
   TUDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
   VISIT = c(rep("C1D1", 3), rep("C1D2", 3), rep("C2D1", 4)),
-  TUSPID = "FORMNAME-R:13/L:13XXXX",
+  TUSEQ = 1:10,
+  TULNKID = c(sprintf("T\%02d", 1:6), "T01", sprintf("T\%02d", 1:3)),
+  TUSPID = c(sprintf("\%02d", 1:6), "01", sprintf("\%02d", 1:3)),
   stringsAsFactors = FALSE
 )
 
 check_tu_tudtc_across_visit(TU)
-check_tu_tudtc_across_visit(TU, preproc = roche_derive_rave_row)
+check_tu_tudtc_across_visit(TU, preproc = ql_derive_seq)
 
 # no records flagged because non-Investigator results
 TU2 <- TU
 TU2$TUEVAL <- "INDEPENDENT ASSESSOR"
 
 check_tu_tudtc_across_visit(TU2)
-check_tu_tudtc_across_visit(TU2, preproc = roche_derive_rave_row)
+check_tu_tudtc_across_visit(TU2, preproc = ql_derive_seq)
 
 # example with TUTESTCD and with records flagged
 TU3 <- TU
@@ -52,7 +54,7 @@ TU3$TUTESTCD <- c(
   rep("TUMIDENT", 2), rep("OTHER", 2), rep("TUMIDENT", 2)
 )
 check_tu_tudtc_across_visit(TU3)
-check_tu_tudtc_across_visit(TU3, preproc = roche_derive_rave_row)
+check_tu_tudtc_across_visit(TU3, preproc = ql_derive_seq)
 
 
 # example without TUSPID and with records flagged
@@ -60,14 +62,14 @@ TU4 <- TU
 TU4$TUSPID <- NULL
 
 check_tu_tudtc_across_visit(TU4)
-check_tu_tudtc_across_visit(TU4, preproc = roche_derive_rave_row)
+check_tu_tudtc_across_visit(TU4, preproc = ql_derive_seq)
 
 # example with required variable missing
 TU5 <- TU
 TU5$VISIT <- NULL
 
 check_tu_tudtc_across_visit(TU5)
-check_tu_tudtc_across_visit(TU5, preproc = roche_derive_rave_row)
+check_tu_tudtc_across_visit(TU5, preproc = ql_derive_seq)
 
 }
 \author{
