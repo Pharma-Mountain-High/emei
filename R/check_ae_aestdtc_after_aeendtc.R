@@ -30,12 +30,14 @@
 #'     "2017-01-01", "2017-01-02", "2017-01-01T14:25", "2015", "2017-01", "2016-01-01",
 #'     "2000", "2017-02", "2017-01-01", "2017-01", "2017-01-01T13", "2017-01-01T14:26:01"
 #'   ),
-#'   AESPID = "FORMNAME-R:19/L:19XXXX",
+#'   AESEQ = 1:12,
+#'   AEGRPID = "01",
+#'   AESPID = sprintf("%02d", 1:12),
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' check_ae_aestdtc_after_aeendtc(AE)
-#' check_ae_aestdtc_after_aeendtc(AE, preproc = roche_derive_rave_row)
+#' check_ae_aestdtc_after_aeendtc(AE, preproc = ql_derive_seq)
 #'
 #' AE$AETERM <- NULL
 #' check_ae_aestdtc_after_aeendtc(AE)
@@ -75,7 +77,7 @@ check_ae_aestdtc_after_aeendtc <- function(AE, preproc = identity, ...) {
     # records with different dates
     mydf <- AE %>%
       filter(!is_sas_na(AESTDTC) & !is_sas_na(AEENDTC) & (DT1 > DT2)) %>%
-      select(any_of(c("USUBJID", "AETERM", "AEDECOD", "AESTDTC", "AEENDTC", "AEGRPID", "AESPID")))
+      select(any_of(c("USUBJID", "AETERM", "AEDECOD", "AESTDTC", "AEENDTC", "SEQ", "AEGRPID", "AESPID")))
 
     rownames(mydf) <- NULL
 
