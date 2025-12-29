@@ -4,21 +4,25 @@
 \alias{check_ss_ssdtc_alive_dm}
 \title{Check non-missing last ALIVE status date in SS is before than death date in DM}
 \usage{
-check_ss_ssdtc_alive_dm(SS, DM)
+check_ss_ssdtc_alive_dm(SS, DM, preproc = identity, ...)
 }
 \arguments{
-\item{SS}{Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT}
+\item{SS}{Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT, SSSPID (optional)}
 
 \item{DM}{Demographics SDTM dataset with variables USUBJID, DTHDTC}
+
+\item{preproc}{An optional company specific preprocessing script}
+
+\item{...}{Other arguments passed to methods}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for non-missing SS.SSDTC when SS.SSORRES contains 'ALIVE' and
+This check looks for non-missing SS.SSDTC when SS.SSORRES contains '存活' and
 Subject Status Date/Time of Assessments is greater then
-Start Date/Time of Disposition Event(SS.SSDTC > DS.DSSTDTC)
+Date/Time of Death in Demographics(SS.SSDTC > DM.DTHDTC)
 }
 \examples{
 
@@ -27,9 +31,9 @@ SS <- data.frame(
   SSDTC = "2020-01-02",
   SSTESTCD = "SURVSTAT",
   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-  VISIT = "WEEK 4"
+  VISIT = "WEEK 4",
+  SSSEQ = 1:5
 )
-
 
 DM <- data.frame(
   USUBJID = 1:5,
@@ -37,13 +41,15 @@ DM <- data.frame(
 )
 
 check_ss_ssdtc_alive_dm(SS, DM)
+check_ss_ssdtc_alive_dm(SS, DM, preproc = ql_derive_seq)
 
-SS <- data.frame(
+SS1 <- data.frame(
   USUBJID = 1:5,
   SSDTC = "2020-01-04",
   SSTESTCD = "SURVSTAT",
   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-  VISIT = "WEEK 4"
+  VISIT = "WEEK 4",
+  SSSEQ = 1:5
 )
 
 DM <- data.frame(
@@ -51,7 +57,8 @@ DM <- data.frame(
   DTHDTC = c("2020-01-04", "2020-01-05", "2020-01-03", "2020-01-04", "2020-01-05")
 )
 
-check_ss_ssdtc_alive_dm(SS, DM)
+check_ss_ssdtc_alive_dm(SS1, DM)
+check_ss_ssdtc_alive_dm(SS1, DM, preproc = ql_derive_seq)
 
 }
 \author{

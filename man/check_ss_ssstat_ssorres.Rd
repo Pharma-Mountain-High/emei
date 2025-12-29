@@ -20,7 +20,7 @@ test failed
 }
 \description{
 This check is for studies with LTFU mapped to the SS domain,
-check that if 'NOT DONE' (Unable to Contact), then there should not be
+check that if '未查' (Unable to Contact), then there should not be
 a response (SSORRES)
 }
 \examples{
@@ -28,12 +28,13 @@ a response (SSORRES)
 SS <- data.frame(
   STUDYID = 1,
   USUBJID = c(rep(1, 6), rep(2, 6)),
-  SSSTRESC = c("存活", "死亡", "存活", "", "", "未知"),
-  SSORRES = c("存活", "死亡", "存活", "", "", "未知"),
-  VISIT = rep(c("SURVIVAL FOLLOW UP 3 MONTHS"), 6),
+  SSSTRESC = c("存活", "死亡", "存活", "", "", "未知", "存活", "死亡", "存活", "", "", "未知"),
+  SSORRES = c("存活", "死亡", "存活", "", "", "未知", "存活", "死亡", "存活", "", "", "未知"),
+  VISIT = rep(paste0("生存随访", 1:6), 2),
   SSSTAT = rep(c("", "未查"), 6),
-  SSDTC = "2016-01-01",
-  SSSPID = "",
+  SSDTC = rep("2016-01-01", 12),
+  SSSEQ = rep(1:6, 2),
+  SSSPID = sprintf("\%02d", rep(1:6, 2)),
   stringsAsFactors = FALSE
 )
 
@@ -42,8 +43,8 @@ check_ss_ssstat_ssorres(SS)
 SS$SSORRES[2] <- NA
 check_ss_ssstat_ssorres(SS)
 
-SS$SSSPID <- "FORMNAME-R:5/L:5XXXX"
-check_ss_ssstat_ssorres(SS, preproc = roche_derive_rave_row)
+SS$SSSPID <- "01"
+check_ss_ssstat_ssorres(SS, preproc = ql_derive_seq)
 
 SS$SSORRES[6] <- NA
 SS$SSORRES[8] <- ""

@@ -8,7 +8,7 @@ check_ae_aestdtc_after_dd(AE, DM, preproc = identity, ...)
 }
 \arguments{
 \item{AE}{Adverse Event SDTM dataset with variables USUBJID,
-AESTDTC, AEDECOD, AETERM, AESPID (optional)}
+AESTDTC, AEDECOD, AETERM, AEGRPID (optional), AESPID (optional)}
 
 \item{DM}{Demographics SDTM dataset with variables USUBJID,
 DTHDTC}
@@ -31,7 +31,9 @@ AE <- data.frame(
   AESTDTC = rep("2016-01-01", 5),
   AEDECOD = c("", "", rep("Myocarditis", 3)),
   AETERM = c("INJURY", rep("MYOCARDITIS", 4)),
-  AESPID = "FORMNAME-R:19/L:19XXXX",
+  AESEQ = 1:5,
+  AEGRPID = "01",
+  AESPID = "01",
   stringsAsFactors = FALSE
 )
 
@@ -46,7 +48,7 @@ check_ae_aestdtc_after_dd(AE, DM)
 AE$AESTDTC[1] <- "2016-01-03"
 AE$USUBJID[1] <- AE$USUBJID[5]
 
-check_ae_aestdtc_after_dd(AE, DM, preproc = roche_derive_rave_row)
+check_ae_aestdtc_after_dd(AE, DM, preproc = ql_derive_seq)
 
 AE$AESPID <- NULL
 check_ae_aestdtc_after_dd(AE, DM)
