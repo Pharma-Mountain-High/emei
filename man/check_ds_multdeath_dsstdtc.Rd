@@ -26,6 +26,7 @@ death, with non-missing mismatching death dates in DSSTDTC.
 DS_error1 <- data.frame(
   STUDYID = rep(1, 6),
   USUBJID = c(1, 1, 1, 2, 1, 1),
+  DSSEQ = c(1, 2, 3, 4, 5, 6),
   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
   DSSCAT = LETTERS[1:6],
   DSSTDTC = c("", "2016-01-01", "", "", "2016-01-02", "2016-01-01"),
@@ -35,6 +36,7 @@ DS_error1 <- data.frame(
 DS_error2 <- data.frame(
   STUDYID = rep(1, 6),
   USUBJID = c(1, 1, 1, 2, 1, 1),
+  DSSEQ = c(1, 2, 3, 4, 5, 6),
   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
   DSSCAT = LETTERS[1:6],
   DSSTDTC = c("", "2016-01", "", "", "2016-01-01", "2016-01-01"),
@@ -44,6 +46,7 @@ DS_error2 <- data.frame(
 DS_noerror <- data.frame(
   STUDYID = rep(1, 6),
   USUBJID = c(1, 1, 1, 2, 1, 1),
+  DSSEQ = c(1, 2, 3, 4, 5, 6),
   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
   DSSCAT = LETTERS[1:6],
   DSSTDTC = c("", "2016-01-01", "", "", "2016-01-01", "2016-01-01"),
@@ -53,7 +56,8 @@ DS_noerror <- data.frame(
 check_ds_multdeath_dsstdtc(DS_error1)
 check_ds_multdeath_dsstdtc(DS_error2)
 check_ds_multdeath_dsstdtc(DS_noerror)
+check_ds_multdeath_dsstdtc(DS_error1, preproc = ql_derive_seq)
 }
 \author{
-Kimberly Fernandes
+JH
 }

@@ -2,7 +2,7 @@
 #'
 #' @description This checks looks for partial death dates in AE and DS
 #'
-#' @param AE Adverse Events SDTM dataset with variables USUBJID,AEDTHDTC,AEDECOD
+#' @param DM SDTM dataset with variable DTHDTC
 #' @param DS Dispostion SDTM dataset with variables USUBJID,DSSCAT,DSSTDTC,DSDECOD
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
@@ -18,46 +18,43 @@
 #'
 #' @examples
 #'
-#' # test with sample data
-#'
-#' AE <- data.frame(
+#' DM <- data.frame(
 #'   USUBJID = 1:3,
-#'   AEDECOD = c("AE1", "AE2", "AE3"),
-#'   AEDTHDTC = c("2017-01-01", "2017", NA),
-#'   AESPID = "FORMNAME-R:2/L:2XXXX",
+#'   DTHDTC = c("2017-01-01", "2017", NA),
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' DS <- data.frame(
 #'   USUBJID = 1:4,
+#'   DSSEQ = 11:14,
 #'   DSSCAT = "STUDY DISCON",
 #'   DSDECOD = "死亡",
 #'   DSSTDTC = c("2017-01-01", "2017", "2017-01-02", "2016-10"),
 #'   stringsAsFactors = FALSE
 #' )
 #'
-#' check_ae_ds_partial_death_dates(AE, DS)
-#' check_ae_ds_partial_death_dates(AE, DS, preproc = roche_derive_rave_row)
+#' check_dm_ds_partial_death_dates(DM, DS)
+#' check_dm_ds_partial_death_dates(DM, DS, preproc = ql_derive_seq)
 #'
 #' DS$DSSTDTC <- NULL
 #'
-#' check_ae_ds_partial_death_dates(AE, DS)
-#'
-check_ae_ds_partial_death_dates <- function(AE, DS, preproc = identity, ...) {
+#' check_dm_ds_partial_death_dates(DM, DS)
+check_dm_ds_partial_death_dates <- function(DM, DS, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
-  if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD")) {
-    fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD")))
-  } else if (AE %lacks_any% c("USUBJID", "AEDTHDTC", "AEDECOD")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC", "AEDECOD")))
+  if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")) {
+    fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")))
+  } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
   } else {
     # Apply company specific preprocessing function
-    AE <- preproc(AE, ...)
+    DS <- preproc(DS, ...)
 
     ### Find records with partial death dates (length <10) in AE and DS
 
-    mydf1 <- subset(DS, DS$DSDECOD == "死亡" & !is_sas_na(DS$DSSTDTC) & nchar(DS$DSSTDTC) < 10, c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC"))
-    mydf2 <- subset(AE, !is_sas_na(AE$AEDTHDTC) & nchar(AE$AEDTHDTC) < 10, ) %>%
-      select(any_of(c("USUBJID", "AEDECOD", "AEDTHDTC", "RAVE")))
+    mydf1 <- subset(DS, DS$DSDECOD == "死亡" & !is_sas_na(DS$DSSTDTC) & nchar(DS$DSSTDTC) < 10 )%>%
+      select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC","SEQ")))
+    mydf2 <- subset(DM, !is_sas_na(DM$DTHDTC) & nchar(DM$DTHDTC) < 10, ) %>%
+      select(any_of(c("USUBJID",  "DTHDTC")))
     mydf <- merge(mydf1, mydf2, by = "USUBJID", all = TRUE)
 
     ### Print to report

@@ -42,13 +42,13 @@
 #' check_ae_aetoxgr(AE)
 #'
 #' AE$AESEV[1] <- NA
-#' check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+#' check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 #'
 #' AE$AETOXGR <- NULL
-#' check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+#' check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 #'
 #' AE$AESPID <- NULL
-#' check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+#' check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 #'
 #' AE$AESEV <- NULL
 #' check_ae_aetoxgr(AE)
@@ -66,7 +66,7 @@ check_ae_aetoxgr <- function(AE, preproc = identity, ...) {
     has_na <- is_sas_na(AE$AETOXGR) & is_sas_na(AE$AESEV)
     if (any(has_na)) {
       df <- AE[which(has_na), ] %>%
-        select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEDECOD", "AETOXGR", "AESEV", "AEGRPID", "AESPID")))
+        select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEDECOD", "AETOXGR", "AESEV", "AEGRPID", "AESPID","AESEQ")))
 
       fail("AE has records where both AESEV and AETOXGR have missing values. ", df)
     } else {

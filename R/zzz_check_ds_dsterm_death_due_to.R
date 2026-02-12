@@ -11,7 +11,7 @@
 #'
 #' @export
 #'
-#' @author Sara Bodach
+#' @author JH
 #'
 #' @examples
 #'

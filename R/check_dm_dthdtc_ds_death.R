@@ -1,9 +1,9 @@
-#' @title Check for missing AEDTHDTC where DS indicates death due to AE
+#' @title Check for missing DTHDTC where DS indicates death
 #'
-#' @description This check looks for missing AEDTHDTC values if a patient has a
-#'   DS record where DSDECOD=DEATH and DSTERM contains ADVERSE EVENT
+#' @description This check looks for missing DTHDTC values if a patient has a
+#'   DS record where DSDECOD="死亡"
 #'
-#' @param AE Adverse Events SDTM dataset with variables USUBJID, AEDTHDTC
+#' @param DM SDTM dataset with variables USUBJID, DTHDTC
 #' @param DS Disposition SDTM dataset with variables USUBJID, DSDECOD, DSTERM, DSSTDTC
 #'
 #' @return boolean value if check failed or passed with 'msg' attribute if the
@@ -15,9 +15,9 @@
 #'
 #' @examples
 #'
-#' AE <- data.frame(
+#' DM <- data.frame(
 #'   USUBJID = 1:3,
-#'   AEDTHDTC = c(NA, NA, 1)
+#'   DTHDTC = c(NA, NA, "2020-01-01")
 #' )
 #'
 #'
@@ -25,48 +25,47 @@
 #' DS <- data.frame(
 #'   USUBJID = 1:4,
 #'   DSTERM = c(
-#'     "DEATH DUE TO ADVERSE EVENT", "DEATH DUE TO PROGRESSIVE DISEASE",
-#'     "DEATH DUE TO ADVERSE EVENT", "DEATH DUE TO ADVERSE EVENT"
+#'     "死亡", "死亡",
+#'     "死亡", "死亡"
 #'   ),
-#'   DSDECOD = rep("DEATH", 4),
+#'   DSDECOD = rep("死亡", 4),
 #'   DSSTDTC = "2020-01-01"
 #' )
 #'
-#' check_ae_aedthdtc_ds_death(AE, DS)
+#' check_dm_dthdtc_ds_death(DM, DS)
 #'
 #' DS$DSSTDTC <- NULL
 #'
-#' check_ae_aedthdtc_ds_death(AE, DS)
+#' check_dm_dthdtc_ds_death(DM, DS)
 #'
 #' # newer mapping that
 #' DS <- data.frame(
 #'   USUBJID = 1:4,
 #'   DSTERM = c(
-#'     "DEATH DUE TO MYOCARDIAL INFARCTION", "DEATH DUE TO PROGRESSIVE DISEASE",
-#'     "DEATH DUE TO COVID-19", "DEATH"
+#'     "不良事件", "不良事件",
+#'     "不良事件", "死亡"
 #'   ),
-#'   DSDECOD = rep("DEATH", 4),
+#'   DSDECOD = rep("死亡", 4),
 #'   DSSTDTC = "2020-01-01"
 #' )
 #'
 #' # pass for study with newer mapping, as another function (check_dd_death_date.R) covers this
-#' check_ae_aedthdtc_ds_death(AE, DS)
-#'
-check_ae_aedthdtc_ds_death <- function(AE, DS) {
+#' check_dm_dthdtc_ds_death(DM, DS)
+
+check_dm_dthdtc_ds_death <- function(DM, DS) {
   ### First check that required variables exist and return a message if they don't
-  if (AE %lacks_any% c("USUBJID", "AEDTHDTC")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC")))
+  if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
   } else if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")))
   } else {
-    ######### Check if study has older mapping where "DEATH DUE TO ADVERSE EVENT" used,
-    #########  based on an instance of the particular text string in DSTERM
-    if ("DEATH DUE TO ADVERSE EVENT" %in% DS$DSTERM) {
+
+    if ("死亡" %in% DS$DSTERM) {
       ### if yes - then use existing function ###
 
-      ######### Only consider DS records from patients who have a record with DEATH and ADVERSE EVENT
-      ds0a <- subset(DS, (regexpr("DEATH", DS$DSDECOD, ignore.case = TRUE) != -1) &
-        (regexpr("ADVERSE EVENT", DS$DSTERM, ignore.case = TRUE) != -1), )
+      ######### Only consider DS records from patients who have a record with DEATH
+      ds0a <- subset(DS, (regexpr("死亡", DS$DSDECOD, ignore.case = TRUE) != -1) &
+        (regexpr("死亡", DS$DSTERM, ignore.case = TRUE) != -1), )
 
       ######### If there are no DS records that qualify for the check ###########
       if (nrow(ds0a) == 0) {
@@ -74,11 +73,11 @@ check_ae_aedthdtc_ds_death <- function(AE, DS) {
 
         ######### If there are DS records that qualify ###########
       } else if (nrow(ds0a) > 0) {
-        # Look for all records in AE where the death date is populated
-        ae0a <- subset(AE, !is_sas_na(AE$AEDTHDTC), )
+        # Look for all records in DM where the death date is populated
+        dm0a <- subset(DM, !is_sas_na(DM$DTHDTC), )
 
         # Check for subjects in ds0a that do not have a matching record in ae0a
-        ds11 <- subset(ds0a, !(ds0a$USUBJID %in% ae0a$USUBJID), c("USUBJID", "DSTERM", "DSSTDTC"))
+        ds11 <- subset(ds0a, !(ds0a$USUBJID %in% dm0a$USUBJID), c("USUBJID", "DSTERM", "DSSTDTC"))
         rownames(ds11) <- NULL
 
         # If all all subjects in ds0a have a matching record in ae0a
@@ -90,8 +89,8 @@ check_ae_aedthdtc_ds_death <- function(AE, DS) {
           fail(
             msg = paste(
               length(unique(ds11$USUBJID)),
-              "patient(s) where DS.DSDECOD contains 'DEATH' and DS.DSTERM contains 'ADVERSE EVENT'",
-              "but with no death date in AE.AEDTHDTC (DSTERM mapping only applicable to older studies). "
+              "patient(s) where DS.DSDECOD contains '死亡' and DS.DSTERM contains '死亡'",
+              "but with no death date in DM.DTHDTC (DSTERM mapping only applicable to older studies). "
             ),
             data = ds11
           )

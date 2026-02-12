@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-#' @author Ryan Marinelli
+#' @author 1
 #'
 #' @examples
 #'

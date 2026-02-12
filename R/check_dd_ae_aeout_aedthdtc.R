@@ -6,6 +6,7 @@
 #'
 #' @param AE Adverse Events SDTM dataset with variables USUBJID, AEDTHDTC,
 #'    AEDECOD, AESTDTC and AEOUT
+#' @param DM SDTM dataset with variable DTHDTC
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
 #'
@@ -17,72 +18,76 @@
 #'
 #' @export
 #'
-#' @author Joel Laxamana
+#' @author JH
 #'
 #' @examples
 #'
 #' AE <- data.frame(
 #'   USUBJID = 1:3,
-#'   AEDTHDTC = c("2020-01-01", "2020-01-02", "2020-01-03"),
 #'   AEDECOD = 1:3,
 #'   AESTDTC = 1:3,
 #'   AEOUT = rep("死亡", 3),
-#'   AESPID = "FORMNAME-R:19/L:19XXXX",
+#'   AESEQ = 11:13,
 #'   stringsAsFactors = FALSE
 #' )
-#'
+#' DM <- data.frame(
+#'   USUBJID = 1:3,
+#'   DTHDTC = c("2020-01-01", "2020-01-02", "2020-01-03"),
+#'   stringsAsFactors = FALSE
+#' )
 #' # pass
-#' check_dd_ae_aeout_aedthdtc(AE)
+#' check_dd_ae_aeout_dthdtc(AE, DM)
 #'
 #' # fail - 1 case (AEDTHDTC not populated but AEOUT == FATAL)
 #' AE1 <- AE
-#' AE1[3, "AEDTHDTC"] <- NA
-#' check_dd_ae_aeout_aedthdtc(AE1)
-#' check_dd_ae_aeout_aedthdtc(AE1, preproc = roche_derive_rave_row)
+#' DM[3, "DTHDTC"] <- NA
+#' check_dd_ae_aeout_dthdtc(AE1, DM)
+#' check_dd_ae_aeout_dthdtc(AE1, DM, preproc = ql_derive_seq)
 #'
-#' # fail - 1 case -- even though AEDTHDTC populated
+#' # fail - 2 case -- even though DTHDTC populated
 #' AE2 <- AE
 #' AE2[1, "AEOUT"] <- NA
-#' check_dd_ae_aeout_aedthdtc(AE2)
-#' check_dd_ae_aeout_aedthdtc(AE2, preproc = roche_derive_rave_row)
+#' check_dd_ae_aeout_dthdtc(AE2, DM)
+#' check_dd_ae_aeout_dthdtc(AE2, DM, preproc = ql_derive_seq)
 #'
 #' # 2 cases
-#' AE[3, "AEDTHDTC"] <- NA
+#'
 #' AE[1, "AEOUT"] <- NA
-#' check_dd_ae_aeout_aedthdtc(AE)
-#' check_dd_ae_aeout_aedthdtc(AE, preproc = roche_derive_rave_row)
+#' check_dd_ae_aeout_dthdtc(AE, DM)
+#' check_dd_ae_aeout_dthdtc(AE, DM, preproc = ql_derive_seq)
 #'
 #' # 2 cases
 #' AE[1, "AEOUT"] <- "NOT RECOVERED/NOT RESOLVED"
-#' check_dd_ae_aeout_aedthdtc(AE)
-#' check_dd_ae_aeout_aedthdtc(AE, preproc = roche_derive_rave_row)
+#' check_dd_ae_aeout_dthdtc(AE, DM)
+#' check_dd_ae_aeout_dthdtc(AE, DM, preproc = ql_derive_seq)
 #'
-#' # non-critical variable missing
-#' AE$AESPID <- NULL
-#' check_dd_ae_aeout_aedthdtc(AE)
-#' check_dd_ae_aeout_aedthdtc(AE, preproc = roche_derive_rave_row)
 #'
 #' # critical variables are missing
-#' AE$AEDTHDTC <- NULL
+#' DM$DTHDTC <- NULL
 #' AE$USUBJID <- NULL
-#' check_dd_ae_aeout_aedthdtc(AE)
-#' check_dd_ae_aeout_aedthdtc(AE, preproc = roche_derive_rave_row)
+#' check_dd_ae_aeout_dthdtc(AE, DM)
+#' check_dd_ae_aeout_dthdtc(AE, DM, preproc = ql_derive_seq)
 #'
-check_dd_ae_aeout_aedthdtc <- function(AE, preproc = identity, ...) {
-  if (AE %lacks_any% c("USUBJID", "AEDTHDTC", "AEOUT", "AEDECOD", "AESTDTC")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC", "AEOUT", "AEDECOD", "AESTDTC")))
-  } else {
+check_dd_ae_aeout_dthdtc <- function(AE,DM, preproc = identity, ...) {
+  if (AE %lacks_any% c("USUBJID",  "AEOUT", "AEDECOD", "AESTDTC")) {
+    fail(lacks_msg(AE, c("USUBJID",  "AEOUT", "AEDECOD", "AESTDTC")))
+  } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
+  }else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
+    dm1<- DM %>%
+      select(any_of(c("USUBJID", "DTHDTC")))
+    AE <- AE %>% left_join(dm1, by = c("USUBJID"))
 
-    # check if AEOUT=='死亡' that there is a corresponding AEDTHDTC, death date
+    # check if AEOUT=='死亡' that there is a corresponding DTHDTC, death date
     # check non-missing AEDTHDTC with AEOUT=='死亡'
     mydf <- unique(subset(
       AE,
-      (AE$AEOUT == "死亡" & is_sas_na(AE$AEDTHDTC)) |
-        (!is_sas_na(AE$AEDTHDTC) & AE$AEOUT != "死亡" | is_sas_na(AE$AEOUT)),
+      (AE$AEOUT == "死亡" & is_sas_na(AE$DTHDTC)) |
+        (!is_sas_na(AE$DTHDTC) & AE$AEOUT != "死亡" | is_sas_na(AE$AEOUT)),
     )) %>%
-      select(any_of(c("USUBJID", "AEDECOD", "AESTDTC", "AEDTHDTC", "AEOUT", "RAVE")))
+      select(any_of(c("USUBJID", "AEDECOD", "AESTDTC", "DTHDTC", "AEOUT", "SEQ")))
 
 
     if (nrow(mydf) > 0) {

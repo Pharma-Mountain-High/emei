@@ -57,5 +57,5 @@ check_ce_missing_month(CE)
 
 }
 \author{
-Ryan Marinelli
+1
 }

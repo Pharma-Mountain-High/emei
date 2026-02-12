@@ -20,36 +20,34 @@
 #' AE <- data.frame(
 #'   USUBJID = 1:10,
 #'   AETOXGR = c(1:5, 5, 5, 5, 5, 5),
-#'   AEDTHDTC = c(rep(NA, 4), rep("2020-01-01", 6)),
+#'   AESEQ = 1:10,
 #'   AESDTH = c(rep(NA, 4), rep("是", 6)),
 #'   AEOUT = c(rep(NA, 4), rep("死亡", 6)),
 #'   AESPID = "FORMNAME-R:13/L:13XXXX"
 #' )
 #'
 #' check_ae_death(AE)
-#' check_ae_death(AE, preproc = roche_derive_rave_row)
+#' check_ae_death(AE, preproc =ql_derive_seq)
 #'
-#' AE$AEDTHDTC[5] <- "NA"
-#' AE$AEDTHDTC[6] <- NA
-#' AE$AEDTHDTC[7] <- ""
+#'
 #' AE$AESDTH[8] <- NA
 #' AE$AEOUT[9] <- NA
 #'
 #' check_ae_death(AE)
-#' check_ae_death(AE, preproc = roche_derive_rave_row)
-#'
+#' check_ae_death(AE, preproc =ql_derive_seq)
+
 check_ae_death <- function(AE, preproc = identity, ...) {
   ### Check that required variables exist and return a message if they don't.
 
-  if (AE %lacks_any% c("USUBJID", "AETOXGR", "AEOUT", "AEDTHDTC", "AESDTH")) {
-    fail(lacks_msg(AE, c("USUBJID", "AETOXGR", "AEOUT", "AEDTHDTC", "AESDTH")))
+  if (AE %lacks_any% c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH")) {
+    fail(lacks_msg(AE, c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH")))
   } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
 
     ### Subset AE to records with Grade 5 AE but have missing death date, or not marked fatal, or death not indicated
-    ae5 <- subset(AE, AE$AETOXGR == "5" & (!grepl("死亡", AE$AEOUT) | is_sas_na(AE$AEOUT) | is_sas_na(AE$AEDTHDTC) | AE$AESDTH != "是" | is_sas_na(AE$AESDTH)), ) %>%
-      select(any_of(c("USUBJID", "AETOXGR", "AEOUT", "AEDTHDTC", "AESDTH", "AEGRPID", "AESPID")))
+    ae5 <- subset(AE, AE$AETOXGR == "5" & (!grepl("死亡", AE$AEOUT) | is_sas_na(AE$AEOUT) | AE$AESDTH != "是" | is_sas_na(AE$AESDTH)), ) %>%
+      select(any_of(c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH", "AEGRPID", "AESPID","AESEQ")))
     rownames(ae5) <- NULL
 
     ### Print to report

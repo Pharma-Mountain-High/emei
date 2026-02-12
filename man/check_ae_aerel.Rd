@@ -55,7 +55,7 @@ AE1 <- data.frame(
 )
 
 check_ae_aerel(AE1)
-check_ae_aerel(AE1, preproc = roche_derive_rave_row)
+check_ae_aerel(AE1, preproc = ql_derive_seq)
 
 AE2 <- data.frame(
   STUDYID = 1001,
@@ -71,7 +71,7 @@ AE2 <- data.frame(
 )
 
 check_ae_aerel(AE2)
-check_ae_aerel(AE2, preproc = roche_derive_rave_row)
+check_ae_aerel(AE2, preproc = ql_derive_seq)
 
 AE3 <- data.frame(
   STUDYID = 1001,
@@ -85,7 +85,7 @@ AE3 <- data.frame(
 )
 
 check_ae_aerel(AE3)
-check_ae_aerel(AE3, preproc = roche_derive_rave_row)
+check_ae_aerel(AE3, preproc = ql_derive_seq)
 
 
 AE4 <- data.frame(
@@ -102,7 +102,7 @@ AE4 <- data.frame(
 )
 
 check_ae_aerel(AE4)
-check_ae_aerel(AE4, preproc = roche_derive_rave_row)
+check_ae_aerel(AE4, preproc = ql_derive_seq)
 
 }
 \author{

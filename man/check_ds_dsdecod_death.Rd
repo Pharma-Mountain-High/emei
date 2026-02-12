@@ -40,7 +40,7 @@ DS <- data.frame(
 )
 
 check_ds_dsdecod_death(DS)
-check_ds_dsdecod_death(DS, preproc = roche_derive_rave_row)
+check_ds_dsdecod_death(DS, preproc = ql_derive_seq)
 
 DS$DSSCAT[2] <- "研究结束"
 check_ds_dsdecod_death(DS)
@@ -50,5 +50,5 @@ check_ds_dsdecod_death(DS)
 
 }
 \author{
-1
+JH
 }

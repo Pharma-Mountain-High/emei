@@ -37,19 +37,19 @@
 #'     "", "", "", "", "未好转",
 #'     "好转", "死亡", "痊愈/恢复", "不详", "不详"
 #'   ),
-#'   AESPID = "FORMNAME-R:13/L:13XXXX",
+#'   AESEQ = 11:20 ,
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' check_ae_aeout_aeendtc_nonfatal(AE)
-#' check_ae_aeout_aeendtc_nonfatal(AE, preproc = roche_derive_rave_row)
+#' check_ae_aeout_aeendtc_nonfatal(AE, preproc = ql_derive_seq)
 #'
 #' AE$AEENDTC <- NULL
 #' check_ae_aeout_aeendtc_nonfatal(AE)
 #'
 #' AE$AEOUT <- NULL
 #' check_ae_aeout_aeendtc_nonfatal(AE)
-#'
+
 check_ae_aeout_aeendtc_nonfatal <- function(AE, preproc = identity, ...) {
   if (AE %lacks_any% c("USUBJID", "AESTDTC", "AETERM", "AEENDTC", "AEOUT")) {
     fail(lacks_msg(AE, c("USUBJID", "AESTDTC", "AETERM", "AEENDTC", "AEOUT")))
@@ -60,7 +60,7 @@ check_ae_aeout_aeendtc_nonfatal <- function(AE, preproc = identity, ...) {
     df <- AE %>%
       filter((is_sas_na(AEENDTC) & AEOUT %in% c("痊愈/恢复", "好转", "痊愈/恢复伴有后遗症", "痊愈/恢复至基线")) |
         (!is_sas_na(AEENDTC) & AEOUT %in% c("不详", "未好转"))) %>%
-      select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEENDTC", "AEOUT", "RAVE")))
+      select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEENDTC", "AEOUT", "SEQ")))
 
     if (nrow(df) > 0) {
       fail(paste0(nrow(df), " non-fatal AE(s) with inconsistent AEENDTC and AEOUT found. "), df)
