@@ -41,19 +41,18 @@ AE <- data.frame(
     "", "", "", "", "未好转",
     "好转", "死亡", "痊愈/恢复", "不详", "不详"
   ),
-  AESPID = "FORMNAME-R:13/L:13XXXX",
+  AESEQ = 11:20 ,
   stringsAsFactors = FALSE
 )
 
 check_ae_aeout_aeendtc_nonfatal(AE)
-check_ae_aeout_aeendtc_nonfatal(AE, preproc = roche_derive_rave_row)
+check_ae_aeout_aeendtc_nonfatal(AE, preproc = ql_derive_seq)
 
 AE$AEENDTC <- NULL
 check_ae_aeout_aeendtc_nonfatal(AE)
 
 AE$AEOUT <- NULL
 check_ae_aeout_aeendtc_nonfatal(AE)
-
 }
 \author{
 1

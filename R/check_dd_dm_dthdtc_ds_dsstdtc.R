@@ -1,9 +1,9 @@
-#' @title Check if death date is the same in AE and DS domains
+#' @title Check if death date is the same in DM and DS domains
 #'
-#' @description This check compares death date in AE AEDTHDT with death date in
+#' @description This check compares death date in DM DTHDTC with death date in
 #'    DS DSSTDTC. It is expected that they are the same.
 #'
-#' @param AE Adverse Events SDTM dataset with variables USUBJID and AEDTHDTC
+#' @param DM  SDTM dataset with variables USUBJID and DTHDTC
 #' @param DS Disposition SDTM dataset with variables USUBJID, DSDECOD, DSSTDTC
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
@@ -16,15 +16,14 @@
 #'
 #' @export
 #'
-#' @author Hiral Raval
+#' @author JH
 #'
 #' @examples
 #'
-#' AE <- data.frame(
+#' DM <- data.frame(
 #'   STUDYID = rep(1, 3),
 #'   USUBJID = 1:3,
-#'   AEDTHDTC = c("2020-01-01", "2020-01-02", "2020-01-03"),
-#'   AESPID = "FORMNAME-R:19/L:19XXXX"
+#'   DTHDTC = c("2020-01-01", "2020-01-02", "2020-01-03")
 #' )
 #'
 #' DS <- data.frame(
@@ -32,45 +31,45 @@
 #'   USUBJID = 1:3,
 #'   DSDECOD = rep("死亡", 3),
 #'   DSSTDTC = c("2020-01-01", "2020-01-02", "2020-01-03"),
-#'   DSSPID = "XXX-R:0",
+#'   DSSEQ = 11:13,
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' # no case
-#' check_dd_ae_aedthdtc_ds_dsstdtc(AE, DS)
+#' check_dd_dm_dthdtc_ds_dsstdtc(DM, DS)
 #'
 #' # 1 case
 #' DS[3, "DSSTDTC"] <- "2000-01-01"
-#' check_dd_ae_aedthdtc_ds_dsstdtc(AE, DS, preproc = roche_derive_rave_row)
+#' check_dd_dm_dthdtc_ds_dsstdtc(DM, DS, preproc = ql_derive_seq)
 #'
 #' # check for non existence of vars
 #' DS$DSDECOD <- NULL
 #' DS$DSSTDTC <- NULL
-#' check_dd_ae_aedthdtc_ds_dsstdtc(AE, DS)
+#' check_dd_dm_dthdtc_ds_dsstdtc(DM, DS)
 #'
-check_dd_ae_aedthdtc_ds_dsstdtc <- function(AE, DS, preproc = identity, ...) {
-  if (AE %lacks_any% c("USUBJID", "AEDTHDTC")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC")))
+check_dd_dm_dthdtc_ds_dsstdtc <- function(DM, DS, preproc = identity, ...) {
+  if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSSTDTC")))
   } else {
     # Apply company specific preprocessing function
-    AE <- preproc(AE, ...)
+
     DS <- preproc(DS, ...)
 
-    # From AE keep rows where the death date is populated
-    ae0 <- subset(AE, !is_sas_na(AE$AEDTHDTC), ) %>%
-      select(any_of(c("USUBJID", "AEDTHDTC", "RAVE")))
+    # From DM keep rows where the death date is populated
+    dm0 <- subset(DM, !is_sas_na(DM$DTHDTC), ) %>%
+      select(any_of(c("USUBJID", "DTHDTC")))
 
     # From DS take DEATH records where DEATH date is populated
     ds0 <- subset(DS, !is_sas_na(DS$DSSTDTC) &
       (regexpr("死亡", DS$DSDECOD, ignore.case = TRUE) != -1), ) %>%
-      select(any_of(c("USUBJID", "DSSTDTC", "RAVE")))
+      select(any_of(c("USUBJID", "DSSTDTC", "DSSEQ")))
 
-    # Merge DS and AE and if death dates in both are different then output in mydf
-    mydf0 <- full_join(ds0, ae0, by = "USUBJID", suffix = c(".DS", ".AE"))
-    mydf <- unique(subset(mydf0, !(mydf0$AEDTHDTC == mydf0$DSSTDTC), )) %>%
-      select(USUBJID, DSSTDTC, AEDTHDTC, everything())
+    # Merge DS and DM and if death dates in both are different then output in mydf
+    mydf0 <- left_join(ds0, dm0, by = "USUBJID", suffix = c(".DS", ".DM"))
+    mydf <- unique(subset(mydf0, !(mydf0$DTHDTC == mydf0$DSSTDTC), )) %>%
+      select(USUBJID, DSSTDTC, DTHDTC, everything())
 
 
     ds11 <- as.data.frame(unique(mydf$USUBJID))
@@ -80,7 +79,7 @@ check_dd_ae_aedthdtc_ds_dsstdtc <- function(AE, DS, preproc = identity, ...) {
     n3 <- ""
 
     # declare number of patients
-    n3 <- paste("There are ", nrow(ds11), " patients with a death date different in DS and AE. ", sep = "")
+    n3 <- paste("There are ", nrow(ds11), " patients with a death date different in DS and DM. ", sep = "")
     if (nrow(ds11) > 0) {
       fail(n3, mydf)
     } else if (nrow(ds11) == 0) {

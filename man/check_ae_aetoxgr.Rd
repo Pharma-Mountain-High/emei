@@ -46,13 +46,13 @@ AE$AETOXGR[1] <- NA
 check_ae_aetoxgr(AE)
 
 AE$AESEV[1] <- NA
-check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 
 AE$AETOXGR <- NULL
-check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 
 AE$AESPID <- NULL
-check_ae_aetoxgr(AE, preproc = roche_derive_rave_row)
+check_ae_aetoxgr(AE, preproc = ql_derive_seq)
 
 AE$AESEV <- NULL
 check_ae_aetoxgr(AE)

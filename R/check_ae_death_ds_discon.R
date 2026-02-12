@@ -23,7 +23,8 @@
 #' AE <- data.frame(
 #'   STUDYID = rep(1, 6),
 #'   USUBJID = 1:6,
-#'   AEDTHDTC = c(NA, "2020-01-01", NA, NA, NA, NA),
+#'   AESEQ = 2:7,
+#'   AEENDTC = c(NA, "2020-01-01", NA, NA, NA, NA),
 #'   AESDTH = c(NA, NA, "是", NA, NA, NA),
 #'   AEOUT = c(NA, NA, NA, "死亡", NA, NA),
 #'   AETOXGR = c(NA, NA, NA, NA, "5", NA),
@@ -33,25 +34,22 @@
 #' DS <- data.frame(
 #'   STUDYID = 1,
 #'   USUBJID = 1:3,
-#'   DSCAT = "DISPOSITION EVENT",
+#'   DSSEQ = 1:3,
+#'   DSCAT = "处置事件",
 #'   DSSCAT = c(
-#'     "STUDY DISCON",
-#'     "STUDY DISCON",
-#'     "STUDY COMPLETION/EARLY DISCONTINUATION"
+#'     "研究结束",
+#'     "研究终止",
+#'     "研究结束"
 #'   )
 #' )
 #'
 #' check_ae_death_ds_discon(AE, DS)
-#' check_ae_death_ds_discon(AE, DS, preproc = roche_derive_rave_row)
-#'
-#' DS$DSSCAT <- NULL
-#'
-#' check_ae_death_ds_discon(AE, DS)
+#' check_ae_death_ds_discon(AE, DS, preproc = ql_derive_seq)
 #'
 check_ae_death_ds_discon <- function(AE, DS, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
-  if (AE %lacks_any% c("USUBJID", "AEDTHDTC", "AESDTH", "AEOUT")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC", "AESDTH", "AEOUT")))
+  if (AE %lacks_any% c("USUBJID", "AEENDTC", "AESDTH", "AEOUT")) {
+    fail(lacks_msg(AE, c("USUBJID", "AEENDTC", "AESDTH", "AEOUT")))
   } else if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSCAT")) {
     fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSCAT")))
   } else {
@@ -61,27 +59,27 @@ check_ae_death_ds_discon <- function(AE, DS, preproc = identity, ...) {
     # in ae keep rows where the death date is populated
 
     if (AE %has_any% "AETOXGR") {
-      ae0 <- subset(AE, !is_sas_na(AE$AEDTHDTC) |
+      ae0 <- subset(AE,
         AE$AESDTH == "是" |
         AE$AEOUT == "死亡" |
         AE$AETOXGR == "5", ) %>%
-        select(any_of(c("USUBJID", "AEDTHDTC", "AETOXGR", "AESDTH", "AEOUT", "AEGRPID", "AESPID")))
+        select(any_of(c("USUBJID", "AEENDTC", "AETOXGR", "AESDTH", "AEOUT", "AEGRPID", "AESPID", "AESEQ")))
     } else {
-      ae0 <- subset(AE, !is_sas_na(AE$AEDTHDTC) |
+      ae0 <- subset(AE,
         AE$AESDTH == "是" |
         AE$AEOUT == "死亡", ) %>%
-        select(any_of(c("USUBJID", "AEDTHDTC", "AESDTH", "AEOUT", "AEGRPID", "AESPID")))
+        select(any_of(c("USUBJID", "AEENDTC", "AESDTH", "AEOUT", "AEGRPID", "AESPID", "AESEQ")))
     }
 
     # find matching patients in DS
     ds0 <- subset(DS, (DS$USUBJID %in% ae0$USUBJID))
-    ds1 <- subset(ds0, (grepl(
-      "研究结束|中止",
-      toupper(ds0$DSSCAT)
-    ) |
-      toupper(ds0$DSSCAT) == "研究结束|中止") &
-      grepl("处置|受试者分布事件", toupper(ds0$DSCAT)),
-    select = c("USUBJID", "DSSCAT", "DSCAT")
+    ds1 <- subset(ds0,
+                  (grepl("研究结束", toupper(ds0$DSSCAT)) |
+                     grepl("研究中止", toupper(ds0$DSSCAT))
+                   ) &
+                    (grepl("处置事件", toupper(ds0$DSCAT)) |
+                       grepl("受试者分布事件", toupper(ds0$DSCAT))),
+                  select = c("USUBJID", "DSSCAT", "DSCAT")
     )
 
 

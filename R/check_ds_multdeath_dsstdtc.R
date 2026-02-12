@@ -15,13 +15,14 @@
 #'
 #' @export
 #'
-#' @author Kimberly Fernandes
+#' @author JH
 #'
 #' @examples
 #'
 #' DS_error1 <- data.frame(
 #'   STUDYID = rep(1, 6),
 #'   USUBJID = c(1, 1, 1, 2, 1, 1),
+#'   DSSEQ = c(1, 2, 3, 4, 5, 6),
 #'   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
 #'   DSSCAT = LETTERS[1:6],
 #'   DSSTDTC = c("", "2016-01-01", "", "", "2016-01-02", "2016-01-01"),
@@ -31,6 +32,7 @@
 #' DS_error2 <- data.frame(
 #'   STUDYID = rep(1, 6),
 #'   USUBJID = c(1, 1, 1, 2, 1, 1),
+#'   DSSEQ = c(1, 2, 3, 4, 5, 6),
 #'   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
 #'   DSSCAT = LETTERS[1:6],
 #'   DSSTDTC = c("", "2016-01", "", "", "2016-01-01", "2016-01-01"),
@@ -40,6 +42,7 @@
 #' DS_noerror <- data.frame(
 #'   STUDYID = rep(1, 6),
 #'   USUBJID = c(1, 1, 1, 2, 1, 1),
+#'   DSSEQ = c(1, 2, 3, 4, 5, 6),
 #'   DSDECOD = c("死亡", "死亡", rep("", 2), "死亡", "死亡"),
 #'   DSSCAT = LETTERS[1:6],
 #'   DSSTDTC = c("", "2016-01-01", "", "", "2016-01-01", "2016-01-01"),
@@ -49,6 +52,8 @@
 #' check_ds_multdeath_dsstdtc(DS_error1)
 #' check_ds_multdeath_dsstdtc(DS_error2)
 #' check_ds_multdeath_dsstdtc(DS_noerror)
+#' check_ds_multdeath_dsstdtc(DS_error1, preproc = ql_derive_seq)
+
 check_ds_multdeath_dsstdtc <- function(DS, preproc = identity, ...) {
   if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSSTDTC")))
@@ -59,7 +64,7 @@ check_ds_multdeath_dsstdtc <- function(DS, preproc = identity, ...) {
     # Get all records with a death date
     death_dates <- DS %>%
       filter(DSDECOD == "死亡" & !is_sas_na(DSSTDTC)) %>%
-      select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC", "RAVE")))
+      select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC", "SEQ")))
 
     # Get all patients where death dates don't match
     df <- death_dates %>%

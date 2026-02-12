@@ -21,31 +21,27 @@
 #' @examples
 #'
 #' AE <- data.frame(
-#'   USUBJID = 1:6,
-#'   AEACN = c("DRUG WITHDRAWN", NA, NA, NA, NA, NA),
-#'   AETOXGR = c(NA, NA, NA, NA, "5", NA),
-#'   AEDECOD = c("NAUSEA", "HEADACHE"),
-#'   AESPID = "FORMNAME-R:5/L:5XXXX"
+#'   USUBJID = c("001", "002"),
+#'   AEACN = c("永久停药", "永久停药"),
+#'   AEDECOD = c("恶心", "头痛"),
+#'   stringsAsFactors = FALSE
 #' )
+#'
 #' DS <- data.frame(
-#'   USUBJID = 1:3,
-#'   DSCAT = "DISPOSITION EVENT",
-#'   DSSCAT = "STUDY TREATMENT",
-#'   DSDECOD = c("完成", "不良事件", "死亡")
+#'   USUBJID = c("001", "003"),
+#'   DSSCAT = c("研究中止", "研究结束"),
+#'   DSCAT = c("处置事件", "处置事件"),
+#'   DSDECOD = c("不良事件", "完成"),
+#'   stringsAsFactors = FALSE
 #' )
 #'
 #' TS <- data.frame(
-#'   TSPARMCD = "TRT",
-#'   TSVAL = "CHECK"
+#'   TSPARMCD = c("TRT"),
+#'   TSVAL = c("Drug A"),
+#'   stringsAsFactors = FALSE
 #' )
-#'
 #' check_ae_withdr_ds_discon(AE, DS, TS)
-#' check_ae_withdr_ds_discon(AE, DS, TS, preproc = roche_derive_rave_row)
-#'
-#' DS$DSSCAT <- NULL
-#'
-#' check_ae_withdr_ds_discon(AE, DS, TS)
-#'
+
 check_ae_withdr_ds_discon <- function(AE, DS, TS, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
   if (AE %lacks_any% c("USUBJID", "AEACN")) {
@@ -77,9 +73,13 @@ check_ae_withdr_ds_discon <- function(AE, DS, TS, preproc = identity, ...) {
       DS <- preproc(DS, ...)
 
       ds0 <- subset(DS, (DS$USUBJID %in% ae0$USUBJID))
-      ds1 <- subset(ds0, (grepl("研究结束|中止", toupper(ds0$DSSCAT)) | (toupper(ds0$DSSCAT) == "治疗结束")) &
-        toupper(ds0$DSDECOD) != "完成" & grepl("处置|受试者分布事件", toupper(ds0$DSCAT))) %>%
-        select(any_of(c("USUBJID", "DSSCAT", "DSCAT", "AEGRPID", "AESPID")))
+      ds1 <- subset(ds0,  (grepl("研究结束", toupper(ds0$DSSCAT)) |
+                             grepl("研究中止", toupper(ds0$DSSCAT))|
+                      grepl("治疗结束", toupper(ds0$DSSCAT))) &
+                      (grepl("处置事件", toupper(ds0$DSCAT)) |
+                         grepl("受试者分布事件", toupper(ds0$DSCAT)))  &
+                      (ds0$DSDECOD!= "完成"))%>%
+        select(any_of(c("USUBJID", "DSSCAT", "DSCAT", "AEGRPID", "AESPID", "AESEQ")))
 
 
       # check which patients have TREATMENT DISCON FORM

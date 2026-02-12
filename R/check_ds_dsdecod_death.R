@@ -11,7 +11,7 @@
 #' @importFrom dplyr %>% filter select
 #' @importFrom tidyselect any_of
 #'
-#' @author 1
+#' @author JH
 #'
 #' @importFrom dplyr distinct %>% select filter
 #'
@@ -38,7 +38,7 @@
 #' )
 #'
 #' check_ds_dsdecod_death(DS)
-#' check_ds_dsdecod_death(DS, preproc = roche_derive_rave_row)
+#' check_ds_dsdecod_death(DS, preproc = ql_derive_seq)
 #'
 #' DS$DSSCAT[2] <- "研究结束"
 #' check_ds_dsdecod_death(DS)
@@ -53,7 +53,7 @@ check_ds_dsdecod_death <- function(DS, preproc = identity, ...) {
     # Apply company specific preprocessing function
     DS <- preproc(DS, ...)
     DS <- DS %>%
-      select(any_of(c("USUBJID", "DSDECOD", "DSCAT", "DSSCAT", "DSSTDTC", "RAVE")))
+      select(any_of(c("USUBJID", "DSDECOD", "DSCAT", "DSSCAT", "DSSTDTC", "SEQ")))
 
     # Subset DS death records and include only records without a STUDY
     # COMPLETION/DISCONTINUATION form

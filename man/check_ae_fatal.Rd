@@ -4,11 +4,13 @@
 \alias{check_ae_fatal}
 \title{Check for death variable consistency when AEOUT=="DEATH"}
 \usage{
-check_ae_fatal(AE, preproc = identity, ...)
+check_ae_fatal(AE, DM, preproc = identity, ...)
 }
 \arguments{
 \item{AE}{Adverse Events SDTM dataset with variables USUBJID, AEDECOD,
 AESTDTC, AEDTHDTC, AEOUT, AESDTH}
+
+\item{DM}{SDTM dataset with variable DTHDTC}
 
 \item{preproc}{An optional company specific preprocessing script}
 
@@ -35,21 +37,25 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
   AESDTH = c("是", "是", "否", "是", NA),
   AETOXGR = c("5", "5", "5", NA, NA),
-  AESPID = "FORMNAME-R:12/L:2XXXX",
+  AESEQ =11:15,
   stringsAsFactors = FALSE
 )
 
-check_ae_fatal(AE)
-check_ae_fatal(AE, preproc = roche_derive_rave_row)
+DM <- data.frame(
+  USUBJID = 1:5,
+  DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
+  stringsAsFactors = FALSE)
+
+check_ae_fatal(AE, DM)
+check_ae_fatal(AE, DM, preproc = ql_derive_seq)
 
 AE$AETOXGR <- NULL
-check_ae_fatal(AE)
+check_ae_fatal(AE, DM)
 
 AE$AEDECOD <- NULL
-check_ae_fatal(AE)
+check_ae_fatal(AE, DM)
 
 
 # AESEV, no AETOXGR
@@ -59,18 +65,21 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", "02FEB2017", "03FEB2017", "04FEB2017", NA),
   AESDTH = c("是", "是", "否", "是", NA),
   AESEV = c("SEVERE", "MILD", "SEVERE", NA, NA),
-  AESPID = "FORMNAME-R:12/L:2XXXX",
+  AESEQ =11:15,
   stringsAsFactors = FALSE
 )
+DM <- data.frame(
+  USUBJID = 1:5,
+  DTHDTC = c("01FEB2017", "02FEB2017", "03FEB2017", "04FEB2017", NA),
+  stringsAsFactors = FALSE)
 
-check_ae_fatal(AE)
-check_ae_fatal(AE, preproc = roche_derive_rave_row)
+check_ae_fatal(AE, DM)
+check_ae_fatal(AE, DM, preproc = ql_derive_seq)
 
 AE$AESEV <- NULL
-check_ae_fatal(AE)
+check_ae_fatal(AE, DM)
 
 # Both AESEV and AETOXGR have non-missing values
 
@@ -79,16 +88,19 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5", "AE6", "AE7"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA, "04FEB2017", "05FEB2017"),
   AESDTH = c("是", "是", "否", "是", NA, "是", "是"),
   AESEV = c("SEVERE", "MILD", "SEVERE", NA, NA, "MILD", "SEVERE"),
   AETOXGR = c("5", "5", "5", NA, NA, "1", "5"),
-  AESPID = "FORMNAME-R:12/L:2XXXX",
+  AESEQ = 11:17,
   stringsAsFactors = FALSE
 )
+DM <- data.frame(
+  USUBJID = 1:7,
+  DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA, "04FEB2017", "05FEB2017"),
+  stringsAsFactors = FALSE)
 
-check_ae_fatal(AE)
-check_ae_fatal(AE, preproc = roche_derive_rave_row)
+check_ae_fatal(AE, DM)
+check_ae_fatal(AE, DM, preproc = ql_derive_seq)
 
 
 # Neither AESEV or AETOXGR
@@ -98,13 +110,15 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
   AESDTH = c("是", "是", "否", "是", NA),
   AESPID = "FORMNAME-R:12/L:2XXXX",
   stringsAsFactors = FALSE
 )
-
-check_ae_fatal(AE)
+DM <- data.frame(
+  USUBJID = 1:5,
+  DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
+  stringsAsFactors = FALSE)
+check_ae_fatal(AE, DM)
 
 # AETOXGR exists but unmapped AESEV
 
@@ -113,16 +127,20 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
   AESDTH = c("是", "是", "否", "是", NA),
   AESEV = rep(NA, 5),
   AETOXGR = c("5", "5", "5", NA, NA),
-  AESPID = "FORMNAME-R:12/L:2XXXX",
+  AESEQ = 111:115,
   stringsAsFactors = FALSE
 )
+DM <- data.frame(
+  USUBJID = 1:5,
+  DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
+  stringsAsFactors = FALSE)
 
-check_ae_fatal(AE)
-check_ae_fatal(AE, preproc = roche_derive_rave_row)
+
+check_ae_fatal(AE, DM)
+check_ae_fatal(AE, DM, preproc = ql_derive_seq)
 
 # AETOXGR and AESEV exist, by both are unmapped
 
@@ -131,18 +149,20 @@ AE <- data.frame(
   AESTDTC = "01JAN2017",
   AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
   AEOUT = "死亡",
-  AEDTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
   AESDTH = c("是", "是", "否", "是", NA),
   AESEV = NA,
   AETOXGR = NA,
-  AESPID = "FORMNAME-R:12/L:2XXXX",
+  AESEQ = "FORMNAME-R:12/L:2XXXX",
   stringsAsFactors = FALSE
 )
+DM <- data.frame(
+  USUBJID = 1:5,
+  DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
+  stringsAsFactors = FALSE)
 
-check_ae_fatal(AE)
-check_ae_fatal(AE, preproc = roche_derive_rave_row)
-
+check_ae_fatal(AE, DM)
+check_ae_fatal(AE, DM, preproc = ql_derive_seq)
 }
 \author{
-1
+JH
 }

@@ -50,7 +50,7 @@
 #' )
 #'
 #' check_ae_aerel(AE1)
-#' check_ae_aerel(AE1, preproc = roche_derive_rave_row)
+#' check_ae_aerel(AE1, preproc = ql_derive_seq)
 #'
 #' AE2 <- data.frame(
 #'   STUDYID = 1001,
@@ -66,7 +66,7 @@
 #' )
 #'
 #' check_ae_aerel(AE2)
-#' check_ae_aerel(AE2, preproc = roche_derive_rave_row)
+#' check_ae_aerel(AE2, preproc = ql_derive_seq)
 #'
 #' AE3 <- data.frame(
 #'   STUDYID = 1001,
@@ -80,7 +80,7 @@
 #' )
 #'
 #' check_ae_aerel(AE3)
-#' check_ae_aerel(AE3, preproc = roche_derive_rave_row)
+#' check_ae_aerel(AE3, preproc = ql_derive_seq)
 #'
 #'
 #' AE4 <- data.frame(
@@ -97,7 +97,7 @@
 #' )
 #'
 #' check_ae_aerel(AE4)
-#' check_ae_aerel(AE4, preproc = roche_derive_rave_row)
+#' check_ae_aerel(AE4, preproc = ql_derive_seq)
 #'
 check_ae_aerel <- function(AE, preproc = identity, ...) {
   ### Keep only AEREL, AEREL1 - AERELN
@@ -110,7 +110,7 @@ check_ae_aerel <- function(AE, preproc = identity, ...) {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
     AE <- AE %>%
-      select(any_of(c("USUBJID", "AESTDTC", "AETERM", "AEGRPID", "AESPID", all_aerel))) # [,intersect(names(AE), c("USUBJID","AESTDTC","AETERM","RAVE", all_aerel))]
+      select(any_of(c("USUBJID", "AESTDTC", "AETERM", "AEGRPID", "AESPID", "AESEQ", all_aerel))) # [,intersect(names(AE), c("USUBJID","AESTDTC","AETERM","RAVE", all_aerel))]
 
     mydf_sub <- AE
 

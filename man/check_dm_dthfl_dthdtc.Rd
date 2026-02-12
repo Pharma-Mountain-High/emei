@@ -47,5 +47,5 @@ check_dm_dthfl_dthdtc(DM)
 
 }
 \author{
-Ross Farrugia
+JH
 }

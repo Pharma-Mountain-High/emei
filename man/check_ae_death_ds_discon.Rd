@@ -28,7 +28,8 @@ there should be a study discontinuation record indicated by DS.DSSCAT
 AE <- data.frame(
   STUDYID = rep(1, 6),
   USUBJID = 1:6,
-  AEDTHDTC = c(NA, "2020-01-01", NA, NA, NA, NA),
+  AESEQ = 2:7,
+  AEENDTC = c(NA, "2020-01-01", NA, NA, NA, NA),
   AESDTH = c(NA, NA, "是", NA, NA, NA),
   AEOUT = c(NA, NA, NA, "死亡", NA, NA),
   AETOXGR = c(NA, NA, NA, NA, "5", NA),
@@ -38,20 +39,17 @@ AE <- data.frame(
 DS <- data.frame(
   STUDYID = 1,
   USUBJID = 1:3,
-  DSCAT = "DISPOSITION EVENT",
+  DSSEQ = 1:3,
+  DSCAT = "处置事件",
   DSSCAT = c(
-    "STUDY DISCON",
-    "STUDY DISCON",
-    "STUDY COMPLETION/EARLY DISCONTINUATION"
+    "研究结束",
+    "研究终止",
+    "研究结束"
   )
 )
 
 check_ae_death_ds_discon(AE, DS)
-check_ae_death_ds_discon(AE, DS, preproc = roche_derive_rave_row)
-
-DS$DSSCAT <- NULL
-
-check_ae_death_ds_discon(AE, DS)
+check_ae_death_ds_discon(AE, DS, preproc = ql_derive_seq)
 
 }
 \author{

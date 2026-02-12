@@ -14,7 +14,7 @@
 #' @importFrom dplyr %>% select
 #' @importFrom tidyselect any_of
 #'
-#' @author Edgar Manukyan, N Springfield updated on 14SEP2020
+#' @author Jh
 #'
 #' @return boolean value if check failed or passed with 'msg' attribute if the test failed
 #'
@@ -43,6 +43,7 @@
 #' check_dd_death_date(AE, DS)
 #' check_dd_death_date(AE, DS, preproc = roche_derive_rave_row)
 #'
+
 check_dd_death_date <- function(AE, DS, preproc = identity, ...) {
   if (AE %lacks_any% c("USUBJID", "AEDTHDTC")) {
     fail(lacks_msg(AE, c("USUBJID", "AEDTHDTC")))

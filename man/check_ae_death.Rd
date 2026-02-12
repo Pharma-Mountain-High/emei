@@ -24,24 +24,21 @@ Checks for grade 5 AEs not marked fatal (AEOUT), death not indicated (AESDTH), o
 AE <- data.frame(
   USUBJID = 1:10,
   AETOXGR = c(1:5, 5, 5, 5, 5, 5),
-  AEDTHDTC = c(rep(NA, 4), rep("2020-01-01", 6)),
+  AESEQ = 1:10,
   AESDTH = c(rep(NA, 4), rep("是", 6)),
   AEOUT = c(rep(NA, 4), rep("死亡", 6)),
   AESPID = "FORMNAME-R:13/L:13XXXX"
 )
 
 check_ae_death(AE)
-check_ae_death(AE, preproc = roche_derive_rave_row)
+check_ae_death(AE, preproc =ql_derive_seq)
 
-AE$AEDTHDTC[5] <- "NA"
-AE$AEDTHDTC[6] <- NA
-AE$AEDTHDTC[7] <- ""
+
 AE$AESDTH[8] <- NA
 AE$AEOUT[9] <- NA
 
 check_ae_death(AE)
-check_ae_death(AE, preproc = roche_derive_rave_row)
-
+check_ae_death(AE, preproc =ql_derive_seq)
 }
 \author{
 1

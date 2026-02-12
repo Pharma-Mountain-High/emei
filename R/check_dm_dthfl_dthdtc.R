@@ -12,7 +12,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Ross Farrugia
+#' @author JH
 #'
 #' @examples
 #'
