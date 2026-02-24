@@ -15,7 +15,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Chandra Mannem
+#' @author JH
 #'
 #' @examples
 #'
@@ -28,9 +28,9 @@
 #'
 #' check_mh_missing_month(MH)
 #'
-#' MH$MHSPID <- "FORMNAME-R:2/L:2XXXX"
+#' MH$MHSEQ<- 11:15
 #'
-#' check_mh_missing_month(MH, preproc = roche_derive_rave_row)
+#' check_mh_missing_month(MH, preproc = ql_derive_seq)
 #'
 check_mh_missing_month <- function(MH, preproc = identity, ...) {
   if (MH %lacks_any% c("USUBJID", "MHTERM", "MHSTDTC")) {
@@ -41,11 +41,11 @@ check_mh_missing_month <- function(MH, preproc = identity, ...) {
 
     if (MH %lacks_any% "MHENDTC") {
       df <- MH %>%
-        select(any_of(c("USUBJID", "MHTERM", "MHSTDTC", "RAVE"))) %>%
+        select(any_of(c("USUBJID", "MHTERM", "MHSTDTC", "SEQ"))) %>%
         filter(missing_month(MHSTDTC))
     } else {
       df <- MH %>%
-        select(any_of(c("USUBJID", "MHTERM", "MHSTDTC", "MHENDTC", "RAVE"))) %>%
+        select(any_of(c("USUBJID", "MHTERM", "MHSTDTC", "MHENDTC", "SEQ"))) %>%
         filter(missing_month(MHSTDTC) | missing_month(MHENDTC))
     }
 

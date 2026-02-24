@@ -18,7 +18,7 @@
 #'
 #' @importFrom utils head
 #'
-#' @author Madeleine Ma
+#' @author JH
 #'
 #' @examples
 #'
@@ -45,8 +45,8 @@
 #' LB$VISIT <- "SCREENING"
 #' check_lb_lbstresn_missing(LB)
 #'
-#' LB$LBSPID <- "FORMNAME-R:2/L:2XXXX"
-#' check_lb_lbstresn_missing(LB, preproc = roche_derive_rave_row)
+#' LB$LBSEQ <- 1:3
+#' check_lb_lbstresn_missing(LB, preproc = ql_derive_seq)
 #'
 #' LB$LBSTRESN <- NULL
 #' check_lb_lbstresn_missing(LB)
@@ -63,7 +63,7 @@ check_lb_lbstresn_missing <- function(LB, preproc = identity, ...) {
 
     # Subset LB to fewer variables
     LB <- LB %>%
-      select(any_of(c("USUBJID", "LBTESTCD", "LBDTC", "LBORRES", "LBORRESU", "LBSTRESN", "LBSTRESC", "RAVE", "VISIT")))
+      select(any_of(c("USUBJID", "LBTESTCD", "LBDTC", "LBORRES", "LBORRESU", "LBSTRESN", "LBSTRESC", "SEQ", "VISIT")))
 
     # Subset to LBORRES populated but LBSTRESN not
     mydf <- subset(LB, !is_sas_na(LB$LBORRES) & is_sas_na(LB$LBSTRESN) & is_sas_na(LB$LBSTRESC))

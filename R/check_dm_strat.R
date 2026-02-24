@@ -1,5 +1,3 @@
-# check_ds_sc_strat
-
 #' @title check missing stratification factors in randomized DM
 #'
 #' @param DM Data frame containing `USUBJID` and, if applicable, randomization

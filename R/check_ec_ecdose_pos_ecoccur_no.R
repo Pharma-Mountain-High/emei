@@ -9,6 +9,7 @@
 # but occurrence not marked as "是"
 #' @export
 #' @importFrom dplyr %>% filter select
+#' @author JH
 #' @examples
 #' EC <- data.frame(
 #'   USUBJID = 1:6,

@@ -1,8 +1,8 @@
-#' @title Check if there is a death date and AEOUT='DEATH' agreement
+#' @title Check if there is a death date and AEOUT is death agreement
 #'
-#' @description This check looks for AE death dates if AEOUT='DEATH' and for the
+#' @description This check looks for AE death dates if AEOUT is death and for the
 #'    reverse, i.e if there is an AE death date, then AEOUT should have the value
-#'    "DEATH".
+#'    "死亡".
 #'
 #' @param AE Adverse Events SDTM dataset with variables USUBJID, AEDTHDTC,
 #'    AEDECOD, AESTDTC and AEOUT

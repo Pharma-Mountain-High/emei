@@ -16,12 +16,13 @@
 #'
 #' @export
 #'
-#' @author 1
+#' @author JH
 #'
 #' @examples
 #'
 #' CE <- data.frame(
 #'   USUBJID = c(1, 2, 3, 4),
+#'   CESEQ = 1:4,
 #'   CETERM = c("Headache", "Nausea", "Dizziness", "Fever"),
 #'   CESTDTC = c("2023---01", "2023-01-15", "2023-02-01", "2023-02-10"),
 #'   CEENDTC = c("2023-01-02", "2023---01", "2023-02-02", "2023-02-12"),
@@ -32,10 +33,11 @@
 #' )
 #'
 #' check_ce_missing_month(CE)
-#' check_ce_missing_month(CE, preproc = roche_derive_rave_row)
+#' check_ce_missing_month(CE, preproc = ql_derive_seq)
 #'
 #' CE <- data.frame(
 #'   USUBJID = c(1, 2, 3, 4),
+#'   CESEQ = 1:4,
 #'   CETERM = c("Headache", "Nausea", "Dizziness", "Fever"),
 #'   CESTDTC = c("2023-01-01", "2023-01-15", "2023-02-01", "2023-02-10"),
 #'   CEENDTC = c("2023-01-02", "2023-01-16", "2023-02-02", "2023-02-12"),
@@ -65,19 +67,19 @@ check_ce_missing_month <- function(CE, preproc = identity, ...) {
     # check if CESTDTC has missing month and is in format 'yyyy---dd'
     if (CE %has_all% c("CESTDTC")) {
       outlist[["cestdtc"]] <- subset(CE, (missing_month(CESTDTC)), ) %>%
-        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "RAVE")))
+        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "SEQ")))
     }
 
     # check if CEENDTC has missing month and is in format 'yyyy---dd'
     if (CE %has_all% c("CEENDTC")) {
       outlist[["ceendtc"]] <- subset(CE, (missing_month(CEENDTC)), ) %>%
-        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "RAVE")))
+        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "SEQ")))
     }
 
     # check if CEDTC has missing month and is in format 'yyyy---dd'
     if (CE %has_all% c("CEDTC")) {
       outlist[["cedtc"]] <- subset(CE, (missing_month(CEDTC)), ) %>%
-        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "RAVE")))
+        select(any_of(c("USUBJID", "CETERM", "CESTDTC", "CEENDTC", "CEDTC", "SEQ")))
     }
 
     ### stack

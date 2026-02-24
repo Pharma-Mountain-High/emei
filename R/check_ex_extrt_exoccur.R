@@ -4,7 +4,7 @@
 #'
 #' @param EX Exposure domain with variables USUBJID, EXSTDTC, EXTRT, EXDOSE
 #'
-#' @author 1
+#' @author Jh
 #'
 #' @importFrom dplyr %>% select filter
 #'
@@ -22,7 +22,7 @@
 #'   EXDOSE = 1:10,
 #'   stringsAsFactors = FALSE
 #' )
-#'
+#' check_ex_extrt_exoccur(EX)
 #' EX$EXTRT[1] <- ""
 #' EX$EXTRT[2] <- "NA"
 #' EX$EXTRT[3] <- NA

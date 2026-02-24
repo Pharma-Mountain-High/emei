@@ -22,6 +22,7 @@
 #'
 #' CM <- data.frame(
 #'   USUBJID = 1:3,
+#'   CMSEQ = 11:13,
 #'   CMTRT = c("CM1", "CM2", "CM3"),
 #'   CMSTDTC = c("2017-01-01", "2017---01", "2017-01-02"),
 #'   CMENDTC = c("2017-02-01", "2017-03-01", "2017---01"),
@@ -30,9 +31,21 @@
 #' )
 #'
 #' check_cm_missing_month(CM)
-#' check_cm_missing_month(CM, preproc = roche_derive_rave_row)
+#' check_cm_missing_month(CM, preproc = ql_derive_seq)
 #'
 #' CM$CMSTDTC <- NULL
+#'
+#' check_cm_missing_month(CM)
+#'
+#' CM <- data.frame(
+#'   USUBJID = 1:3,
+#'   CMSEQ = 11:13,
+#'   CMTRT = c("CM1", "CM2", "CM3"),
+#'   CMSTDTC = c("2017-01-01", "2017-02-01", "2017-01-02"),
+#'   CMENDTC = c("2017-02-01", "2017-03-01", "2017-02-01"),
+#'   CMSPID = "/F:XXX-D:12345-R:123",
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' check_cm_missing_month(CM)
 #'
@@ -49,7 +62,7 @@ check_cm_missing_month <- function(CM, preproc = identity, ...) {
       CM,
       (missing_month(CMSTDTC) | missing_month(CMENDTC)),
     ) %>%
-      select(any_of(c("USUBJID", "CMTRT", "CMSTDTC", "CMENDTC", "RAVE")))
+      select(any_of(c("USUBJID", "CMTRT", "CMSTDTC", "CMENDTC", "SEQ")))
     rownames(mydf) <- NULL
 
     ### Print to report

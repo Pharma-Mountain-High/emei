@@ -1,6 +1,6 @@
-#' @title Check for partial death dates in AE and DS
+#' @title Check for partial death dates in DM and DS
 #'
-#' @description This checks looks for partial death dates in AE and DS
+#' @description This checks looks for partial death dates in DM and DS
 #'
 #' @param DM SDTM dataset with variable DTHDTC
 #' @param DS Dispostion SDTM dataset with variables USUBJID,DSSCAT,DSSTDTC,DSDECOD

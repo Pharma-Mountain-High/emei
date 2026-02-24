@@ -16,7 +16,7 @@
 #' @importFrom dplyr %>% filter select
 #' @importFrom tidyselect any_of
 #'
-#' @author Will Harris
+#' @author Jh
 #'
 #' @examples
 
@@ -43,7 +43,8 @@
 #' # Example without TUEVAL column (still checks TUMETHOD and TULOC)
 #' TU2 <- TU
 #' TU2$TUEVAL <- NULL
-#' check_tu_tuloc_missing(TU2)
+#' TU2$TUSEQ <- 1:3
+#' check_tu_tuloc_missing(TU2, preproc = ql_derive_seq)
 
 
 check_tu_tuloc_missing <- function(TU, preproc = identity, ...) {
@@ -58,11 +59,11 @@ check_tu_tuloc_missing <- function(TU, preproc = identity, ...) {
       ### Subset TU to only target lesions with missing TULOC
       mydf <- TU %>%
         filter(is_sas_na(TULOC), !is_sas_na(TUMETHOD)) %>%
-        select(any_of(c("USUBJID", "TUDTC", "VISIT", "TUORRES", "TULOC", "RAVE")))
+        select(any_of(c("USUBJID", "TUDTC", "VISIT", "TUORRES", "TULOC", "SEQ")))
     } else {
       mydf <- TU %>%
         filter(is_sas_na(TULOC), !is_sas_na(TUMETHOD), toupper(TUEVAL) == "研究者" | is_sas_na(TUEVAL)) %>%
-        select(any_of(c("USUBJID", "TUDTC", "VISIT", "TUORRES", "TULOC", "RAVE")))
+        select(any_of(c("USUBJID", "TUDTC", "VISIT", "TUORRES", "TULOC", "SEQ")))
     }
 
     rownames(mydf) <- NULL

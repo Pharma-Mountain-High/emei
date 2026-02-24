@@ -12,7 +12,7 @@
 #'
 #' @export
 #'
-#' @author Vira Vrakina
+#' @author Jh
 #'
 #' @examples
 #'

@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @author Rena Wang
+#' @author JH
 #'
 #' @examples
 #'

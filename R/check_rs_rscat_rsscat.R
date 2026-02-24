@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-#' @author Saibah Chohan, Ashley Mao, Tina Cho (HackR 2021 Team STA-R)
+#' @author Jh
 #'
 #' @examples
 #'

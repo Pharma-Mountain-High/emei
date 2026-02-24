@@ -13,7 +13,7 @@
 #'
 #' @export
 #'
-#' @author Sara Bodach
+#' @author Jh
 #'
 #' @examples
 #'

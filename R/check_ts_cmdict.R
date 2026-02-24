@@ -12,7 +12,7 @@
 #'
 #' @importFrom dplyr %>% filter select pull case_when mutate
 #'
-#' @author Antony Howard (HackR 2021 Team Pentraxin1)
+#' @author Jh
 #'
 #' @examples
 #'
