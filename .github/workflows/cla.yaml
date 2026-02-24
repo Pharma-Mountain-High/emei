@@ -55,6 +55,6 @@ jobs:
           use-dco-flag: false
           lock-pullrequest-aftermerge: true
         env:
-          GITHUB_TOKEN: ${{ env.token }}
-          PERSONAL_ACCESS_TOKEN: ${{ env.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 

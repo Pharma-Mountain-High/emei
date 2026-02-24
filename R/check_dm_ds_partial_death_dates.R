@@ -44,12 +44,12 @@ check_dm_ds_partial_death_dates <- function(DM, DS, preproc = identity, ...) {
   if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")) {
     fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")))
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
-    fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else {
     # Apply company specific preprocessing function
     DS <- preproc(DS, ...)
 
-    ### Find records with partial death dates (length <10) in AE and DS
+    ### Find records with partial death dates (length <10) in DM and DS
 
     mydf1 <- subset(DS, DS$DSDECOD == "死亡" & !is_sas_na(DS$DSSTDTC) & nchar(DS$DSSTDTC) < 10 )%>%
       select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC","SEQ")))

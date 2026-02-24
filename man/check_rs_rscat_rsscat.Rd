@@ -32,5 +32,5 @@ check_rs_rscat_rsscat(RS)
 
 }
 \author{
-Saibah Chohan, Ashley Mao, Tina Cho (HackR 2021 Team STA-R)
+Jh
 }

@@ -37,5 +37,5 @@ check_dm_armcd(DM)
 
 }
 \author{
-Rena Wang
+JH
 }

@@ -62,5 +62,5 @@ check_lb_lbstresc_char(LB)
 
 }
 \author{
-Vira Vrakina
+Jh
 }

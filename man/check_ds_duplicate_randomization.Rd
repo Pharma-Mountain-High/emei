@@ -35,5 +35,5 @@ check_ds_duplicate_randomization(DS)
 
 }
 \author{
-Madeleine Ma
+JH
 }

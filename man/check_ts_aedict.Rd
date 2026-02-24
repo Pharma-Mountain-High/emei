@@ -69,5 +69,5 @@ check_ts_aedict(rbind(TS1, TS1))
 
 }
 \author{
-Vira Vrakina, Antony Howard (HackR 2021 Team Pentraxin1)
+Jh
 }

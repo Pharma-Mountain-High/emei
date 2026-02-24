@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_ae_aesdth_dthdtc.R
 \name{check_ae_aesdth_dthdtc}
 \alias{check_ae_aesdth_dthdtc}
-\title{Check AEs with AEDTHDTC value but AESDTH not "Y"}
+\title{Check DM with DTHDTC value but AESDTH not "Y"}
 \usage{
 check_ae_aesdth_dthdtc(AE, DM, preproc = identity, ...)
 }
@@ -22,7 +22,7 @@ attribute if the check failed
 }
 \description{
 This check looks for DM entries with an DTHDTC (death date)
-value and  AESDTH of AE not equal to "Y"
+value and  AESDTH of AE not equal to "是"
 }
 \examples{
 

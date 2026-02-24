@@ -16,7 +16,7 @@ Boolean value for whether the check passed or failed, with 'msg'
 attribute if the check failed
 }
 \description{
-This check looks for valid exposures (EXOCCUR=Y or doesn't exist) but
+This check looks for valid exposures (EXOCCUR="是" or doesn't exist) but
 EXDOSE (dose per administration) is not > 0 (>= 0 in case of placebo) and/or
 EXSTDTC (start date/treatment date) is missing or incomplete in the EX
 (exposure) SDTM domain
@@ -24,16 +24,16 @@ EXSTDTC (start date/treatment date) is missing or incomplete in the EX
 \examples{
 
 EX <- data.frame(
-  USUBJID = LETTERS[1:5],
-  VISIT = paste0("Visit ", 1:5),
-  VISITNUM = 1:5,
-  EXTRT = LETTERS[1:5],
-  EXDOSE = 1:5,
-  EXSTDTC = c("2010-01-01", rep("", 4)),
-  EXENDTC = c("2010-01-01", rep("", 4)),
+  USUBJID = LETTERS[1:6],
+  VISIT = paste0("Visit ", 1:6),
+  VISITNUM = 1:6,
+  EXTRT = LETTERS[1:6],
+  EXDOSE = 1:6,
+  EXSTDTC = c("2010-01-01", rep("", 5)),
+  EXENDTC = c("2010-01-01", rep("", 5)),
   stringsAsFactors = FALSE
 )
-
+check_ex_exoccur_exdose_exstdtc(EX)
 EX$EXSTDTC[2] <- "2011"
 EX$EXDOSE[1] <- 0
 
@@ -45,5 +45,5 @@ check_ex_exoccur_exdose_exstdtc(EX)
 
 }
 \author{
-Sara Bodach
+Jh
 }

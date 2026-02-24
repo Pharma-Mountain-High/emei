@@ -11,7 +11,7 @@
 #'
 #' @export
 #'
-#' @author 1
+#' @author Jh
 #'
 #' @examples
 #'
@@ -55,7 +55,7 @@
 check_dm_dthdtc_ds_death <- function(DM, DS) {
   ### First check that required variables exist and return a message if they don't
   if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
-    fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")))
   } else {
@@ -76,11 +76,11 @@ check_dm_dthdtc_ds_death <- function(DM, DS) {
         # Look for all records in DM where the death date is populated
         dm0a <- subset(DM, !is_sas_na(DM$DTHDTC), )
 
-        # Check for subjects in ds0a that do not have a matching record in ae0a
+        # Check for subjects in ds0a that do not have a matching record in dm0a
         ds11 <- subset(ds0a, !(ds0a$USUBJID %in% dm0a$USUBJID), c("USUBJID", "DSTERM", "DSSTDTC"))
         rownames(ds11) <- NULL
 
-        # If all all subjects in ds0a have a matching record in ae0a
+        # If all all subjects in ds0a have a matching record in dm0a
         if (nrow(ds11) == 0) {
           pass()
 
