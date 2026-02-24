@@ -37,7 +37,7 @@
 #'   PRSPID = "FORMNAME-R:2/L:2XXXX",
 #'   stringsAsFactors = FALSE
 #' )
-#' check_pr_prlat(PR, preproc = roche_derive_rave_row)
+#' check_pr_prlat(PR, preproc = ql_derive_seq)
 #'
 #' PR <- data.frame(
 #'   USUBJID = 1:5,
