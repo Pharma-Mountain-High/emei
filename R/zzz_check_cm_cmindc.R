@@ -1,8 +1,8 @@
-#' @title Check for concomitant medication indication with text string "PROPHYL"
+#' @title Check for concomitant medication indication with text string "预防用药"
 #' when not given for prophylaxis
 #'
-#' @description This check looks for patients with text string "PROPHYL" in CMINDC
-#' when CMPROPH is not checked as "Y" in studies with given for prophylaxis
+#' @description This check looks for patients with text string "预防用药" in CMINDC
+#' when CMPROPH is not checked as "是" in studies with given for prophylaxis
 #' variable (CMPROPH)
 #'
 #' @param CM Concomitant Medication SDTM dataset with variables USUBJID, CMTRT,
@@ -37,13 +37,13 @@
 #' )
 #'
 #' check_cm_cmindc(CM)
-#' check_cm_cmindc(CM, preproc = roche_derive_rave_row)
+#' check_cm_cmindc(CM, preproc = ql_derive_seq)
 #'
 #' CM$CMPROPH[7] <- "是"
 #' check_cm_cmindc(CM)
 #'
 #' CM$CMSPID <- NULL
-#' check_cm_cmindc(CM, preproc = roche_derive_rave_row)
+#' check_cm_cmindc(CM, preproc = ql_derive_seq)
 #'
 #' CM$CMPROPH <- NULL
 #' check_cm_cmindc(CM)
@@ -56,14 +56,14 @@ check_cm_cmindc <- function(CM, preproc = identity, ...) {
     # Apply company specific preprocessing function
     CM <- preproc(CM, ...)
 
-    perm_var <- c("RAVE")
+    perm_var <- c("SEQ")
     int_var <- intersect(names(CM), perm_var)
 
     # keep records not indicated as prophylactic via CMPROPH
 
     cmNP <- CM %>%
       filter(is_sas_na(CMPROPH)) %>%
-      select(any_of(c("USUBJID", int_var, "CMTRT", "CMSTDTC", "CMINDC", "CMPROPH", "RAVE")))
+      select(any_of(c("USUBJID", int_var, "CMTRT", "CMSTDTC", "CMINDC", "CMPROPH")))
 
     mydf <- cmNP %>% filter(grepl("预防用药", toupper(CMINDC)))
     rownames(mydf) <- NULL
@@ -76,7 +76,7 @@ check_cm_cmindc <- function(CM, preproc = identity, ...) {
       fail(
         paste0(
           "There are ", length(unique(mydf$USUBJID)),
-          " patients with CM indication containing 'PROPHYL' when given for prophylaxis variable is not checked as 'Y'. "
+          " patients with CM indication containing '预防用药' when given for prophylaxis variable is not checked as '是'. "
         ),
         mydf
       )
