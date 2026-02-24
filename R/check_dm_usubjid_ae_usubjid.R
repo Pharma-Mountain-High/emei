@@ -17,7 +17,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Vani Nimbal
+#' @author JH
 #'
 #' @examples
 #' USUBJID <- c(1:10)

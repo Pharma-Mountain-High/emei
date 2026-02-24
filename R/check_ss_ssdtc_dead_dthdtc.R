@@ -15,7 +15,7 @@
 #'
 #' @importFrom dplyr left_join filter %>%
 #'
-#' @author Vira Vrakina
+#' @author Jh
 #'
 #' @examples
 #'

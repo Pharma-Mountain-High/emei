@@ -7,6 +7,7 @@
 #' @return Boolean value with attributes; returns FALSE with attached data if issues are found
 #' @export
 #' @importFrom dplyr %>% filter select
+#' @author JH
 #' @examples
 #'
 #' EC <- data.frame(

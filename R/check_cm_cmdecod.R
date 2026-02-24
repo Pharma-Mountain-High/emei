@@ -13,13 +13,14 @@
 #' @importFrom dplyr %>% filter select
 #' @importFrom tidyselect any_of
 #'
-#' @author Lei Zhao, Stella Banjo (HackR 2021)
+#' @author JH
 #'
 #' @examples
 #'
 #' CM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DOMAIN = rep("CM", 5),
+#'   CMSEQ = 1:5,
 #'   CMTRT = rep("DRUG TERM", 5),
 #'   CMDECOD = rep("CODED DRUG TERM", 5),
 #'   CMSTDTC = 1:5,
@@ -41,7 +42,7 @@
 #' CM$CMDECOD[2] <- "NA"
 #' CM$CMDECOD[3:5] <- ""
 #' check_cm_cmdecod(CM)
-#' check_cm_cmdecod(CM, preproc = roche_derive_rave_row)
+#' check_cm_cmdecod(CM, preproc = ql_derive_seq)
 #'
 #' CM$CMDECOD <- NULL
 #' check_cm_cmdecod(CM)
@@ -57,7 +58,7 @@ check_cm_cmdecod <- function(CM, preproc = identity, ...) {
     ### Subset domain to only records with missing coded term (CMDECOD)
     mydf <- CM %>%
       filter(grepl("CONCOMITANT", CMCAT)) %>%
-      select(any_of(c("USUBJID", "CMSTDTC", "CMTRT", "CMDECOD", "CMPRESP", "CMOCCUR", "RAVE"))) %>%
+      select(any_of(c("USUBJID", "CMSTDTC", "CMTRT", "CMDECOD", "CMPRESP", "CMOCCUR", "SEQ"))) %>%
       filter(is_sas_na(CMDECOD))
     rownames(mydf) <- NULL
 

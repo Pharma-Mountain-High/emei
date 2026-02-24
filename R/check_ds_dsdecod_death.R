@@ -22,8 +22,9 @@
 #' @examples
 #'
 #' DS <- data.frame(
-#'   STUDYID = 1,
+#'   STUDYID = "XXX",
 #'   USUBJID = 1:3,
+#'   DSSEQ = 1:3,
 #'   DSDECOD = c(NA, "死亡", NA),
 #'   DSSTDTC = c(NA, "DSDATE", NA),
 #'   DSCAT = c("处置事件", "处置事件", "其他"),

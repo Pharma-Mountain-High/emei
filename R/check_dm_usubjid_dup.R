@@ -11,7 +11,7 @@
 #'
 #' @importFrom dplyr %>% count filter mutate select group_by ungroup n
 #'
-#' @author Madeleine Ma, Stella Banjo (HackR 2021)
+#' @author JH
 #'
 #' @examples
 #'

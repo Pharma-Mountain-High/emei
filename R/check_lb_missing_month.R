@@ -14,7 +14,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Sara Bodach
+#' @author Jh
 #'
 #' @examples
 #'
@@ -28,9 +28,9 @@
 #'
 #' check_lb_missing_month(LB)
 #'
-#' LB$LBSPID <- "FORMNAME-R:2/L:2XXXX"
+#' LB$LBSEQ<- 11:14
 #'
-#' check_lb_missing_month(LB, preproc = roche_derive_rave_row)
+#' check_lb_missing_month(LB, preproc = ql_derive_seq)
 #'
 #' LB$LBDTC <- NULL
 #'
@@ -45,7 +45,7 @@ check_lb_missing_month <- function(LB, preproc = identity, ...) {
 
     # check if LBDTC has missing month and is in format 'yyyy---dd'
     mydf <- LB %>%
-      select(any_of(c("USUBJID", "LBTEST", "LBDTC", "VISIT", "RAVE"))) %>%
+      select(any_of(c("USUBJID", "LBTEST", "LBDTC", "VISIT", "SEQ"))) %>%
       filter(missing_month(LBDTC))
     rownames(mydf) <- NULL
 

@@ -2,7 +2,7 @@
 #' date that is not equal to the death date
 #'
 #' @description This check looks for AEs with outcome of 'DEATH' but AE
-#' resolution date is not equal to AE death date.
+#' resolution date is not equal to DM death date.
 #' Note that these datapoints are not collected the same way for all trials -
 #' some trials leave AEENDTC missing if it was unresolved at death date. Confirm
 #' within your team before querying this issue.

@@ -11,7 +11,7 @@
 #'
 #' @export
 #'
-#' @author Jen Chen
+#' @author Jh
 #'
 #' @examples
 #'
