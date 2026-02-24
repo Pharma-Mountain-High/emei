@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_dm_ds_partial_death_dates.R
 \name{check_dm_ds_partial_death_dates}
 \alias{check_dm_ds_partial_death_dates}
-\title{Check for partial death dates in AE and DS}
+\title{Check for partial death dates in DM and DS}
 \usage{
 check_dm_ds_partial_death_dates(DM, DS, preproc = identity, ...)
 }
@@ -19,7 +19,7 @@ check_dm_ds_partial_death_dates(DM, DS, preproc = identity, ...)
 boolean value if check failed or passed with 'msg' attribute if the test failed
 }
 \description{
-This checks looks for partial death dates in AE and DS
+This checks looks for partial death dates in DM and DS
 }
 \examples{
 

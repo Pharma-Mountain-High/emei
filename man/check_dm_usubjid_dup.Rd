@@ -94,5 +94,5 @@ check_dm_usubjid_dup(DM6)
 
 }
 \author{
-Madeleine Ma, Stella Banjo (HackR 2021)
+JH
 }

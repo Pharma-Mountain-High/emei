@@ -47,8 +47,8 @@ check_lb_lbstresn_missing(LB)
 LB$VISIT <- "SCREENING"
 check_lb_lbstresn_missing(LB)
 
-LB$LBSPID <- "FORMNAME-R:2/L:2XXXX"
-check_lb_lbstresn_missing(LB, preproc = roche_derive_rave_row)
+LB$LBSEQ <- 1:3
+check_lb_lbstresn_missing(LB, preproc = ql_derive_seq)
 
 LB$LBSTRESN <- NULL
 check_lb_lbstresn_missing(LB)
@@ -58,5 +58,5 @@ check_lb_lbstresn_missing(LB)
 
 }
 \author{
-Madeleine Ma
+JH
 }

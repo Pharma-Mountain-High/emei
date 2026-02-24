@@ -33,14 +33,14 @@ LB <- data.frame(
 
 check_lb_missing_month(LB)
 
-LB$LBSPID <- "FORMNAME-R:2/L:2XXXX"
+LB$LBSEQ<- 11:14
 
-check_lb_missing_month(LB, preproc = roche_derive_rave_row)
+check_lb_missing_month(LB, preproc = ql_derive_seq)
 
 LB$LBDTC <- NULL
 
 check_lb_missing_month(LB)
 }
 \author{
-Sara Bodach
+Jh
 }

@@ -59,5 +59,5 @@ DS <- data.frame(
 check_dm_dthdtc_ds_death(DM, DS)
 }
 \author{
-1
+Jh
 }

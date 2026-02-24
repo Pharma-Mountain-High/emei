@@ -27,7 +27,7 @@ if TUEVAL and RSEVAL variables available.
 
 TU <- data.frame(
   USUBJID = 1:3,
-  TUSTRESC = c("INV001", "NEW", "NEW"),
+  TUSTRESC = c("INV001", "新病灶", "新病灶"),
   TUDTC = "2017-01-01"
 )
 
@@ -64,9 +64,9 @@ RS <- data.frame(
 
 check_tu_rs_new_lesions(RS, TU)
 
-TU$TUEVAL <- "INDEPENDENT ASSESSOR"
+TU$TUEVAL <- "研究者"
 
-RS$RSEVAL <- "INDEPENDENT ASSESSOR"
+RS$RSEVAL <- "研究者"
 
 ## pass if by IRF, even if NEW in TU
 check_tu_rs_new_lesions(RS, TU)
@@ -78,5 +78,5 @@ check_tu_rs_new_lesions(RS, TU)
 
 }
 \author{
-Will Harris
+Jh
 }

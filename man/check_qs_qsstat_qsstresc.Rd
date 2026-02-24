@@ -46,5 +46,5 @@ check_qs_qsstat_qsstresc(QS)
 
 }
 \author{
-Sara Bodach
+Jh
 }

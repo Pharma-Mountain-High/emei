@@ -33,11 +33,11 @@ MH <- data.frame(
 
 check_mh_missing_month(MH)
 
-MH$MHSPID <- "FORMNAME-R:2/L:2XXXX"
+MH$MHSEQ<- 11:15
 
-check_mh_missing_month(MH, preproc = roche_derive_rave_row)
+check_mh_missing_month(MH, preproc = ql_derive_seq)
 
 }
 \author{
-Chandra Mannem
+JH
 }

@@ -24,6 +24,7 @@ This check looks for missing CMDECOD values
 CM <- data.frame(
   USUBJID = 1:5,
   DOMAIN = rep("CM", 5),
+  CMSEQ = 1:5,
   CMTRT = rep("DRUG TERM", 5),
   CMDECOD = rep("CODED DRUG TERM", 5),
   CMSTDTC = 1:5,
@@ -45,12 +46,12 @@ CM$CMDECOD[1] <- NA
 CM$CMDECOD[2] <- "NA"
 CM$CMDECOD[3:5] <- ""
 check_cm_cmdecod(CM)
-check_cm_cmdecod(CM, preproc = roche_derive_rave_row)
+check_cm_cmdecod(CM, preproc = ql_derive_seq)
 
 CM$CMDECOD <- NULL
 check_cm_cmdecod(CM)
 
 }
 \author{
-Lei Zhao, Stella Banjo (HackR 2021)
+JH
 }

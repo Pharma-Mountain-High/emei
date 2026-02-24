@@ -46,8 +46,9 @@ head(as.data.frame(attr(res, "data")))
 # Example without TUEVAL column (still checks TUMETHOD and TULOC)
 TU2 <- TU
 TU2$TUEVAL <- NULL
-check_tu_tuloc_missing(TU2)
+TU2$TUSEQ <- 1:3
+check_tu_tuloc_missing(TU2, preproc = ql_derive_seq)
 }
 \author{
-Will Harris
+Jh
 }

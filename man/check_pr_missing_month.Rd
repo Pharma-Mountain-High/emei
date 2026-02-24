@@ -36,10 +36,13 @@ PR <- data.frame(
 )
 
 check_pr_missing_month(PR)
-
-check_pr_missing_month(PR, preproc = roche_derive_rave_row)
+PR$PRSEQ<- 11:13
+check_pr_missing_month(PR, preproc = ql_derive_seq)
 
 PR$PRENDTC <- NULL
 check_pr_missing_month(PR)
 
+}
+\author{
+JH
 }

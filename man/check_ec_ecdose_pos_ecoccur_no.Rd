@@ -40,3 +40,6 @@ EC$ECDOSE <- NULL
 check_ec_ecdose_pos_ecoccur_no(EC)
 
 }
+\author{
+JH
+}
