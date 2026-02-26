@@ -1,9 +1,9 @@
 #' @title Check that all RS dates for INV Overall Response are duplicated or
 #' earlier than last visit's (possible date entry error)
 #'
-#' @description This check identifies RSDTC values when RSEVAL == 'INVESTIGATOR'
+#' @description This check identifies RSDTC values when RSEVAL == '研究者'
 #' and RSTESTCD == 'OVRLRESP' that are duplicated or earlier than last visit's.
-#' Unscheduled and 'NOT DONE' visits are excluded.
+#' '计划外' and '未查' visits are excluded.
 #'
 #' @param RS Response SDTM dataset with variables USUBJID, VISITNUM, VISIT,
 #' RSDTC, RSTESTCD, RSEVAL, RSSTAT
@@ -25,17 +25,17 @@
 #'     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
 #'   ), 2),
 #'   VISITNUM = rep(1:5, 2),
-#'   VISIT = rep(c("Screening", "Cycle 1", "Cycle 2", "Cycle 3", "Follow-up"), 2),
+#'   VISIT = rep(c("筛选期", "C1/D1", "C2/D1", "C3/D1", "随访"), 2),
 #'   RSTESTCD = "OVRLRESP",
-#'   RSEVAL = "INVESTIGATOR",
+#'   RSEVAL = "研究者",
 #'   RSSTAT = "",
 #'   stringsAsFactors = FALSE
 #' )
 #' check_rs_rsdtc_visit_ordinal_error(RS)
 #'
 #' # adding cases with earler date
-#' RS$RSDTC[RS$USUBJID == 101 & RS$VISIT == "Cycle 3"] <- "2017-01-02T08:25"
-#' RS$RSDTC[RS$USUBJID == 102 & RS$VISIT == "Cycle 1"] <- "2017-01-01T06:25"
+#' RS$RSDTC[RS$USUBJID == 101 & RS$VISIT == "C3/D1"] <- "2017-01-02T08:25"
+#' RS$RSDTC[RS$USUBJID == 102 & RS$VISIT == "C1/D1"] <- "2017-01-01T06:25"
 #' check_rs_rsdtc_visit_ordinal_error(RS)
 #'
 check_rs_rsdtc_visit_ordinal_error <- function(RS) {

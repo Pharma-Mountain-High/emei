@@ -4,7 +4,8 @@
 #' @description This check identifies EXSTDTC values that are
 #' earlier than last visit's. Unscheduled visits are excluded.
 #'
-#' @param EX Exposure dataset with variables USUBJID, EXTRT, VISITNUM, VISIT, EXDTC, optional variable EXOCCUR
+#' @param EX Exposure dataset with variables USUBJID, EXTRT, VISITNUM, VISIT, EXSTDTC,
+#'   optional variable EXOCCUR
 #'
 #' @return boolean value if check failed or passed with 'msg' attribute if the
 #'   test failed
@@ -24,19 +25,19 @@
 #'     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
 #'   ), 2),
 #'   VISITNUM = rep(1:5, 2),
-#'   VISIT = rep(c("Cycle 1", "Cycle 2", "Cycle 3", "Cycle 4", "uNscheDuledd"), 2),
+#'   VISIT = rep(c("C1/D1", "C2/D1", "C3/D1", "C4/D1", "uNscheDuledd"), 2),
 #'   stringsAsFactors = FALSE
 #' )
 #' check_ex_exstdtc_visit_ordinal_error(EX)
 #'
 #' # adding cases with earlier date
-#' EX$EXSTDTC[EX$USUBJID == 101 & EX$VISIT == "Cycle 4"] <- "2017-01-10T08:25"
-#' EX$EXSTDTC[EX$USUBJID == 102 & EX$VISIT == "Cycle 2"] <- "2017-01-01T06:25"
+#' EX$EXSTDTC[EX$USUBJID == 101 & EX$VISIT == "C4/D1"] <- "2017-01-10T08:25"
+#' EX$EXSTDTC[EX$USUBJID == 102 & EX$VISIT == "C2/D1"] <- "2017-01-01T06:25"
 #' check_ex_exstdtc_visit_ordinal_error(EX)
 #'
 #' # adding cases with duplicated date
-#' EX$EXSTDTC[EX$USUBJID == 101 & EX$VISIT == "Cycle 5"] <- "2017-01-10T08:25"
-#' EX$EXSTDTC[EX$USUBJID == 102 & EX$VISIT == "Cycle 3"] <- "2017-01-01T06:25"
+#' EX$EXSTDTC[EX$USUBJID == 101 & EX$VISIT == "C4/D1"] <- "2017-01-10T08:25"
+#' EX$EXSTDTC[EX$USUBJID == 102 & EX$VISIT == "C3/D1"] <- "2017-01-01T06:25"
 #' check_ex_exstdtc_visit_ordinal_error(EX)
 #'
 check_ex_exstdtc_visit_ordinal_error <- function(EX) {

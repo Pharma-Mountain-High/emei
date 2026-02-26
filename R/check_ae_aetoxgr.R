@@ -66,7 +66,7 @@ check_ae_aetoxgr <- function(AE, preproc = identity, ...) {
     has_na <- is_sas_na(AE$AETOXGR) & is_sas_na(AE$AESEV)
     if (any(has_na)) {
       df <- AE[which(has_na), ] %>%
-        select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEDECOD", "AETOXGR", "AESEV", "AEGRPID", "AESPID","AESEQ")))
+        select(any_of(c("USUBJID", "AETERM", "AESTDTC", "AEDECOD", "AETOXGR", "AESEV", "SEQ", "AEGRPID", "AESPID")))
 
       fail("AE has records where both AESEV and AETOXGR have missing values. ", df)
     } else {
@@ -79,7 +79,7 @@ check_ae_aetoxgr <- function(AE, preproc = identity, ...) {
     has_na <- is_sas_na(AE[[toxgr_var]])
 
     if (any(has_na)) {
-      df <- AE[, intersect(names(AE), c("USUBJID", "AEGRPID", "AESPID", "AETERM", "AESTDTC", "AEDECOD", toxgr_var))] %>%
+      df <- AE[, intersect(names(AE), c("USUBJID", "AETERM", "AESTDTC", "AEDECOD", toxgr_var, "SEQ", "AEGRPID", "AESPID"))] %>%
         filter(has_na)
 
       fail(paste("AE has", nrow(df), "record(s) with missing", toxgr_var), df)

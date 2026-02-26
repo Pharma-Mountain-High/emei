@@ -2,11 +2,11 @@
 #' visit's (possible datetime data entry error)
 #'
 #' @description This check identifies LBDTC values that are duplicated or
-#' earlier than last visit's. Records with LBSTAT == 'NOT DONE' and unscheduled
-#' visits (VISIT with the string "UNSCHEDU") and treatment discon visits
-#' (VISIT with the string "TREATMENT OR OBSERVATION FU COMP EARLY DISC") are excluded.
+#' earlier than last visit's. Records with LBSTAT == '未查' and unscheduled
+#' visits (VISIT with the string "计划外") are excluded.
 #'
-#' @param LB SDTM dataset with variables USUBJID, VISITNUM, VISIT, LBDTC, LBTESTCD, LBSTAT
+#' @param LB SDTM dataset with variables USUBJID, VISITNUM, VISIT, LBDTC, LBSTAT.
+#'   LBTESTCD/LBCAT are used for grouping when available.
 #'
 #' @return boolean value if check failed or passed with 'msg' attribute if the
 #'   test failed
@@ -30,30 +30,30 @@
 #'   ), 2),
 #'   VISITNUM = rep(1:5, 2),
 #'   VISIT = rep(c(
-#'     "Visit 1",
-#'     "Visit 2",
-#'     "Visit 3",
-#'     "UNSCheduled!!!",
-#'     "VIsit 5"
+#'     "C1/D1",
+#'     "C2/D1",
+#'     "C3/D1",
+#'     "计划外访视",
+#'     "C4/D1"
 #'   ), 2),
-#'   LBSTAT = c(rep("", 9), "NOT DONE"),
+#'   LBSTAT = c(rep("", 9), "未查"),
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' check_lb_lbdtc_visit_ordinal_error(LB1)
 #'
 #' LB2 <- LB1
-#' LB2$LBCAT <- "Virology"
+#' LB2$LBCAT <- "病毒学检查"
 #' LB3 <- rbind(LB1, LB2)
 #' check_lb_lbdtc_visit_ordinal_error(LB3)
 #'
 #' # adding cases with earlier date
-#' LB3$LBDTC[LB3$USUBJID == 101 & LB3$VISIT == "Visit 3"] <- "2016-01-10T08:25"
-#' LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "Visit 2"] <- "2016-01-01T06:25"
+#' LB3$LBDTC[LB3$USUBJID == 101 & LB3$VISIT == "C3/D1"] <- "2016-01-10T08:25"
+#' LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "C2/D1"] <- "2016-01-01T06:25"
 #' check_lb_lbdtc_visit_ordinal_error(LB = LB3)
 #'
 #' # adding cases with duplicated date
-#' LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "Visit 3"] <- "2017-01-15T10:25"
+#' LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "C3/D1"] <- "2017-01-15T10:25"
 #' LB3 <- LB3[order(LB3$USUBJID, LB3$VISITNUM, LB3$LBDTC), ]
 #' check_lb_lbdtc_visit_ordinal_error(LB = LB3)
 #'
@@ -68,21 +68,25 @@
 #'
 check_lb_lbdtc_visit_ordinal_error <- function(LB) {
   class(LB) <- "data.frame"
-  vars <- c("USUBJID", "VISITNUM", "VISIT", "LBDTC", "LBSTAT")
+  vars <- c(
+    "USUBJID", "VISITNUM", "VISIT", "LBDTC",
+    names(LB)[names(LB) %in% c("LBTESTCD", "LBCAT")], "LBSTAT"
+  )
   if (LB %lacks_any% vars) {
     fail(lacks_msg(LB, vars))
   } else if (length(unique(LB[["VISITNUM"]])) <= 1) {
     fail(msg = "VISITNUM exists but only a single value. ")
   } else {
     subsetdf <- subset(LB, LB$LBSTAT != "未查" & !grepl(
-      "UNS|计划外",
+      "计划外",
       toupper(LB$VISIT)
     ))
     if (nrow(subsetdf) > 0) {
+      groupby_vars <- c("USUBJID", names(LB)[names(LB) %in% c("LBTESTCD", "LBCAT")])
       mydf2 <- dtc_dupl_early(
         dts = subsetdf, vars = vars,
-        groupby = vars[c(1)], dtc = vars[4], vars[1],
-        vars[2], vars[3], vars[4]
+        groupby = groupby_vars, dtc = "LBDTC", vars[1],
+        vars[2], vars[3], "LBDTC"
       )
       myout <- mydf2[!is.na(mydf2$check.flag), ]
       myout <- myout[order(

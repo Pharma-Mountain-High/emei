@@ -1,12 +1,14 @@
 #' @title Check TU Records where the same date occurs across multiple visits
 #'
 #' @description This check identifies records where the same date TUDTC occurs
-#'  across multiple visits. Only applies to assessments by investigator,
-#'  selected based on uppercased TUEVAL = "INVESTIGATOR" or missing or
-#'  TUEVAL variable does not exist.
+#'  across multiple visits.
+#'  Same-date checks are performed by USUBJID + TUDTC, and additionally by
+#'  TUTESTCD and TULNKID when available.
+#'  Only applies to investigator assessments (TUEVAL = "研究者"), or when
+#'  TUEVAL is missing or the TUEVAL variable does not exist.
 #'
 #' @param TU Tumor Identification SDTM dataset with variables USUBJID, TUDTC, VISIT,
-#' TUEVAL (optional), TUTESTCD (optional)
+#' TUEVAL (optional), TUTESTCD (optional), TULNKID (optional)
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
 #'
@@ -23,7 +25,7 @@
 #'
 #' @examples
 #'
-#' # records flagged
+#' # PASS: no records flagged with current key (USUBJID + TUDTC + TULNKID)
 #' TU <- data.frame(
 #'   USUBJID = 1,
 #'   TUDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
@@ -36,6 +38,15 @@
 #'
 #' check_tu_tudtc_across_visit(TU)
 #' check_tu_tudtc_across_visit(TU, preproc = ql_derive_seq)
+#'
+#' # FAIL: same date across visits after aligning TULNKID
+#' TU1 <- TU
+#' TU1$TUEVAL <- "研究者"
+#' TU1$TUTESTCD <- "TUMIDENT"
+#' TU1$TULNKID[TU1$VISIT == "C2D1" & TU1$TUDTC == "2016-06-01"] <- "T06"
+#'
+#' check_tu_tudtc_across_visit(TU1)
+#' check_tu_tudtc_across_visit(TU1, preproc = ql_derive_seq)
 #'
 #' # no records flagged because non-Investigator results
 #' TU2 <- TU
@@ -87,9 +98,10 @@ check_tu_tudtc_across_visit <- function(TU, preproc = identity, ...) {
         select(USUBJID, TUDTC, VISIT, any_of(c("SEQ", "TUTESTCD", "TULNKID", "TUSPID")))
     }
 
+    # Use TUTESTCD and TULNKID as part of duplicate key when available.
+    key_vars <- c("USUBJID", "TUDTC", names(tusub)[names(tusub) %in% c("TUTESTCD", "TULNKID")])
     tu_orig <- tusub # Save additional columns for merging in later
-    tusub <- tusub %>%
-      select(-any_of(c("SEQ", "TUTESTCD", "TULNKID", "TUSPID"))) # dont want to unique on these vars
+    tusub <- tusub %>% select(any_of(c(key_vars, "VISIT")))
 
     if (nrow(tusub) > 0) {
       # get unique visit/date pairs per patients
@@ -97,19 +109,19 @@ check_tu_tudtc_across_visit <- function(TU, preproc = identity, ...) {
       mypairs$x <- 1
 
       ### Get counts of visit values per date for each subject
-      mydf0 <- aggregate(mypairs$x, by = list(USUBJID = mypairs$USUBJID, TUDTC = mypairs$TUDTC), FUN = sum)
+      mydf0 <- aggregate(mypairs$x, by = mypairs[, key_vars, drop = FALSE], FUN = sum)
 
       ### Subset where count is >1
       mydf0 <- mydf0 %>%
         filter(x > 1) %>%
-        select(USUBJID, TUDTC)
+        select(any_of(key_vars))
 
       mypairs0 <- mypairs %>%
-        select(USUBJID, TUDTC, VISIT)
+        select(any_of(c(key_vars, "VISIT")))
 
       # subset unique pairs to only instances where visit has >1 date
-      mydf <- merge(mydf0, mypairs0, by = c("USUBJID", "TUDTC"), all.x = TRUE) %>%
-        left_join(tu_orig, by = c("USUBJID", "TUDTC", "VISIT")) %>% # merge in RAVE var if it exists
+      mydf <- merge(mydf0, mypairs0, by = key_vars, all.x = TRUE) %>%
+        left_join(tu_orig, by = c(key_vars, "VISIT")) %>% # merge in optional vars if they exist
         unique()
 
       rownames(mydf) <- NULL

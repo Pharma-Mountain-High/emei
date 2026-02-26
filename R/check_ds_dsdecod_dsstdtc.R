@@ -2,7 +2,7 @@
 #'
 #' @description This check looks for patients in DS who have a record indicating
 #'   death but no corresponding record with death date in DS.
-#'   For example, "Survival Follow Up" records often have no death dates, so for
+#'   For example, "生存随访" records often have no death dates, so for
 #'   a data cut to be applied properly, you have to impute that missing
 #'   death date from another record where its not missing (e.g. Study Discon form)
 #'
@@ -20,20 +20,21 @@
 #'
 #' @examples
 #'
-#' DS <- data.frame(
-#'   STUDYID = rep(1, 5),
-#'   USUBJID = c(1, 1, 1, 2, 3),
-#'   DSDECOD = c("死亡", "死亡", rep("", 3)),
-#'   DSSCAT = LETTERS[1:5],
-#'   DSSTDTC = c("", "2016-01-01", "", "", "2016-01-02"),
+#' DS1 <- data.frame(
+#'   STUDYID = rep(1, 4),
+#'   USUBJID = c(1, 1, 2, 3),
+#'   DSDECOD = c("死亡", "死亡相关", "完成", "不良事件"),
+#'   DSSCAT = c("处置事件", "处置事件", "方案里程碑", "受试者分布事件"),
+#'   DSSTDTC = c(NA, "2016-01-01", "2016-01-03", "2016-01-02"),
 #'   stringsAsFactors = FALSE
 #' )
 #'
-#' check_ds_dsdecod_dsstdtc(DS)
+#' check_ds_dsdecod_dsstdtc(DS1)
 #'
-#' DS$DSSTDTC[2] <- ""
+#' DS2 <- DS1
+#' DS2$DSSTDTC[2] <- NA
 #'
-#' check_ds_dsdecod_dsstdtc(DS)
+#' check_ds_dsdecod_dsstdtc(DS2)
 #'
 check_ds_dsdecod_dsstdtc <- function(DS) {
   if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSSCAT", "DSSTDTC")) {
@@ -41,13 +42,13 @@ check_ds_dsdecod_dsstdtc <- function(DS) {
   } else {
     # Get all patients with a death date
     has_death_date <- DS %>%
-      filter(DSDECOD == "死亡" & !is_sas_na(DSSTDTC)) %>%
+      filter(grepl("死亡", DSDECOD) & !is_sas_na(DSSTDTC)) %>%
       select("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC") %>%
       unique()
 
     # Get all patients with a death record that aren't in the list of patients with a death date
     df <- DS %>%
-      filter(DSDECOD == "死亡" & !(USUBJID %in% has_death_date$USUBJID)) %>%
+      filter(grepl("死亡", DSDECOD) & !(USUBJID %in% has_death_date$USUBJID)) %>%
       select("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC") %>%
       unique()
 

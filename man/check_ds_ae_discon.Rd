@@ -7,67 +7,60 @@
 check_ds_ae_discon(DS, AE)
 }
 \arguments{
-\item{DS}{Disposition SDTM dataset with variables USUBJID, DSSPID, DSCAT,
-DSDECOD, DSSTDTC}
+\item{DS}{Disposition SDTM dataset with variables USUBJID, DSCAT,
+DSSCAT, DSDECOD, DSSTDTC. DSTERM is optional.}
 
-\item{AE}{Adverse Events SDTM dataset with variables USUBJID, AEDECOD,
-AESTDTC, AEACN*}
+\item{AE}{Adverse Events SDTM dataset with variables USUBJID, AETERM,
+AEDECOD, AESTDTC, AEACN (and optional AEACNx variables)}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for consistency when DS.DSSPID=DISCTX*
-then there should be AE.AEACN*=DRUG WITHDRAWN
+This check looks for DS records indicating treatment
+discontinuation due to AE (DSDECOD/DSTERM contains "不良事件"),
+then verifies there should be AE.AEACN*="永久停药"
 }
 \examples{
 
+# PASS: DS has discon due to AE and AE has matching "永久停药"
 AE <- data.frame(
-  USUBJID = 1:5,
-  AESTDTC = "01JAN2017",
-  AETERM = c("AE1", "AE2", "AE3", "AE4", "AE5"),
-  AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
-  AEACN = c(
-    "剂量减少", "剂量减少", "剂量不变",
-    "剂量不变", "不适用"
-  ),
+  USUBJID = 1:3,
+  AESTDTC = "2017-01-01",
+  AETERM = c("头痛", "恶心", "皮疹"),
+  AEDECOD = c("头痛", "恶心", "皮疹"),
+  AEACN = c("永久停药", "剂量不变", "不适用"),
   stringsAsFactors = FALSE
 )
-
 
 DS <- data.frame(
-  USUBJID = 1:5,
-  DSSPID = c("XXXDISCTXXXXX"),
-  DSSTDTC = "01JAN2017",
-  DSCAT = rep("DISPOSITION EVENT", 5),
-  DSSCAT = rep("TX FORM", 5),
-  DSDECOD = c("研究者决策", "其他", "研究者决策", "其他", "死亡"),
-  stringsAsFactors = FALSE
-)
-
-# no case
-check_ds_ae_discon(DS, AE)
-
-# 1 case
-DS[3, "DSDECOD"] <- "不良事件"
-check_ds_ae_discon(DS, AE)
-
-# mutliple AEACNx
-AE <- data.frame(
-  USUBJID = 1:5,
-  AESTDTC = c("01JAN2017"),
-  AETERM = c("AE1", "AE2", "AE3", "AE4", "AE5"),
-  AEDECOD = c("AE1", "AE2", "AE3", "AE4", "AE5"),
-  AEACN = rep("MULTIPLE", 5),
-  AEACN1 = c(
-    "剂量减少", "剂量不变", "剂量不变",
-    "剂量不变", "不适用"
-  ),
+  USUBJID = 1:3,
+  DSSTDTC = "2017-01-01",
+  DSCAT = rep("处置事件", 3),
+  DSSCAT = rep("治疗结束", 3),
+  DSDECOD = c("不良事件", "完成", "完成"),
   stringsAsFactors = FALSE
 )
 
 check_ds_ae_discon(DS, AE)
+
+# FAIL: USUBJID=2 DS discon due to AE but no matching AEACN="永久停药"
+DS[2, "DSDECOD"] <- "不良事件"
+check_ds_ae_discon(DS, AE)
+
+# multiple AEACNx: USUBJID=1 has "永久停药" in AEACN1
+AE2 <- data.frame(
+  USUBJID = 1:3,
+  AESTDTC = "2017-01-01",
+  AETERM = c("头痛", "恶心", "皮疹"),
+  AEDECOD = c("头痛", "恶心", "皮疹"),
+  AEACN = rep("MULTIPLE", 3),
+  AEACN1 = c("永久停药", "剂量不变", "不适用"),
+  stringsAsFactors = FALSE
+)
+
+check_ds_ae_discon(DS, AE2)
 
 }
 \author{
