@@ -26,8 +26,16 @@ DM <- data.frame(
 )
 
 check_dm_actarm_arm(DM)
+DM <- data.frame(
+  USUBJID = 1:5,
+  ARM =  letters[1:5],
+  ACTARM = letters[1:5],
+  stringsAsFactors = FALSE
+)
+
+check_dm_actarm_arm(DM)
 
 }
 \author{
-Ying Yuen
+JH
 }

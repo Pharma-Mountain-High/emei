@@ -54,9 +54,10 @@ TR2 <- TR
 TR2$TRSTRESN <- c("", "NA", NA, 1, 1)
 
 check_tr_trstresn_ldiam(TR2)
-check_tr_trstresn_ldiam(TR2, preproc = roche_derive_rave_row)
+TR2$TRSEQ <- 11:15
+check_tr_trstresn_ldiam(TR2, preproc = ql_derive_seq)
 
 }
 \author{
-Will Harris
+Jh
 }

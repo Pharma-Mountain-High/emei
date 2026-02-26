@@ -48,5 +48,5 @@ check_lb_lbstnrlo_lbstnrhi(DM, LB)
 
 }
 \author{
-Lei Zhao
+Jh
 }

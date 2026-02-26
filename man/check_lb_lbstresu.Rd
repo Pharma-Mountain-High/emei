@@ -49,8 +49,8 @@ check_lb_lbstresu(LB)
 LB$LBSTRESU[3] <- NA
 check_lb_lbstresu(LB)
 
-LB$LBSPID <- "FORMNAME-R:2/L:2XXXX"
-check_lb_lbstresu(LB, preproc = roche_derive_rave_row)
+LB$LBSEQ <- 11:20
+check_lb_lbstresu(LB, preproc = ql_derive_seq)
 
 LB$VISIT <- "SCREENING"
 check_lb_lbstresu(LB)
@@ -60,5 +60,5 @@ check_lb_lbstresu(LB)
 
 }
 \author{
-Iris Zhao
+Jh
 }

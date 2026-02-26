@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-#' @author Madeleine Ma
+#' @author JH
 #'
 #' @examples
 #'

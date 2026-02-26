@@ -26,6 +26,7 @@ Check for missing month when clinical events dates
 
 CE <- data.frame(
   USUBJID = c(1, 2, 3, 4),
+  CESEQ = 1:4,
   CETERM = c("Headache", "Nausea", "Dizziness", "Fever"),
   CESTDTC = c("2023---01", "2023-01-15", "2023-02-01", "2023-02-10"),
   CEENDTC = c("2023-01-02", "2023---01", "2023-02-02", "2023-02-12"),
@@ -36,10 +37,11 @@ CE <- data.frame(
 )
 
 check_ce_missing_month(CE)
-check_ce_missing_month(CE, preproc = roche_derive_rave_row)
+check_ce_missing_month(CE, preproc = ql_derive_seq)
 
 CE <- data.frame(
   USUBJID = c(1, 2, 3, 4),
+  CESEQ = 1:4,
   CETERM = c("Headache", "Nausea", "Dizziness", "Fever"),
   CESTDTC = c("2023-01-01", "2023-01-15", "2023-02-01", "2023-02-10"),
   CEENDTC = c("2023-01-02", "2023-01-16", "2023-02-02", "2023-02-12"),
@@ -57,5 +59,5 @@ check_ce_missing_month(CE)
 
 }
 \author{
-1
+JH
 }

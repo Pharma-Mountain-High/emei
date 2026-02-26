@@ -60,5 +60,5 @@ check_dm_usubjid_ae_usubjid(DM, AE, DS, EX)
 
 }
 \author{
-Vani Nimbal
+JH
 }

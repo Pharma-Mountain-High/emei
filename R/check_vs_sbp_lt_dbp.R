@@ -9,6 +9,8 @@
 #'
 #' @importFrom dplyr %>% filter select rename
 #'
+#' @author Jh
+#'
 #' @examples
 #'
 #' vs <- data.frame(

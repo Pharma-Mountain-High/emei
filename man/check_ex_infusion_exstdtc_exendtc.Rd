@@ -70,5 +70,5 @@ check_ex_infusion_exstdtc_exendtc(EX3)
 
 }
 \author{
-Anastasiia Khmelnytska, Stella Banjo(HackR 2021)
+JH
 }

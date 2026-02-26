@@ -52,5 +52,5 @@ DM <- data.frame(
 check_ss_ssdtc_dead_dthdtc(SS, DM)
 }
 \author{
-Vira Vrakina
+Jh
 }

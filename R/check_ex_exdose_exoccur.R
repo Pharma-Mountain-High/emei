@@ -17,7 +17,7 @@
 #'
 #' @importFrom  dplyr %>% filter select
 #'
-#' @author Will Harris, Pasha Foroudi
+#' @author JH
 #'
 #' @examples
 #'
@@ -36,7 +36,7 @@
 #' EX$EXDOSE[3] <- NA
 #' check_ex_exdose_exoccur(EX)
 #'
-#' EX$EXVISIT <- NULL
+#' EX$VISIT <- NULL
 #' check_ex_exdose_exoccur(EX)
 #'
 #' EX$EXDOSE <- NULL

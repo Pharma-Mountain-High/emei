@@ -13,7 +13,7 @@
 #'
 #' @export
 #'
-#' @author Anastasiia Khmelnytska, Stella Banjo(HackR 2021)
+#' @author JH
 #'
 #' @examples
 #'

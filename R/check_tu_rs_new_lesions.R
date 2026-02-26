@@ -16,13 +16,13 @@
 #'
 #' @export
 #'
-#' @author Will Harris
+#' @author Jh
 #'
 #' @examples
 #'
 #' TU <- data.frame(
 #'   USUBJID = 1:3,
-#'   TUSTRESC = c("INV001", "NEW", "NEW"),
+#'   TUSTRESC = c("INV001", "新病灶", "新病灶"),
 #'   TUDTC = "2017-01-01"
 #' )
 #'
@@ -59,9 +59,9 @@
 #'
 #' check_tu_rs_new_lesions(RS, TU)
 #'
-#' TU$TUEVAL <- "INDEPENDENT ASSESSOR"
+#' TU$TUEVAL <- "研究者"
 #'
-#' RS$RSEVAL <- "INDEPENDENT ASSESSOR"
+#' RS$RSEVAL <- "研究者"
 #'
 #' ## pass if by IRF, even if NEW in TU
 #' check_tu_rs_new_lesions(RS, TU)
@@ -85,9 +85,9 @@ check_tu_rs_new_lesions <- function(RS, TU) {
   ### Find new lesions in TU and overall PD or PMD responses in RS
 
   if (TU %lacks_any% "TUEVAL") {
-    mytu <- subset(TU, TU$TUSTRESC == "NEW")
+    mytu <- subset(TU, TU$TUSTRESC == "新病灶")
   } else {
-    mytu <- subset(TU, TU$TUSTRESC == "NEW" & (toupper(TU$TUEVAL) == "研究者" | is_sas_na(TU$TUEVAL)))
+    mytu <- subset(TU, TU$TUSTRESC == "新病灶" & (toupper(TU$TUEVAL) == "研究者" | is_sas_na(TU$TUEVAL)))
   }
 
   if (RS %lacks_any% "RSEVAL") {

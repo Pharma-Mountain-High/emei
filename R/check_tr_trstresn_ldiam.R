@@ -17,7 +17,7 @@
 #'
 #' @export
 #'
-#' @author Will Harris
+#' @author Jh
 #'
 #' @examples
 #'
@@ -48,7 +48,8 @@
 #' TR2$TRSTRESN <- c("", "NA", NA, 1, 1)
 #'
 #' check_tr_trstresn_ldiam(TR2)
-#' check_tr_trstresn_ldiam(TR2, preproc = roche_derive_rave_row)
+#' TR2$TRSEQ <- 11:15
+#' check_tr_trstresn_ldiam(TR2, preproc = ql_derive_seq)
 #'
 check_tr_trstresn_ldiam <- function(TR, preproc = identity, ...) {
   if ((TR %lacks_any% c("USUBJID", "TRTESTCD", "TRDTC", "VISIT", "TRORRES", "TRSTRESN")) || (TR %lacks_all% c("TRLINKID", "TRLNKID"))) {
@@ -59,7 +60,7 @@ check_tr_trstresn_ldiam <- function(TR, preproc = identity, ...) {
     # Apply company specific preprocessing function
     TR <- preproc(TR, ...)
 
-    myvars <- c("USUBJID", "TRTESTCD", "TRDTC", "VISIT", "TRORRES", "TRSTRESN", names(TR)[names(TR) %in% c("RAVE", "TRLINKID", "TRLNKID", "TRSTAT")])
+    myvars <- c("USUBJID", "TRTESTCD", "TRDTC", "VISIT", "TRORRES", "TRSTRESN", names(TR)[names(TR) %in% c("TRSEQ", "TRLINKID", "TRLNKID", "TRSTAT")])
     if (TR %lacks_any% "TREVAL") {
       df <- subset(TR, TR$TRTESTCD == "LDIAM" & is_sas_na(TR$TRSTRESN), myvars)
     } else {

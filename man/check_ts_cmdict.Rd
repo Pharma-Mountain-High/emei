@@ -68,5 +68,5 @@ check_ts_cmdict(TS6)
 check_ts_cmdict(rbind(TS1, TS1))
 }
 \author{
-Antony Howard (HackR 2021 Team Pentraxin1)
+Jh
 }

@@ -1,7 +1,7 @@
 #' @title Check for Invalid EXDOSE (Dose per Administration) and
 #'   Missing/Incomplete EXSTDTC (Start Date) Values for valid exposures
 #'
-#' @description This check looks for valid exposures (EXOCCUR=Y or doesn't exist) but
+#' @description This check looks for valid exposures (EXOCCUR="是" or doesn't exist) but
 #'   EXDOSE (dose per administration) is not > 0 (>= 0 in case of placebo) and/or
 #'   EXSTDTC (start date/treatment date) is missing or incomplete in the EX
 #'   (exposure) SDTM domain
@@ -16,21 +16,21 @@
 #'
 #' @export
 #'
-#' @author Sara Bodach
+#' @author Jh
 #'
 #' @examples
 #'
 #' EX <- data.frame(
-#'   USUBJID = LETTERS[1:5],
-#'   VISIT = paste0("Visit ", 1:5),
-#'   VISITNUM = 1:5,
-#'   EXTRT = LETTERS[1:5],
-#'   EXDOSE = 1:5,
-#'   EXSTDTC = c("2010-01-01", rep("", 4)),
-#'   EXENDTC = c("2010-01-01", rep("", 4)),
+#'   USUBJID = LETTERS[1:6],
+#'   VISIT = paste0("Visit ", 1:6),
+#'   VISITNUM = 1:6,
+#'   EXTRT = LETTERS[1:6],
+#'   EXDOSE = 1:6,
+#'   EXSTDTC = c("2010-01-01", rep("", 5)),
+#'   EXENDTC = c("2010-01-01", rep("", 5)),
 #'   stringsAsFactors = FALSE
 #' )
-#'
+#' check_ex_exoccur_exdose_exstdtc(EX)
 #' EX$EXSTDTC[2] <- "2011"
 #' EX$EXDOSE[1] <- 0
 #'
@@ -57,7 +57,7 @@ check_ex_exoccur_exdose_exstdtc <- function(EX) {
     # Filter by NA date, NA EXDOSE value, or invalid EXDOSE value
     df <- df %>%
       filter(is_sas_na(df$startdate) | is_sas_na(df$EXDOSE) |
-        ((grepl("(PLACEBO|DUMMY)", df$EXTRT) & df$EXDOSE < 0) | (!grepl("(PLACEBO|DUMMY)", df$EXTRT) & df$EXDOSE <= 0))) %>%
+        ((grepl("(安慰剂|DUMMY)", df$EXTRT) & df$EXDOSE < 0) | (!grepl("(安慰剂|DUMMY)", df$EXTRT) & df$EXDOSE <= 0))) %>%
       # select based off REGEX matching
       select(matches(
         match = ("USUBJID$|VISIT$|VISITNUM$|EXOCCUR$|EXTRT$|EXDOSE$|EXSTDTC$|EXENDTC$")

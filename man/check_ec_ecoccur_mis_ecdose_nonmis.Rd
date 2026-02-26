@@ -47,3 +47,6 @@ EC3$ECOCCUR <- NULL
 check_ec_ecoccur_mis_ecdose_nonmis(EC3)
 
 }
+\author{
+JH
+}

@@ -14,7 +14,7 @@
 #'
 #' @importFrom dplyr %>% filter rename select
 #'
-#' @author Lei Zhao
+#' @author Jh
 #'
 #' @examples
 #'

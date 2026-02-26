@@ -15,7 +15,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Sara Bodach
+#' @author Jh
 #'
 #' @examples
 #'

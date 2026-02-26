@@ -12,7 +12,7 @@
 #'
 #' @importFrom dplyr %>% filter select
 #'
-#' @author Madeleine Ma
+#' @author Jh
 #'
 #' @examples
 #'
