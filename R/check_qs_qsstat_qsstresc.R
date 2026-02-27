@@ -2,7 +2,7 @@
 #'
 #' @description This check is for studies with PRO outcomes data (i.e., QS domain),
 #' check that within a given instrument (e.g., QS.QSCAT='BFI' or QS.QSCAT ='MDASI"),
-#' if QS.QSSTAT=NOT DONE and QSTESTCD=QSALL, then there should be no populated
+#' if QS.QSSTAT=NOT DONE or QSTESTCD=QSALL, then there should be no populated
 #' responses(QS.QSSTRESC) for a particular visit (QS.VISIT), return a dataframe if otherwise
 #'
 #' @param QS Questionnaires SDTM dataset with variables USUBJID, QSSTRESC,
@@ -27,7 +27,7 @@
 #'   QSSTAT = rep(c("", "未查"), 6),
 #'   QSCAT = rep(c("INDIVIDUAL", "OVERALL", "BFI"), 4),
 #'   QSDTC = "2016-01-01",
-#'   QSTESTCD = "QSALL",
+#'   QSTESTCD = c(rep("QSALL",6),rep("ECOG01",6)),
 #'   stringsAsFactors = FALSE
 #' )
 #'
@@ -52,27 +52,27 @@ check_qs_qsstat_qsstresc <- function(QS) {
       "QSDTC", "QSTESTCD"
     )))
   } else {
-    # in QS keep rows where QSSTAT = 未查 and QSTESTCD = QSALL
+    # in QS keep rows where QSSTAT = 未查 or QSTESTCD = QSALL
     qsND <- QS %>%
-      filter(QSSTAT == "未查" & QSTESTCD == "QSALL") %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC)
+      filter(QSSTAT == "未查" | QSTESTCD == "QSALL") %>%
+      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD)
 
     qsANS <- QS %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC) %>%
+      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD) %>%
       filter(!is_sas_na(QSSTRESC))
 
     # find matching patients in qsND
     qsNDsub <- qsND %>%
-      select(USUBJID, VISIT, QSSTAT, QSCAT, QSDTC)
+      select(USUBJID, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD)
     qsANSsub <- qsANS %>%
-      select(USUBJID, VISIT, QSSTRESC, QSCAT, QSDTC)
-    qsPREP <- merge(qsNDsub, qsANSsub, c("USUBJID", "VISIT", "QSCAT", "QSDTC"),
+      select(USUBJID, VISIT, QSSTRESC, QSCAT, QSDTC,QSTESTCD)
+    qsPREP <- merge(qsNDsub, qsANSsub, c("USUBJID", "VISIT", "QSCAT", "QSDTC","QSTESTCD"),
       all.x = TRUE
     )
 
     mydf <- qsPREP %>%
-      filter(QSSTAT == "未查" & !is_sas_na(QSSTRESC)) %>%
-      select(USUBJID, VISIT, QSCAT, QSDTC, QSSTAT, QSSTRESC)
+      filter((QSSTAT == "未查" & !is_sas_na(QSSTRESC)) |  QSTESTCD == "QSALL")  %>%
+      select(USUBJID, VISIT, QSCAT, QSDTC, QSSTAT, QSSTRESC,QSTESTCD)
 
     mydf <- unique(mydf)
     rownames(mydf) <- NULL
@@ -87,7 +87,7 @@ check_qs_qsstat_qsstresc <- function(QS) {
     } else if (nrow(mydf) > 0) {
       fail(
         paste0("There are non-missing QSSTRESC records for the following ",
-          "visits when QSSTAT=未查 and QSTESTCD=QSALL. ",
+          "visits when QSSTAT=未查 or QSTESTCD=QSALL. ",
           sep = " "
         ),
         mydf

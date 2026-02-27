@@ -1,7 +1,7 @@
 Type: Package
 Package: Emei
 Title: EMEI-SDTM Edit-rule Monitoring & Error Inspection
-Version: 0.1.0.9179
+Version: 1.0
 Date: 2024-08-20
 Authors@R:
     person("insightsengineering", , , "insightsengineering@example.com", role = c("aut", "cre"))

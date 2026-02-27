@@ -17,7 +17,7 @@ test failed
 \description{
 This check is for studies with PRO outcomes data (i.e., QS domain),
 check that within a given instrument (e.g., QS.QSCAT='BFI' or QS.QSCAT ='MDASI"),
-if QS.QSSTAT=NOT DONE and QSTESTCD=QSALL, then there should be no populated
+if QS.QSSTAT=NOT DONE or QSTESTCD=QSALL, then there should be no populated
 responses(QS.QSSTRESC) for a particular visit (QS.VISIT), return a dataframe if otherwise
 }
 \examples{
@@ -30,7 +30,7 @@ QS <- data.frame(
   QSSTAT = rep(c("", "未查"), 6),
   QSCAT = rep(c("INDIVIDUAL", "OVERALL", "BFI"), 4),
   QSDTC = "2016-01-01",
-  QSTESTCD = "QSALL",
+  QSTESTCD = c(rep("QSALL",6),rep("ECOG01",6)),
   stringsAsFactors = FALSE
 )
 

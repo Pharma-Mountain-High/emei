@@ -22,7 +22,7 @@
 #' SS <- data.frame(
 #'   USUBJID = 1:5,
 #'   SSDTC = "2020-01-02",
-#'   SSSTRESC = c("DEAD", "DEAD", "ALIVE", "DEAD", "ALIVE"),
+#'   SSSTRESC = c("死亡", "死亡", "存活", "死亡", "存活"),
 #'   VISIT = "DAY 10"
 #' )
 #'
@@ -36,7 +36,7 @@
 #' SS <- data.frame(
 #'   USUBJID = 1:5,
 #'   SSDTC = "2020-01-02",
-#'   SSSTRESC = c("DEAD", "DEAD", "ALIVE", "DEAD", "ALIVE"),
+#'   SSSTRESC = c("死亡", "死亡", "存活", "死亡", "存活"),
 #'   VISIT = "FOLLOW-UP"
 #' )
 #'
@@ -53,7 +53,7 @@ check_ss_ssdtc_dead_dthdtc <- function(SS, DM) {
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else {
-    myss <- subset(SS, !is_sas_na(SS$SSDTC) & SS$SSSTRESC == "DEAD", c("USUBJID", "SSDTC", "SSSTRESC", "VISIT"))
+    myss <- subset(SS, !is_sas_na(SS$SSDTC) & SS$SSSTRESC == "死亡", c("USUBJID", "SSDTC", "SSSTRESC", "VISIT"))
     mydm <- subset(DM, !is_sas_na(DM$DTHDTC), c("USUBJID", "DTHDTC"))
     mydf <- myss %>%
       left_join(mydm, by = "USUBJID") %>%

@@ -26,7 +26,7 @@ Start Date/Time of Disposition Event(SS.SSDTC < DS.DSSTDTC)
 SS <- data.frame(
   USUBJID = 1:5,
   SSDTC = "2020-01-02",
-  SSSTRESC = c("DEAD", "DEAD", "ALIVE", "DEAD", "ALIVE"),
+  SSSTRESC = c("死亡", "死亡", "存活", "死亡", "存活"),
   VISIT = "DAY 10"
 )
 
@@ -40,7 +40,7 @@ check_ss_ssdtc_dead_dthdtc(SS, DM)
 SS <- data.frame(
   USUBJID = 1:5,
   SSDTC = "2020-01-02",
-  SSSTRESC = c("DEAD", "DEAD", "ALIVE", "DEAD", "ALIVE"),
+  SSSTRESC = c("死亡", "死亡", "存活", "死亡", "存活"),
   VISIT = "FOLLOW-UP"
 )
 
