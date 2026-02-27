@@ -38,7 +38,7 @@
 #'
 check_ex_extrt_exoccur <- function(EX) {
   if (EX %lacks_any% c("USUBJID", "EXSTDTC", "EXTRT", "EXDOSE")) {
-    fail(lacks_msg(EX, c("USUBJID", "EXSTDTC", "EXTRT", "EXDOSE")))
+    return(fail(lacks_msg(EX, c("USUBJID", "EXSTDTC", "EXTRT", "EXDOSE"))))
   } else if (EX %has_all% c("EXOCCUR")) {
     ### Subset EX to only records with missing EXTRT but EXOCCUR=Y
     mydf <- EX %>%
