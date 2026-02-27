@@ -1,12 +1,13 @@
-#' @title Check for AEREL1 - AERELN when AEREL is missing and when AEREL is unexpected
+#' @title Check for AERELx when AEREL is missing and when AEREL is unexpected
 #'
 #' @description Flag if patient has a record with null value of AEREL
-#'              but AEREL1 - AERELN contain 'Y'/'N'/'N/A', so a likely mapping issue
-#'              or if AEREL is missing and there is no any AERELn variable
+#'              but AERELx (x = 1, 2, ..., or A, B, ...) contain "是"/"否"/"不适用",
+#'              so a likely mapping issue,
+#'              or if AEREL is missing and there is no AERELx variable,
 #'              or if AEREL has unexpected value
 #'
 #' @param AE Adverse Events SDTM dataset with variables USUBJID, AESEQ, AETERM,
-#' AESTDTC, AEREL, AERELn, AESPID (if present)
+#' AESTDTC, AEREL, AERELx (optional), AESPID (if present)
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
 #'
@@ -175,9 +176,9 @@ check_ae_aerel <- function(AE, preproc = identity, ...) {
     if (nrow(mydf) == 0) {
       pass()
     } else if (nrow(mydf) == 1) {
-      fail(msg = "There is one observation with missing AEREL but one of AEREL1 - AEREL[n] is equal to 是/否/不适用, or AEREL has unexpected value, or AEREL[n] missing. ", mydf)
+      fail(msg = "There is one observation with missing AEREL but one of AERELx is equal to 是/否/不适用, or AEREL has unexpected value, or AERELx missing. ", mydf)
     } else {
-      fail(paste("AE has", nrow(mydf), "observations where AEREL is missing but one of AEREL1 - AEREL[n] is equal to 是/否/不适用, or AEREL has an unexpected value, or AEREL[n] missing. "), mydf)
+      fail(paste("AE has", nrow(mydf), "observations where AEREL is missing but one of AERELx is equal to 是/否/不适用, or AEREL has an unexpected value, or AERELx missing. "), mydf)
     }
   }
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/check_ss_ssdtc_alive_dm.R
 \name{check_ss_ssdtc_alive_dm}
 \alias{check_ss_ssdtc_alive_dm}
-\title{Check non-missing last ALIVE status date in SS is before than death date in DM}
+\title{Check SS records with alive result and non-missing SSDTC later than DM death date}
 \usage{
 check_ss_ssdtc_alive_dm(SS, DM, preproc = identity, ...)
 }
 \arguments{
-\item{SS}{Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT, SSSPID (optional)}
+\item{SS}{Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT, SSSPID (optional), SEQ (optional)}
 
 \item{DM}{Demographics SDTM dataset with variables USUBJID, DTHDTC}
 
@@ -20,19 +20,19 @@ boolean value if check failed or passed with 'msg' attribute if the
 test failed
 }
 \description{
-This check looks for non-missing SS.SSDTC when SS.SSORRES contains '存活' and
-Subject Status Date/Time of Assessments is greater then
-Date/Time of Death in Demographics(SS.SSDTC > DM.DTHDTC)
+This check looks for non-missing SS.SSDTC when SS.SSTESTCD='SURVSTAT' and
+SS.SSORRES='存活', then compares SS.SSDTC with DM.DTHDTC
+by subject and reports records where SS.SSDTC > DM.DTHDTC.
 }
 \examples{
 
 SS <- data.frame(
   USUBJID = 1:5,
+  SSSEQ = 1:5,
   SSDTC = "2020-01-02",
   SSTESTCD = "SURVSTAT",
   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-  VISIT = "WEEK 4",
-  SSSEQ = 1:5
+  VISIT = "生存随访"
 )
 
 DM <- data.frame(
@@ -45,11 +45,11 @@ check_ss_ssdtc_alive_dm(SS, DM, preproc = ql_derive_seq)
 
 SS1 <- data.frame(
   USUBJID = 1:5,
+  SSSEQ = 1:5,
   SSDTC = "2020-01-04",
   SSTESTCD = "SURVSTAT",
   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-  VISIT = "WEEK 4",
-  SSSEQ = 1:5
+  VISIT = "生存随访"
 )
 
 DM <- data.frame(

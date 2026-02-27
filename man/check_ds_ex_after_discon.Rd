@@ -21,10 +21,11 @@ in the DS and EX domains.
 }
 \examples{
 
+# FAIL: USUBJID=2 exposure end date after study discon date
 DS <- data.frame(
   USUBJID = c(rep(1, 2), rep(2, 2)),
-  DSSCAT = rep(c("STUDY COMPLETION/EARLY DISCONTINUATION", "ADVERSE EVENT"), 2),
-  DSCAT = rep(c("DISPOSITION EVENT", "OTHER"), 2),
+  DSSCAT = rep(c("研究结束", "入组信息"), 2),
+  DSCAT = rep(c("处置事件", "其他"), 2),
   DSSTDTC = c("2019-12-29", "2019-12-20", "2019-12-10", "2019-12-01"),
   stringsAsFactors = FALSE
 )
@@ -33,31 +34,32 @@ EX <- data.frame(
   USUBJID = c(rep(1, 2), rep(2, 2)),
   EXSTDTC = c("2019-12-20", "2019-12-28", "2019-12-26", "2019-12-27"),
   EXENDTC = c("2019-12-10", "2019-12-23", "2019-12-30", "2019-12-27"),
-  EXTRT = c(rep("SOME DRUG", 2), rep("PLACEBO", 2)),
+  EXTRT = c(rep("药物A", 2), rep("安慰剂", 2)),
   EXDOSE = c(10, 10, 0, 0),
   stringsAsFactors = FALSE
 )
 
 check_ds_ex_after_discon(DS, EX)
 
-DS <- data.frame(
+# PASS: all exposure dates before study discon date
+DS2 <- data.frame(
   USUBJID = c(rep(1, 2), rep(2, 2)),
-  DSSCAT = rep(c("STUDY COMPLETION/EARLY DISCONTINUATION", "ADVERSE EVENT"), 2),
-  DSCAT = rep(c("DISPOSITION EVENT", "OTHER"), 2),
+  DSSCAT = rep(c("研究结束", "入组信息"), 2),
+  DSCAT = rep(c("处置事件", "其他"), 2),
   DSSTDTC = c("2019-12-29", "2019-12-20", "2019-12-10", "2019-12-01"),
   stringsAsFactors = FALSE
 )
 
-EX <- data.frame(
+EX2 <- data.frame(
   USUBJID = c(rep(1, 2), rep(2, 2)),
   EXSTDTC = c("2019-12-20", "2019-12-28", "2019-12-01", "2019-12-02"),
-  EXENDTC = c("2019-12-10", "2019-12-23", "2020", "2020"),
-  EXTRT = c(rep("SOME DRUG", 2), rep("PLACEBO", 2)),
+  EXENDTC = c("2019-12-10", "2019-12-23", "2019-12-05", "2019-12-08"),
+  EXTRT = c(rep("药物A", 2), rep("安慰剂", 2)),
   EXDOSE = c(10, 10, 0, 0),
   stringsAsFactors = FALSE
 )
 
-check_ds_ex_after_discon(DS, EX)
+check_ds_ex_after_discon(DS2, EX2)
 
 }
 \author{

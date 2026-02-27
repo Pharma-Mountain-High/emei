@@ -7,7 +7,7 @@
 check_tr_dup(TR)
 }
 \arguments{
-\item{TR}{dataframe with variables USUBJID, TRCAT, TRLINKID/TRLNKID, TRTESTCD, TRSTRESC,
+\item{TR}{dataframe with variables USUBJID, TRCAT, TRLNKID, TRTESTCD, TRSTRESC,
 TRDTC, TRSPID (if it exists)}
 }
 \value{
@@ -16,7 +16,7 @@ boolean value if check failed or passed with 'msg' attribute if the test failed
 \description{
 This check looks for duplicate TR records and returns a data frame.
 Only applies to assessments by Investigator, selected based on uppercased
-TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
+TREVAL = "研究者" or missing or TREVAL variable does not exist.
 }
 \examples{
 
@@ -25,7 +25,7 @@ TR <- data.frame(
   USUBJID = c(1, 1, 2, 2),
   TRCAT = c(1, 1, 2, 2),
   TRTESTCD = c(1, 1, 2, 2),
-  TRLINKID = c(1, 1, 2, 2),
+  TRLNKID = c(1, 1, 2, 2),
   TRDTC = c(rep("2016-01-01", 2), rep("2016-06-01", 2)),
   TRSTRESC = c(1, 1, 2, 2),
   TRSPID = "FORMNAME-R:19/L:19XXXX",
@@ -52,7 +52,7 @@ check_tr_dup(TR3)
 
 # example with required variable missing
 TR4 <- TR
-TR4$TRLINKID <- NULL
+TR4$TRLNKID <- NULL
 check_tr_dup(TR4)
 
 }

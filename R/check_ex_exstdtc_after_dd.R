@@ -6,7 +6,8 @@
 #'   DTHDTC
 #'
 #' @param EX Exposure SDTM dataset with variables USUBJID,
-#'   EXSTDTC, EXTRT, and EXDOSE
+#'   EXSTDTC, EXTRT, and EXDOSE. EXOCCUR is optional and, when available,
+#'   only EXOCCUR = "是" records are checked.
 #'
 #' @return Boolean value for whether the check passed or failed, with 'msg'
 #'   attribute if the check failed

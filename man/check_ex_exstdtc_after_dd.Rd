@@ -11,7 +11,8 @@ check_ex_exstdtc_after_dd(DM, EX)
 DTHDTC}
 
 \item{EX}{Exposure SDTM dataset with variables USUBJID,
-EXSTDTC, EXTRT, and EXDOSE}
+EXSTDTC, EXTRT, and EXDOSE. EXOCCUR is optional and, when available,
+only EXOCCUR = "是" records are checked.}
 }
 \value{
 Boolean value for whether the check passed or failed, with 'msg'

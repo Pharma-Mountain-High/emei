@@ -19,6 +19,7 @@ AEDECOD, AESTDTC, AEENDTC, AEMODIFY (if present), AELAT (if present) and AETOXGR
 }
 \examples{
 
+# FAIL: first two records are duplicates
 AE <- data.frame(
   USUBJID = c(1), AESTDTC = c("2020-01-01", "2020-01-01", "2020-02-01", "2020-03-01"),
   AEENDTC = rep("2020-02-01", 4), AEDECOD = letters[c(1, 1:3)],
@@ -28,6 +29,19 @@ AE <- data.frame(
 )
 
 check_ae_dup(AE)
+
+# PASS: no duplicates
+AE2 <- data.frame(
+  USUBJID = 1:3,
+  AESTDTC = c("2020-01-01", "2020-02-01", "2020-03-01"),
+  AEENDTC = c("2020-01-10", "2020-02-10", "2020-03-10"),
+  AEDECOD = c("头痛", "恶心", "皮疹"),
+  AETERM = c("头痛", "恶心", "皮疹"),
+  AETOXGR = c(1, 2, 3),
+  stringsAsFactors = FALSE
+)
+
+check_ae_dup(AE2)
 
 }
 \author{

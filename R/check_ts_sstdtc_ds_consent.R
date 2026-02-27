@@ -8,7 +8,7 @@
 #' needed - this would be updating the assignment in the TS domain.
 #'
 #' @param TS Trial Summary SDTM dataset with variables TSPARMCD, TSPARM, TSVAL
-#' @param DS Disposition SDTM dataset with variables DSCAT, DSSCAT, DSDECOD, DSSTDTC
+#' @param DS Disposition SDTM dataset with variables DSCAT, DSDECOD, DSSTDTC
 #'
 #' @return boolean value if check failed or passed with 'msg' attribute if the
 #'   test failed
@@ -67,11 +67,11 @@
 #'
 #' DS1 <- data.frame(
 #'   USUBJID = c(1, 1, 2, 3, 4),
-#'   DSCAT = rep("PROTOCOL MILESTONE", 5),
-#'   DSSCAT = rep("PROTOCOL MILESTONE", 5),
+#'   DSCAT = rep("方案里程碑", 5),
+#'   DSSCAT = rep("方案里程碑", 5),
 #'   DSDECOD = c(
-#'     "INFORMED CONSENT OBTAINED", "OTHER", "PHYSICIAN DECISION",
-#'     "OTHER", "INFORMED CONSENT OBTAINED"
+#'     "签署知情同意", "其他", "医生决定",
+#'     "其他", "签署知情同意"
 #'   ),
 #'   DSSTDTC = c("2021-01-01", "2021-01-02", "2021-01-02", "2021-01-02", "2020-01-02"),
 #'   stringsAsFactors = FALSE
@@ -85,8 +85,8 @@
 #' check_ts_sstdtc_ds_consent(DS = DS1, TS = TS6)
 #'
 check_ts_sstdtc_ds_consent <- function(DS, TS) {
-  if (DS %lacks_any% c("DSCAT", "DSSCAT", "DSDECOD", "DSSTDTC")) {
-    fail(lacks_msg(DS, c("DSCAT", "DSSCAT", "DSDECOD", "DSSTDTC")))
+  if (DS %lacks_any% c("DSCAT", "DSDECOD", "DSSTDTC")) {
+    fail(lacks_msg(DS, c("DSCAT", "DSDECOD", "DSSTDTC")))
   } else if (TS %lacks_any% c("TSPARMCD", "TSPARM", "TSVAL")) {
     fail(lacks_msg(TS, c("TSPARMCD", "TSPARM", "TSVAL")))
   } else if (!("SSTDTC" %in% TS[["TSPARMCD"]])) {
@@ -97,11 +97,12 @@ check_ts_sstdtc_ds_consent <- function(DS, TS) {
       "TSPARM", "TSVAL"
     ))
     mydf$DS_FIRST_ICDATE <- NA
-    ic <- subset(DS, DS$DSDECOD == "签署知情同意" &
-      DS$DSCAT == "方案里程碑" & startsWith(
-      DS$DSSCAT,
-      "PROTOCOL"
-    ), c("DSCAT", "DSSCAT", "DSDECOD", "DSSTDTC"))
+    ic <- subset(
+      DS,
+      DS$DSDECOD %in% c("签署知情同意", "知情同意签署") &
+        DS$DSCAT == "方案里程碑",
+      c("DSCAT", "DSDECOD", "DSSTDTC")
+    )
     if (nrow(ic) >= 1) {
       ic$icdate <- substr(ic$DSSTDTC, 1, 10)
       ic <- ic %>%

@@ -1,4 +1,4 @@
-#' @title Check for non-missing SSORRES if SSSTAT is NOT DONE
+#' @title Check for non-missing SSORRES when SSSTAT is '未查'
 #'
 #' @description This check is for studies with LTFU mapped to the SS domain,
 #' check that if '未查' (Unable to Contact), then there should not be
@@ -79,7 +79,7 @@ check_ss_ssstat_ssorres <- function(SS, preproc = identity, ...) {
     } else if (nrow(mydf) > 0) {
       fail(
         paste0("SS (LTFU) has ", nrow(mydf), " record(s) for ", length(unique(mydf$USUBJID)),
-          " unique patient(s) with non-missing SSORRES when SSSTAT=NOT DONE (no contact). ",
+          " unique patient(s) with non-missing SSORRES when SSSTAT='未查'. ",
           sep = " "
         ),
         mydf

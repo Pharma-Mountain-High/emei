@@ -1,8 +1,8 @@
 #' @title Check that all TR dates by INV are duplicated or earlier than
 #' last visit's (possible date entry error)
 #'
-#' @description This check identifies TRDTC values when TREVAL == 'INVESTIGATOR'
-#'  are duplicated or earlier than last visit's. Unscheduled and 'NOT DONE' visits
+#' @description This check identifies TRDTC values when TREVAL == '研究者'
+#'  are duplicated or earlier than last visit's. '计划外' and '未查' visits
 #'  are excluded.
 #'
 #' @param TR Tumor Response Measurement SDTM dataset with variables USUBJID,
@@ -26,16 +26,16 @@
 #'     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
 #'   ), 2),
 #'   VISITNUM = rep(1:5, 2),
-#'   VISIT = rep(c("筛选期", "Cycle 1", "Cycle 2", "Cycle 3", "随访"), 2),
+#'   VISIT = rep(c("筛选期", "C1/D1", "C2/D1", "C3/D1", "随访"), 2),
 #'   TREVAL = "研究者",
-#'   TRSTAT = "未查",
+#'   TRSTAT = "",
 #'   stringsAsFactors = FALSE
 #' )
 #' check_tr_trdtc_visit_ordinal_error(TR)
 #'
 #' # Cases with earler datetime
-#' TR$TRDTC[TR$USUBJID == 101 & TR$VISIT == "Cycle 3"] <- "2017-01-02T08:25"
-#' TR$TRDTC[TR$USUBJID == 102 & TR$VISIT == "Cycle 1"] <- "2017-01-01T06:25"
+#' TR$TRDTC[TR$USUBJID == 101 & TR$VISIT == "C3/D1"] <- "2017-01-02T08:25"
+#' TR$TRDTC[TR$USUBJID == 102 & TR$VISIT == "C1/D1"] <- "2017-01-01T06:25"
 #' check_tr_trdtc_visit_ordinal_error(TR)
 #'
 check_tr_trdtc_visit_ordinal_error <- function(TR) {

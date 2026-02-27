@@ -7,7 +7,7 @@
 check_ts_sstdtc_ds_consent(DS, TS)
 }
 \arguments{
-\item{DS}{Disposition SDTM dataset with variables DSCAT, DSSCAT, DSDECOD, DSSTDTC}
+\item{DS}{Disposition SDTM dataset with variables DSCAT, DSDECOD, DSSTDTC}
 
 \item{TS}{Trial Summary SDTM dataset with variables TSPARMCD, TSPARM, TSVAL}
 }
@@ -71,11 +71,11 @@ TS6 <- data.frame(
 
 DS1 <- data.frame(
   USUBJID = c(1, 1, 2, 3, 4),
-  DSCAT = rep("PROTOCOL MILESTONE", 5),
-  DSSCAT = rep("PROTOCOL MILESTONE", 5),
+  DSCAT = rep("方案里程碑", 5),
+  DSSCAT = rep("方案里程碑", 5),
   DSDECOD = c(
-    "INFORMED CONSENT OBTAINED", "OTHER", "PHYSICIAN DECISION",
-    "OTHER", "INFORMED CONSENT OBTAINED"
+    "签署知情同意", "其他", "医生决定",
+    "其他", "签署知情同意"
   ),
   DSSTDTC = c("2021-01-01", "2021-01-02", "2021-01-02", "2021-01-02", "2020-01-02"),
   stringsAsFactors = FALSE

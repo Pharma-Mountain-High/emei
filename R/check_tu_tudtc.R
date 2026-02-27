@@ -1,7 +1,8 @@
 #' @title Check for missing TUDTC values
 #'
 #' @description This check looks for missing TUDTC values and returns a data frame.
-#'   Only applies to assessments by investigator.
+#'   If TUEVAL exists, only records with TUEVAL = '研究者' are checked.
+#'   If TUEVAL does not exist, all records are checked.
 #'
 #' @param TU Tumor Identification SDTM dataset with variables USUBJID, TUDTC,
 #' VISIT, TUORRES, TUEVAL (optional), TUTESTCD (optional), TULNKID (optional), TUSPID (optional)
@@ -52,6 +53,17 @@
 #' TU$VISIT <- NULL
 #' check_tu_tudtc(TU)
 #'
+#' ## PASS example
+#' TU_PASS <- data.frame(
+#'   USUBJID = c("1001", "1002"),
+#'   TUDTC = c("2020-05-05", "2020-05-06"),
+#'   VISIT = c("C1D1", "C1D1"),
+#'   TUORRES = c("A", "B"),
+#'   TUEVAL = c("研究者", "独立评估者"),
+#'   stringsAsFactors = FALSE
+#' )
+#' check_tu_tudtc(TU_PASS)
+#'
 check_tu_tudtc <- function(TU, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
   if (TU %lacks_any% c("USUBJID", "TUDTC", "VISIT", "TUORRES")) {
@@ -69,7 +81,7 @@ check_tu_tudtc <- function(TU, preproc = identity, ...) {
         filter(is_sas_na(TUDTC))
     } else {
       mydf <- TU %>%
-        filter(is_sas_na(TUDTC), toupper(TUEVAL) == "研究者" | is_sas_na(TUEVAL))
+        filter(is_sas_na(TUDTC), toupper(TUEVAL) == "研究者")
     }
 
     rownames(mydf) <- NULL

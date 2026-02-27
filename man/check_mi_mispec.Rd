@@ -7,7 +7,7 @@
 check_mi_mispec(MI)
 }
 \arguments{
-\item{MI}{Microscopic Findings with variables USUBJID, MISPEC, MITESTCD, MIDTC}
+\item{MI}{Microscopic Findings with variables USUBJID, MISPEC, MITESTCD}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the test failed
@@ -22,10 +22,10 @@ MI <- data.frame(
   USUBJID = c("1", "2", "3"),
   DOMAIN = "MI",
   MISEQ = c(1, 2, 1),
-  MISPEC = c("", "BLOCK SLIDE", NA),
+  MISPEC = c("", "血", NA),
   MITESTCD = "TESTCD1",
   MIDTC = "2020-01-01",
-  stringAsFactors = FALSE
+  stringsAsFactors = FALSE
 )
 
 check_mi_mispec(MI)
@@ -35,7 +35,7 @@ MI2 <- data.frame(
   USUBJID = c("1", "2", "3"),
   DOMAIN = "MI",
   MISEQ = 1,
-  MISPEC = c("SLIDE", "TUMOR TISSUE", "BLOCK SLIDE"),
+  MISPEC = c("切片", "肿瘤组织", "血"),
   MITESTCD = "TESTCD1",
   MIDTC = "",
   stringsAsFactors = FALSE

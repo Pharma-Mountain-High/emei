@@ -11,7 +11,7 @@ check_vs_vsdtc_after_dd(DM, VS)
 DTHDTC}
 
 \item{VS}{Vital Signs SDTM dataset with variables USUBJID,
-VSDTC, VSTESTCD, and VSORRES}
+VSDTC, VSTESTCD, and VSORRES. VSSTAT is optional.}
 }
 \value{
 Boolean value for whether the check passed or failed, with 'msg'
@@ -33,6 +33,7 @@ VS <- data.frame(
   VSDTC = rep("2015-12-31", 5),
   VSTESTCD = letters[1:5],
   VSORRES = 1:5,
+  VSSTAT = "",
   stringsAsFactors = FALSE
 )
 
@@ -41,6 +42,9 @@ check_vs_vsdtc_after_dd(DM, VS)
 VS$VSDTC[1] <- "2016-01-03"
 VS$USUBJID[1] <- VS$USUBJID[5]
 
+check_vs_vsdtc_after_dd(DM, VS)
+
+VS$VSSTAT[1] <- "未查"
 check_vs_vsdtc_after_dd(DM, VS)
 
 }

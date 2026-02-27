@@ -8,7 +8,8 @@ visit's (possible datetime data entry error)}
 check_lb_lbdtc_visit_ordinal_error(LB)
 }
 \arguments{
-\item{LB}{SDTM dataset with variables USUBJID, VISITNUM, VISIT, LBDTC, LBTESTCD, LBSTAT}
+\item{LB}{SDTM dataset with variables USUBJID, VISITNUM, VISIT, LBDTC, LBSTAT.
+LBTESTCD/LBCAT are used for grouping when available.}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
@@ -16,9 +17,8 @@ test failed
 }
 \description{
 This check identifies LBDTC values that are duplicated or
-earlier than last visit's. Records with LBSTAT == 'NOT DONE' and unscheduled
-visits (VISIT with the string "UNSCHEDU") and treatment discon visits
-(VISIT with the string "TREATMENT OR OBSERVATION FU COMP EARLY DISC") are excluded.
+earlier than last visit's. Records with LBSTAT == '未查' and unscheduled
+visits (VISIT with the string "计划外") are excluded.
 }
 \examples{
 
@@ -35,30 +35,30 @@ LB1 <- data.frame(
   ), 2),
   VISITNUM = rep(1:5, 2),
   VISIT = rep(c(
-    "Visit 1",
-    "Visit 2",
-    "Visit 3",
-    "UNSCheduled!!!",
-    "VIsit 5"
+    "C1/D1",
+    "C2/D1",
+    "C3/D1",
+    "计划外访视",
+    "C4/D1"
   ), 2),
-  LBSTAT = c(rep("", 9), "NOT DONE"),
+  LBSTAT = c(rep("", 9), "未查"),
   stringsAsFactors = FALSE
 )
 
 check_lb_lbdtc_visit_ordinal_error(LB1)
 
 LB2 <- LB1
-LB2$LBCAT <- "Virology"
+LB2$LBCAT <- "病毒学检查"
 LB3 <- rbind(LB1, LB2)
 check_lb_lbdtc_visit_ordinal_error(LB3)
 
 # adding cases with earlier date
-LB3$LBDTC[LB3$USUBJID == 101 & LB3$VISIT == "Visit 3"] <- "2016-01-10T08:25"
-LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "Visit 2"] <- "2016-01-01T06:25"
+LB3$LBDTC[LB3$USUBJID == 101 & LB3$VISIT == "C3/D1"] <- "2016-01-10T08:25"
+LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "C2/D1"] <- "2016-01-01T06:25"
 check_lb_lbdtc_visit_ordinal_error(LB = LB3)
 
 # adding cases with duplicated date
-LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "Visit 3"] <- "2017-01-15T10:25"
+LB3$LBDTC[LB3$USUBJID == 102 & LB3$VISIT == "C3/D1"] <- "2017-01-15T10:25"
 LB3 <- LB3[order(LB3$USUBJID, LB3$VISITNUM, LB3$LBDTC), ]
 check_lb_lbdtc_visit_ordinal_error(LB = LB3)
 

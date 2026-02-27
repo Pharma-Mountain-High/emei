@@ -8,7 +8,7 @@ check_tu_tudtc_across_visit(TU, preproc = identity, ...)
 }
 \arguments{
 \item{TU}{Tumor Identification SDTM dataset with variables USUBJID, TUDTC, VISIT,
-TUEVAL (optional), TUTESTCD (optional)}
+TUEVAL (optional), TUTESTCD (optional), TULNKID (optional)}
 
 \item{preproc}{An optional company specific preprocessing script}
 
@@ -20,13 +20,15 @@ test failed.
 }
 \description{
 This check identifies records where the same date TUDTC occurs
-across multiple visits. Only applies to assessments by investigator,
-selected based on uppercased TUEVAL = "INVESTIGATOR" or missing or
-TUEVAL variable does not exist.
+across multiple visits.
+Same-date checks are performed by USUBJID + TUDTC, and additionally by
+TUTESTCD and TULNKID when available.
+Only applies to investigator assessments (TUEVAL = "研究者"), or when
+TUEVAL is missing or the TUEVAL variable does not exist.
 }
 \examples{
 
-# records flagged
+# PASS: no records flagged with current key (USUBJID + TUDTC + TULNKID)
 TU <- data.frame(
   USUBJID = 1,
   TUDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
@@ -39,6 +41,15 @@ TU <- data.frame(
 
 check_tu_tudtc_across_visit(TU)
 check_tu_tudtc_across_visit(TU, preproc = ql_derive_seq)
+
+# FAIL: same date across visits after aligning TULNKID
+TU1 <- TU
+TU1$TUEVAL <- "研究者"
+TU1$TUTESTCD <- "TUMIDENT"
+TU1$TULNKID[TU1$VISIT == "C2D1" & TU1$TUDTC == "2016-06-01"] <- "T06"
+
+check_tu_tudtc_across_visit(TU1)
+check_tu_tudtc_across_visit(TU1, preproc = ql_derive_seq)
 
 # no records flagged because non-Investigator results
 TU2 <- TU

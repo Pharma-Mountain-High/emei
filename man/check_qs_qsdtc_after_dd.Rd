@@ -11,7 +11,7 @@ check_qs_qsdtc_after_dd(DM, QS)
 DTHDTC}
 
 \item{QS}{Questionnaire Test Findings SDTM dataset with variables
-USUBJID, QSDTC, QSCAT, and QSORRES}
+USUBJID, QSDTC, QSCAT, and QSORRES. QSTESTCD and QSSTAT are optional.}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the test failed
@@ -34,6 +34,7 @@ QS <- data.frame(
     "2015-06-30", "2015-09-30", "2015-12-30"
   ),
   QSCAT = "A",
+  QSTESTCD = "ECOG",
   QSORRES = LETTERS[1:6],
   QSSTAT = "",
   VISIT = c("Week 1", "Week 12", "Week 24", "Week 1", "Week 12", "Week 24"),
@@ -46,7 +47,7 @@ check_qs_qsdtc_after_dd(DM, QS)
 QS$QSDTC[3:5] <- "2016-01-03"
 check_qs_qsdtc_after_dd(DM, QS)
 
-QS$QSSTAT[3] <- "Not Done"
+QS$QSSTAT[3] <- "未查"
 check_qs_qsdtc_after_dd(DM, QS)
 
 DM1 <- data.frame(
@@ -59,9 +60,10 @@ QS1 <- data.frame(
   USUBJID = 1,
   QSDTC = c("2015-06-30", "2016-01-15", "2016-01-15"),
   QSCAT = rep("EQ-5D-5L"),
+  QSTESTCD = "ECOG",
   QSORRES = "1",
   QSSTAT = "",
-  VISIT = c("Week 1", "Week 12", "Week 12"),
+  VISIT = c("C1/D1", "C2/D1", "C2/D1"),
   QSSTRESC = "1",
   stringsAsFactors = FALSE
 )

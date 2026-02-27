@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_ss_ssstat_ssorres.R
 \name{check_ss_ssstat_ssorres}
 \alias{check_ss_ssstat_ssorres}
-\title{Check for non-missing SSORRES if SSSTAT is NOT DONE}
+\title{Check for non-missing SSORRES when SSSTAT is '未查'}
 \usage{
 check_ss_ssstat_ssorres(SS, preproc = identity, ...)
 }

@@ -13,7 +13,8 @@ check_ex_visit(EX)
 boolean value if check failed or passed with 'msg' attribute if the test failed
 }
 \description{
-This check looks missing EX.VISIT values when EX.EXOCCUR=Y (or EX.EXOCCUR doesn't exist)
+This check looks for missing EX.VISIT values when EX.EXOCCUR=是
+(or EX.EXOCCUR does not exist)
 }
 \examples{
 
@@ -34,6 +35,16 @@ check_ex_visit(EX)
 EX$VISIT <- NULL
 
 check_ex_visit(EX) #
+
+## PASS example
+EX_PASS <- data.frame(
+  USUBJID = 1:2,
+  EXTRT = c("A", "B"),
+  EXSTDTC = c("2020-01-01", "2020-01-02"),
+  EXOCCUR = c("是", "是"),
+  VISIT = c("C1D1", "C2D1")
+)
+check_ex_visit(EX_PASS)
 
 }
 \author{

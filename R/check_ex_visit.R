@@ -1,6 +1,7 @@
 #' @title Check for missing EX.VISIT
 #'
-#' @description This check looks missing EX.VISIT values when EX.EXOCCUR=Y (or EX.EXOCCUR doesn't exist)
+#' @description This check looks for missing EX.VISIT values when EX.EXOCCUR=是
+#' (or EX.EXOCCUR does not exist)
 #'
 #' @param EX Exposure SDTM dataset with variables USUBJID,EXTRT,EXSTDTC,VISIT, and optional variable EXOCCUR
 #'
@@ -29,6 +30,16 @@
 #' EX$VISIT <- NULL
 #'
 #' check_ex_visit(EX) #
+#'
+#' ## PASS example
+#' EX_PASS <- data.frame(
+#'   USUBJID = 1:2,
+#'   EXTRT = c("A", "B"),
+#'   EXSTDTC = c("2020-01-01", "2020-01-02"),
+#'   EXOCCUR = c("是", "是"),
+#'   VISIT = c("C1D1", "C2D1")
+#' )
+#' check_ex_visit(EX_PASS)
 #'
 check_ex_visit <- function(EX) {
   ### First check that required variables exist and return a message if they don't

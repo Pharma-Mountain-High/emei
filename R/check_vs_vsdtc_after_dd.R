@@ -6,7 +6,7 @@
 #'   DTHDTC
 #'
 #' @param VS Vital Signs SDTM dataset with variables USUBJID,
-#'   VSDTC, VSTESTCD, and VSORRES
+#'   VSDTC, VSTESTCD, and VSORRES. VSSTAT is optional.
 #'
 #' @return Boolean value for whether the check passed or failed, with 'msg'
 #'   attribute if the check failed
@@ -31,6 +31,7 @@
 #'   VSDTC = rep("2015-12-31", 5),
 #'   VSTESTCD = letters[1:5],
 #'   VSORRES = 1:5,
+#'   VSSTAT = "",
 #'   stringsAsFactors = FALSE
 #' )
 #'
@@ -39,6 +40,9 @@
 #' VS$VSDTC[1] <- "2016-01-03"
 #' VS$USUBJID[1] <- VS$USUBJID[5]
 #'
+#' check_vs_vsdtc_after_dd(DM, VS)
+#'
+#' VS$VSSTAT[1] <- "未查"
 #' check_vs_vsdtc_after_dd(DM, VS)
 #'
 check_vs_vsdtc_after_dd <- function(DM, VS) {
@@ -72,16 +76,30 @@ check_vs_vsdtc_after_dd <- function(DM, VS) {
     if (nrow(death_dates) == 0) {
       pass() # If no death dates, then check automatically passes
     } else {
-      suppressWarnings(
-        df0 <- VS %>%
-          filter(
-            USUBJID %in% death_dates[["USUBJID"]],
-            !is_sas_na(VSDTC),
-            !is_sas_na(VSORRES)
-          ) %>%
-          select(USUBJID, VSDTC, VSTESTCD) %>%
-          left_join(death_dates, by = "USUBJID")
-      )
+      if (VS %has_all% c("VSSTAT")) {
+        suppressWarnings(
+          df0 <- VS %>%
+            filter(
+              !grepl("未查", VSSTAT),
+              USUBJID %in% death_dates[["USUBJID"]],
+              !is_sas_na(VSDTC),
+              !is_sas_na(VSORRES)
+            ) %>%
+            select(USUBJID, VSDTC, VSTESTCD) %>%
+            left_join(death_dates, by = "USUBJID")
+        )
+      } else {
+        suppressWarnings(
+          df0 <- VS %>%
+            filter(
+              USUBJID %in% death_dates[["USUBJID"]],
+              !is_sas_na(VSDTC),
+              !is_sas_na(VSORRES)
+            ) %>%
+            select(USUBJID, VSDTC, VSTESTCD) %>%
+            left_join(death_dates, by = "USUBJID")
+        )
+      }
       df <- df0 %>%
         filter(as.Date(df0$DTHDTC) < as.Date(df0$VSDTC))
 

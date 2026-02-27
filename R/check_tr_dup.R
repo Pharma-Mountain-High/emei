@@ -2,9 +2,9 @@
 #'
 #' @description This check looks for duplicate TR records and returns a data frame.
 #'   Only applies to assessments by Investigator, selected based on uppercased
-#'   TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
+#'   TREVAL = "研究者" or missing or TREVAL variable does not exist.
 #'
-#' @param TR dataframe with variables USUBJID, TRCAT, TRLINKID/TRLNKID, TRTESTCD, TRSTRESC,
+#' @param TR dataframe with variables USUBJID, TRCAT, TRLNKID, TRTESTCD, TRSTRESC,
 #'           TRDTC, TRSPID (if it exists)
 #'
 #' @author 1
@@ -23,7 +23,7 @@
 #'   USUBJID = c(1, 1, 2, 2),
 #'   TRCAT = c(1, 1, 2, 2),
 #'   TRTESTCD = c(1, 1, 2, 2),
-#'   TRLINKID = c(1, 1, 2, 2),
+#'   TRLNKID = c(1, 1, 2, 2),
 #'   TRDTC = c(rep("2016-01-01", 2), rep("2016-06-01", 2)),
 #'   TRSTRESC = c(1, 1, 2, 2),
 #'   TRSPID = "FORMNAME-R:19/L:19XXXX",
@@ -50,7 +50,7 @@
 #'
 #' # example with required variable missing
 #' TR4 <- TR
-#' TR4$TRLINKID <- NULL
+#' TR4$TRLNKID <- NULL
 #' check_tr_dup(TR4)
 #'
 check_tr_dup <- function(TR) {
@@ -62,11 +62,10 @@ check_tr_dup <- function(TR) {
       "USUBJID", "TRCAT", "TRTESTCD",
       "TRDTC", "TRSTRESC"
     )))
-  } else if (TR %lacks_all% c("TRLINKID", "TRLNKID")) {
-    fail("TR is missing both the TRLINKID and TRLNKID variables. ")
+  } else if (TR %lacks_any% "TRLNKID") {
+    fail("TR is missing the TRLNKID variable. ")
   } else {
-    myvars <- c("USUBJID", "TRCAT", "TRTESTCD", names(TR)[names(TR) %in%
-      c("TRLINKID", "TRLNKID")], names(TR)[names(TR) %in%
+    myvars <- c("USUBJID", "TRCAT", "TRTESTCD", "TRLNKID", names(TR)[names(TR) %in%
       "TRSPID"], "TRDTC", "TRSTRESC")
     if (TR %lacks_any% "TREVAL") {
       tr1 <- TR %>%
