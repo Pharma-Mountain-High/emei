@@ -2,13 +2,13 @@
 % Please edit documentation in R/check_ae_aerel.R
 \name{check_ae_aerel}
 \alias{check_ae_aerel}
-\title{Check for AEREL1 - AERELN when AEREL is missing and when AEREL is unexpected}
+\title{Check for AERELx when AEREL is missing and when AEREL is unexpected}
 \usage{
 check_ae_aerel(AE, preproc = identity, ...)
 }
 \arguments{
 \item{AE}{Adverse Events SDTM dataset with variables USUBJID, AESEQ, AETERM,
-AESTDTC, AEREL, AERELn, AESPID (if present)}
+AESTDTC, AEREL, AERELx (optional), AESPID (if present)}
 
 \item{preproc}{An optional company specific preprocessing script}
 
@@ -20,8 +20,9 @@ test failed
 }
 \description{
 Flag if patient has a record with null value of AEREL
-but AEREL1 - AERELN contain 'Y'/'N'/'N/A', so a likely mapping issue
-or if AEREL is missing and there is no any AERELn variable
+but AERELx (x = 1, 2, ..., or A, B, ...) contain "是"/"否"/"不适用",
+so a likely mapping issue,
+or if AEREL is missing and there is no AERELx variable,
 or if AEREL has unexpected value
 }
 \examples{

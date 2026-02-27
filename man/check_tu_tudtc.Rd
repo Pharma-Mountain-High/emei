@@ -20,7 +20,8 @@ test failed
 }
 \description{
 This check looks for missing TUDTC values and returns a data frame.
-Only applies to assessments by investigator.
+If TUEVAL exists, only records with TUEVAL = '研究者' are checked.
+If TUEVAL does not exist, all records are checked.
 }
 \examples{
 TU <- data.frame(
@@ -56,6 +57,17 @@ check_tu_tudtc(TU)
 
 TU$VISIT <- NULL
 check_tu_tudtc(TU)
+
+## PASS example
+TU_PASS <- data.frame(
+  USUBJID = c("1001", "1002"),
+  TUDTC = c("2020-05-05", "2020-05-06"),
+  VISIT = c("C1D1", "C1D1"),
+  TUORRES = c("A", "B"),
+  TUEVAL = c("研究者", "独立评估者"),
+  stringsAsFactors = FALSE
+)
+check_tu_tudtc(TU_PASS)
 
 }
 \author{

@@ -6,7 +6,7 @@
 #'   DTHDTC
 #'
 #' @param QS Questionnaire Test Findings SDTM dataset with variables
-#'   USUBJID, QSDTC, QSCAT, and QSORRES
+#'   USUBJID, QSDTC, QSCAT, and QSORRES. QSTESTCD and QSSTAT are optional.
 #'
 #' @importFrom dplyr %>% arrange filter left_join select n_distinct distinct
 #'
@@ -33,6 +33,7 @@
 #'     "2015-06-30", "2015-09-30", "2015-12-30"
 #'   ),
 #'   QSCAT = "A",
+#'   QSTESTCD = "ECOG",
 #'   QSORRES = LETTERS[1:6],
 #'   QSSTAT = "",
 #'   VISIT = c("Week 1", "Week 12", "Week 24", "Week 1", "Week 12", "Week 24"),
@@ -45,7 +46,7 @@
 #' QS$QSDTC[3:5] <- "2016-01-03"
 #' check_qs_qsdtc_after_dd(DM, QS)
 #'
-#' QS$QSSTAT[3] <- "Not Done"
+#' QS$QSSTAT[3] <- "未查"
 #' check_qs_qsdtc_after_dd(DM, QS)
 #'
 #' DM1 <- data.frame(
@@ -58,9 +59,10 @@
 #'   USUBJID = 1,
 #'   QSDTC = c("2015-06-30", "2016-01-15", "2016-01-15"),
 #'   QSCAT = rep("EQ-5D-5L"),
+#'   QSTESTCD = "ECOG",
 #'   QSORRES = "1",
 #'   QSSTAT = "",
-#'   VISIT = c("Week 1", "Week 12", "Week 12"),
+#'   VISIT = c("C1/D1", "C2/D1", "C2/D1"),
 #'   QSSTRESC = "1",
 #'   stringsAsFactors = FALSE
 #' )
@@ -97,8 +99,12 @@ check_qs_qsdtc_after_dd <- function(DM, QS) {
       if (QS %has_all% c("QSSTAT")) {
         suppressWarnings(
           mydf0 <- QS %>%
-            filter(grepl("NOT DONE", QSSTAT, ignore.case = TRUE) == FALSE & USUBJID %in% death_dates[["USUBJID"]] &
-              !is_sas_na(QSDTC) & !is_sas_na(QSORRES)) %>%
+            filter(
+              !grepl("未查", QSSTAT) &
+                USUBJID %in% death_dates[["USUBJID"]] &
+                !is_sas_na(QSDTC) &
+                !is_sas_na(QSORRES)
+            ) %>%
             left_join(death_dates, by = "USUBJID")
         )
       } else {
@@ -111,7 +117,7 @@ check_qs_qsdtc_after_dd <- function(DM, QS) {
 
       mydf <- mydf0 %>%
         filter(as.Date(DTHDTC) < as.Date(QSDTC)) %>%
-        select(any_of(c("USUBJID", "QSDTC", "VISIT", "QSEVAL", "QSCAT", "DTHDTC")))
+        select(any_of(c("USUBJID", "QSDTC", "QSTESTCD", "VISIT", "QSEVAL", "QSCAT", "DTHDTC")))
 
       if (nrow(mydf) == 0) {
         pass()

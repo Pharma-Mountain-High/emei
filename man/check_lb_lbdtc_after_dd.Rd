@@ -11,7 +11,8 @@ check_lb_lbdtc_after_dd(DM, LB)
 DTHDTC}
 
 \item{LB}{Laboratory Test Findings SDTM dataset with variables USUBJID,
-LBDTC, LBTESTCD, and LBORRES}
+LBDTC, LBTESTCD, and LBORRES. LBSTAT is optional.
+LBTESTCD is included in output for context.}
 }
 \value{
 Boolean value for whether the check passed or failed, with 'msg'
@@ -33,6 +34,7 @@ LB <- data.frame(
   LBDTC = rep("2015-12-31", 5),
   LBTESTCD = letters[1:5],
   LBORRES = 1:5,
+  LBSTAT = "",
   stringsAsFactors = FALSE
 )
 
@@ -41,6 +43,9 @@ check_lb_lbdtc_after_dd(DM, LB)
 LB$LBDTC[1] <- "2016-01-03"
 LB$USUBJID[1] <- LB$USUBJID[5]
 
+check_lb_lbdtc_after_dd(DM, LB)
+
+LB$LBSTAT[1] <- "未查"
 check_lb_lbdtc_after_dd(DM, LB)
 
 }

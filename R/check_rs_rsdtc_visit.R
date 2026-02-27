@@ -1,7 +1,7 @@
 #' @title Check missing RSDTC and VISIT
 #'
 #' @description This check looks for missing RSDTC or VISIT values when
-#' RSORRES is not missing and RSSTAT not equal to "NOT DONE" in RS dataset
+#' RSORRES is not missing and RSSTAT not equal to "未查" in RS dataset
 #' and returns a data frame. Only applies to assessments by investigator.
 #'
 #' @param RS Disease Response SDTM dataset with variables USUBJID, RSDTC,
@@ -43,6 +43,18 @@
 #' RS$RSORRES[5] <- "THING 2"
 #'
 #' check_rs_rsdtc_visit(RS)
+#'
+#' ## PASS example
+#' RS_PASS <- data.frame(
+#'   USUBJID = 1:2,
+#'   RSDTC = c("2020-01-01", "2020-01-02"),
+#'   RSORRES = c("SD", "PR"),
+#'   VISIT = c("C1D1", "C2D1"),
+#'   RSSTAT = c("", "未查"),
+#'   RSEVAL = c("研究者", "研究者"),
+#'   stringsAsFactors = FALSE
+#' )
+#' check_rs_rsdtc_visit(RS_PASS)
 #'
 check_rs_rsdtc_visit <- function(RS) {
   ### First check that required variables exist and return a message if they don't

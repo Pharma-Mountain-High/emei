@@ -44,6 +44,26 @@ check_ex_exstdtc_after_exendtc(EX)
 EX$EXTRT <- NULL
 check_ex_exstdtc_after_exendtc(EX)
 
+## 7-digit vs 10-digit date comparisons use the same precision (month-level)
+EX7 <- data.frame(
+  USUBJID = c("A", "B"),
+  EXTRT = "SOME DRUG",
+  EXSTDTC = c("2017-01", "2017-02"),
+  EXENDTC = c("2017-01-31", "2017-01-31"),
+  stringsAsFactors = FALSE
+)
+check_ex_exstdtc_after_exendtc(EX7)
+
+## Equal at shared precision (2017-01 vs 2017-01-31) -> pass
+EX7_PASS <- data.frame(
+  USUBJID = "C",
+  EXTRT = "SOME DRUG",
+  EXSTDTC = "2017-01",
+  EXENDTC = "2017-01-31",
+  stringsAsFactors = FALSE
+)
+check_ex_exstdtc_after_exendtc(EX7_PASS)
+
 }
 \author{
 1

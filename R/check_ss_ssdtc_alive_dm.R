@@ -1,10 +1,10 @@
-#' @title Check non-missing last ALIVE status date in SS is before than death date in DM
+#' @title Check SS records with alive result and non-missing SSDTC later than DM death date
 #'
-#' @description This check looks for non-missing SS.SSDTC when SS.SSORRES contains '存活' and
-#'              Subject Status Date/Time of Assessments is greater then
-#'              Date/Time of Death in Demographics(SS.SSDTC > DM.DTHDTC)
+#' @description This check looks for non-missing SS.SSDTC when SS.SSTESTCD='SURVSTAT' and
+#'              SS.SSORRES='存活', then compares SS.SSDTC with DM.DTHDTC
+#'              by subject and reports records where SS.SSDTC > DM.DTHDTC.
 #'
-#' @param SS Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT, SSSPID (optional)
+#' @param SS Subject Status SDTM dataset with variables USUBJID, SSDTC, SSORRES, SSTESTCD, VISIT, SSSPID (optional), SEQ (optional)
 #' @param DM Demographics SDTM dataset with variables USUBJID, DTHDTC
 #' @param preproc An optional company specific preprocessing script
 #' @param ... Other arguments passed to methods
@@ -14,7 +14,7 @@
 #'
 #' @export
 #'
-#' @importFrom dplyr left_join filter %>% select
+#' @importFrom dplyr left_join filter mutate %>% select
 #' @importFrom tidyselect any_of
 #'
 #' @author 1
@@ -23,11 +23,11 @@
 #'
 #' SS <- data.frame(
 #'   USUBJID = 1:5,
+#'   SSSEQ = 1:5,
 #'   SSDTC = "2020-01-02",
 #'   SSTESTCD = "SURVSTAT",
 #'   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-#'   VISIT = "WEEK 4",
-#'   SSSEQ = 1:5
+#'   VISIT = "生存随访"
 #' )
 #'
 #' DM <- data.frame(
@@ -40,11 +40,11 @@
 #'
 #' SS1 <- data.frame(
 #'   USUBJID = 1:5,
+#'   SSSEQ = 1:5,
 #'   SSDTC = "2020-01-04",
 #'   SSTESTCD = "SURVSTAT",
 #'   SSORRES = c("死亡", "死亡", "存活", "死亡", "存活"),
-#'   VISIT = "WEEK 4",
-#'   SSSEQ = 1:5
+#'   VISIT = "生存随访"
 #' )
 #'
 #' DM <- data.frame(
@@ -56,34 +56,35 @@
 #' check_ss_ssdtc_alive_dm(SS1, DM, preproc = ql_derive_seq)
 #'
 check_ss_ssdtc_alive_dm <- function(SS, DM, preproc = identity, ...) {
-  ### First check that required variables exist and return a message if they don't
+  # Validate required variables in SS and DM.
   if (SS %lacks_any% c("USUBJID", "SSDTC", "SSORRES", "SSTESTCD", "VISIT")) {
     fail(lacks_msg(SS, c("USUBJID", "SSDTC", "SSORRES", "SSTESTCD", "VISIT")))
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else {
-    # Apply company specific preprocessing function
+    # Apply optional company specific preprocessing.
     SS <- preproc(SS, ...)
     
-    myss <- subset(SS, !is_sas_na(SS$SSDTC) & SS$SSTESTCD == "SURVSTAT" & grepl("存活", SS$SSORRES)) %>%
+    myss <- subset(SS, !is_sas_na(SS$SSDTC) & SS$SSTESTCD == "SURVSTAT" & SS$SSORRES == "存活") %>%
       select(any_of(c("USUBJID", "SSDTC", "SSORRES", "SSTESTCD", "VISIT", "SEQ", "SSSPID")))
     mydm <- subset(DM, !is_sas_na(DM$DTHDTC)) %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     mydf <- myss %>%
       left_join(mydm, by = "USUBJID") %>%
-      filter(SSDTC > DTHDTC)
+      mutate(
+        ssdtc_date = as.Date(substr(SSDTC, 1, 10)),
+        dthdtc_date = as.Date(substr(DTHDTC, 1, 10))
+      ) %>%
+      filter(!is.na(ssdtc_date), !is.na(dthdtc_date), ssdtc_date > dthdtc_date) %>%
+      select(-ssdtc_date, -dthdtc_date)
 
-    ### Print to report
-
-    ### Return message if no records
+    # Return pass when no inconsistent records are found.
     if (nrow(mydf) == 0) {
       pass()
-
-      ### Return subset dataframe if there are records where SS.SSDTC > DM.DTHDTC
     } else if (nrow(mydf) > 0) {
       fail(
         paste(length(unique(mydf$USUBJID)),
-          " patient(s) with ALIVE status date in SS domain later than death date in DM domain. ",
+          " patient(s) with SSORRES='存活' and SSDTC later than DM.DTHDTC. ",
           sep = ""
         ),
         mydf

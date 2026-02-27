@@ -20,44 +20,36 @@ earlier than last visit's. Unscheduled visits are excluded.
 }
 \examples{
 
-# No case
-EG <- data.frame(
-  USUBJID = 101:102,
+# PASS: no out-of-order datetime records (unscheduled visits excluded)
+EG1 <- data.frame(
+  USUBJID = rep(c(101, 102), each = 5),
   EGDTC = rep(c(
     "2017-01-01T08:25", "2017-01-05T09:25",
     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
   ), 2),
   VISITNUM = rep(1:5, 2),
-  VISIT = rep(c(
-    "Screening", "Cycle 1", "Cycle 2",
-    "Cycle 3", "UNschedUled"
-  ), 2),
+  VISIT = rep(c("筛选期", "C1/D1", "C2/D1", "C3/D1", "计划外访视"), 2),
   EGSTAT = "",
   stringsAsFactors = FALSE
 )
-check_eg_egdtc_visit_ordinal_error(EG)
+check_eg_egdtc_visit_ordinal_error(EG1)
 
-# Cases with earlier datetime
-EG$EGDTC[EG$USUBJID == 101 & EG$VISIT == "Cycle 3"] <- "2017-01-10T08:25"
-EG$EGDTC[EG$USUBJID == 102 & EG$VISIT == "Cycle 1"] <- "2017-01-01T06:25"
-check_eg_egdtc_visit_ordinal_error(EG)
+# FAIL: datetime earlier than prior scheduled visit
+EG2 <- EG1
+EG2$EGDTC[EG2$USUBJID == 101 & EG2$VISIT == "C3/D1"] <- "2017-01-10T08:25"
+EG2$EGDTC[EG2$USUBJID == 102 & EG2$VISIT == "C1/D1"] <- "2017-01-01T06:25"
+check_eg_egdtc_visit_ordinal_error(EG2)
 
-# Cases with duplicated datetime
-EG$EGDTC[EG$USUBJID == 101 & EG$VISIT == "Cycle 3"] <- "2017-01-15T10:25"
-EG$EGDTC[EG$USUBJID == 102 & EG$VISIT == "Cycle 2"] <- "2017-01-01T06:25"
-check_eg_egdtc_visit_ordinal_error(EG)
-
-# Not checking duplicates
-EG <- data.frame(
+# PASS: duplicated datetime alone is not flagged
+EG3 <- data.frame(
   USUBJID = rep("101", 6),
   EGDTC = rep("2017-01-01T08:25", 6),
   VISITNUM = rep(1:2, 3),
-  VISIT = rep("Screening", 6),
+  VISIT = rep("筛选期", 6),
   EGSTAT = "",
   stringsAsFactors = FALSE
 )
-
-check_eg_egdtc_visit_ordinal_error(EG)
+check_eg_egdtc_visit_ordinal_error(EG3)
 
 }
 \author{

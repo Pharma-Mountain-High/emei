@@ -8,7 +8,9 @@ visit's (possible datetime data entry error)}
 check_tu_tudtc_visit_ordinal_error(TU)
 }
 \arguments{
-\item{TU}{Tumor Identification SDTM dataset with variables USUBJID,TUORRES ,TULOC, VISITNUM, VISIT, TUDTC, TUEVAL}
+\item{TU}{Tumor Identification SDTM dataset with variables USUBJID, TUORRES,
+TULOC, VISITNUM, VISIT, TUDTC, TUEVAL. Optional variables TUSPID and TULNKID
+are used for grouping when available.}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
@@ -23,27 +25,27 @@ earlier than last visit's. Unscheduled visits are excluded.
 # no case
 TU <- data.frame(
   USUBJID = 101:102,
-  TUORRES = rep(c("NEW", "TARGET"), 5),
-  TULOC = rep(c("BONE", "LIVER"), 5),
+  TUORRES = rep(c("新病灶", "靶病灶"), 5),
+  TULOC = rep(c("骨", "肝"), 5),
   TUDTC = rep(c(
     "2017-01-01T08:25", "2017-01-05T09:25",
     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
   ), 2),
   VISITNUM = rep(1:5, 2),
-  VISIT = rep(c("Visit 1", "Visit 2", "Visit 3", "Visit 4", "VIsit 5"), 2),
+  VISIT = rep(c("C1/D1", "C2/D1", "C3/D1", "C4/D1", "C5/D1"), 2),
   TUEVAL = "研究者",
   stringsAsFactors = FALSE
 )
 check_tu_tudtc_visit_ordinal_error(TU)
 
 # adding cases with earler date
-TU$TUDTC[TU$USUBJID == 101 & TU$VISIT == "Visit 4"] <- "2017-01-10T08:25"
-TU$TUDTC[TU$USUBJID == 102 & TU$VISIT == "Visit 2"] <- "2017-01-01T06:25"
+TU$TUDTC[TU$USUBJID == 101 & TU$VISIT == "C4/D1"] <- "2017-01-10T08:25"
+TU$TUDTC[TU$USUBJID == 102 & TU$VISIT == "C2/D1"] <- "2017-01-01T06:25"
 check_tu_tudtc_visit_ordinal_error(TU)
 
 # adding cases with duplicated date
-TU$TUDTC[TU$USUBJID == 101 & TU$VISIT == "Visit 5"] <- "2017-01-10T08:25"
-TU$TUDTC[TU$USUBJID == 102 & TU$VISIT == "Visit 3"] <- "2017-01-01T06:25"
+TU$TUDTC[TU$USUBJID == 101 & TU$VISIT == "C5/D1"] <- "2017-01-10T08:25"
+TU$TUDTC[TU$USUBJID == 102 & TU$VISIT == "C3/D1"] <- "2017-01-01T06:25"
 check_tu_tudtc_visit_ordinal_error(TU)
 }
 \author{

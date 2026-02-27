@@ -8,7 +8,7 @@ check_tr_trdtc_across_visit(TR, preproc = identity, ...)
 }
 \arguments{
 \item{TR}{Tumor Result SDTM dataset with variables USUBJID, TRDTC, TRTESTCD, VISIT,
-TREVAL (optional)}
+TREVAL (optional), TRLNKID (optional)}
 
 \item{preproc}{An optional company specific preprocessing script}
 
@@ -20,12 +20,16 @@ test failed
 }
 \description{
 This check identifies records where the same date TRDTC occurs
-across multiple visits for Longest Diameter and Sum of Diameters measurements (TRTESTCD is "LDIAM" or "SUMDIAM").
-Only applies to assessments by investigator, selected based on uppercased
-TREVAL = "INVESTIGATOR" or missing or TREVAL variable does not exist.
+across multiple visits for selected tumor response measurements
+(TRTESTCD in "LDIAM", "SUMDIAM", "DIAMTETER", "TUMSTATE").
+Same-date checks are performed by USUBJID + TRDTC + TRTESTCD,
+and TRLNKID is additionally included when available.
+Only applies to investigator assessments (TREVAL = "研究者"), or when
+TREVAL is missing or the TREVAL variable does not exist.
 }
 \examples{
 
+# PASS: no records flagged with current key (USUBJID + TRDTC + TRTESTCD + TRLNKID)
 TR <- data.frame(
   USUBJID = 1,
   TRDTC = c(rep("2016-01-01", 3), rep("2016-06-01", 5), rep("2016-06-24", 2)),
@@ -40,13 +44,14 @@ TR <- data.frame(
 check_tr_trdtc_across_visit(TR)
 check_tr_trdtc_across_visit(TR, preproc = ql_derive_seq)
 
+# FAIL: same date across visits after aligning TRLNKID within same TRTESTCD
 TR2 <- TR
-TR2$TRSPID[4:5] <- c("04", "05")
+TR2$TRLNKID[TR2$VISIT == "C2D1" & TR2$TRTESTCD == "SUMDIAM"] <- "T06"
 
 check_tr_trdtc_across_visit(TR2)
 check_tr_trdtc_across_visit(TR2, preproc = ql_derive_seq)
 
-# missing optional variable
+# PASS: missing optional variable
 TR3 <- TR
 TR3$TRSPID <- NULL
 

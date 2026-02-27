@@ -8,7 +8,7 @@ visit's (possible datetime data entry error)}
 check_qs_qsdtc_visit_ordinal_error(QS)
 }
 \arguments{
-\item{QS}{SDTM dataset with variables USUBJID, QSCAT, QSORRES, VISITNUM, VISIT, QSDTC}
+\item{QS}{SDTM dataset with variables USUBJID, QSCAT, QSTESTCD, VISITNUM, VISIT, QSDTC}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
@@ -24,28 +24,30 @@ earlier than last visit's. Unscheduled visits are excluded.
 QS1 <- data.frame(
   USUBJID = c(rep(101, 5), rep(102, 5)),
   QSCAT = "DLQI",
+  QSTESTCD = "DLQI01",
   QSDTC = rep(c(
     "2017-01-01T08:25", "2017-01-05T09:25",
     "2017-01-15T10:25", "2017-01-20T08:25", "2017-01-25T08:25"
   ), 2),
   VISITNUM = rep(1:5, 2),
-  VISIT = rep(c("Visit 1", "Visit 2", "Visit 3", "UNSCheduled!!!", "VIsit 5"), 2),
+  VISIT = rep(c("C1/D1", "C2/D1", "C3/D1", "计划外访视", "C4/D1"), 2),
   stringsAsFactors = FALSE
 )
 
 QS2 <- QS1
 QS2$QSCAT <- "SKINDEX-29"
+QS2$QSTESTCD <- "SKINDEX29"
 
 QS <- rbind(QS1, QS2)
 check_qs_qsdtc_visit_ordinal_error(QS)
 
 # adding cases with earlier date
-QS$QSDTC[QS$USUBJID == 101 & QS$VISIT == "Visit 3"] <- "2017-01-10T08:25"
-QS$QSDTC[QS$USUBJID == 102 & QS$VISIT == "Visit 2"] <- "2017-01-01T06:25"
+QS$QSDTC[QS$USUBJID == 101 & QS$VISIT == "C3/D1"] <- "2017-01-01T06:25"
+QS$QSDTC[QS$USUBJID == 102 & QS$VISIT == "C2/D1"] <- "2017-01-01T06:25"
 check_qs_qsdtc_visit_ordinal_error(QS)
 
 # adding cases with duplicated date
-QS$QSDTC[QS$USUBJID == 102 & QS$VISIT == "Visit 3"] <- "2017-01-01T06:25"
+QS$QSDTC[QS$USUBJID == 102 & QS$VISIT == "C3/D1"] <- "2017-01-01T06:25"
 check_qs_qsdtc_visit_ordinal_error(QS)
 
 }

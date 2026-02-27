@@ -6,6 +6,8 @@
 \alias{Emei-package}
 \title{Emei: EMEI-SDTM Edit-rule Monitoring & Error Inspection}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 The purpose of the Emei package is to help detect and investigate potential analysis relevant issues in SDTM data. This is done using a set of data check functions. These check functions are intended to be generalizable, actionable, and meaningful for analysis.
 }
 \seealso{

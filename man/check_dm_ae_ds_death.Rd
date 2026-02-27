@@ -9,9 +9,9 @@ check_dm_ae_ds_death(DM, DS, AE)
 \arguments{
 \item{DM}{Demographics SDTM dataset with variables USUBJID, DTHFL, DTHDTC}
 
-\item{DS}{Disposition SDTM dataset with variables USUBJID, DSDECOD, DSSTDTC}
+\item{DS}{Disposition SDTM dataset with variables USUBJID, DSDECOD, DSSTDTC, DSSCAT}
 
-\item{AE}{Adverse Events SDTM dataset with variables USUBJID, AEDTHDTC, AESDTH, AEOUT}
+\item{AE}{Adverse Events SDTM dataset with variables USUBJID, AESDTH, AEOUT}
 }
 \value{
 boolean value if check failed or passed with 'msg' attribute if the
@@ -26,7 +26,6 @@ DTHDTC then there should be death indicated in either AE or DS.
 AE <- data.frame(
   STUDYID = 1,
   USUBJID = 1:3,
-  AEDTHDTC = c(NA, 1, NA),
   AESDTH = c(NA, "是", NA),
   AEOUT = c(NA, "死亡", NA),
   AETOXGR = c(NA, "5", NA)
@@ -35,15 +34,16 @@ AE <- data.frame(
 DS <- data.frame(
   STUDYID = 1,
   USUBJID = 1:3,
+  DSSCAT = c("处置事件", "方案里程碑", "受试者分布事件"),
   DSDECOD = c(NA, "死亡", NA),
-  DSSTDTC = c(NA, "DSDATE", NA)
+  DSSTDTC = c(NA, "2024-06-01", NA)
 )
 
 DM <- data.frame(
   STUDYID = 1,
   USUBJID = 1:3,
   DTHFL = c(NA, "是", "是"),
-  DTHDTC = c(NA, "DMDATE", "DMDATE")
+  DTHDTC = c(NA, "2024-06-01", "2024-06-10")
 )
 
 check_dm_ae_ds_death(DM, DS, AE)
