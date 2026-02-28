@@ -39,14 +39,15 @@ AE <- data.frame(
   AEOUT = "死亡",
   AESDTH = c("是", "是", "否", "是", NA),
   AETOXGR = c("5", "5", "5", NA, NA),
-  AESEQ =11:15,
+  AESEQ = 11:15,
   stringsAsFactors = FALSE
 )
 
 DM <- data.frame(
   USUBJID = 1:5,
   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 
 check_ae_fatal(AE, DM)
 check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -67,13 +68,14 @@ AE <- data.frame(
   AEOUT = "死亡",
   AESDTH = c("是", "是", "否", "是", NA),
   AESEV = c("SEVERE", "MILD", "SEVERE", NA, NA),
-  AESEQ =11:15,
+  AESEQ = 11:15,
   stringsAsFactors = FALSE
 )
 DM <- data.frame(
   USUBJID = 1:5,
   DTHDTC = c("01FEB2017", "02FEB2017", "03FEB2017", "04FEB2017", NA),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 
 check_ae_fatal(AE, DM)
 check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -97,7 +99,8 @@ AE <- data.frame(
 DM <- data.frame(
   USUBJID = 1:7,
   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA, "04FEB2017", "05FEB2017"),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 
 check_ae_fatal(AE, DM)
 check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -117,7 +120,8 @@ AE <- data.frame(
 DM <- data.frame(
   USUBJID = 1:5,
   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 check_ae_fatal(AE, DM)
 
 # AETOXGR exists but unmapped AESEV
@@ -136,7 +140,8 @@ AE <- data.frame(
 DM <- data.frame(
   USUBJID = 1:5,
   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 
 
 check_ae_fatal(AE, DM)
@@ -158,7 +163,8 @@ AE <- data.frame(
 DM <- data.frame(
   USUBJID = 1:5,
   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE
+)
 
 check_ae_fatal(AE, DM)
 check_ae_fatal(AE, DM, preproc = ql_derive_seq)

@@ -41,8 +41,8 @@
 #' check_dm_ds_partial_death_dates(DM, DS)
 check_dm_ds_partial_death_dates <- function(DM, DS, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
-  if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")) {
-    fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD","DSSEQ")))
+  if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD", "DSSEQ")) {
+    fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSSTDTC", "DSDECOD", "DSSEQ")))
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else {
@@ -51,10 +51,10 @@ check_dm_ds_partial_death_dates <- function(DM, DS, preproc = identity, ...) {
 
     ### Find records with partial death dates (length <10) in DM and DS
 
-    mydf1 <- subset(DS, DS$DSDECOD == "死亡" & !is_sas_na(DS$DSSTDTC) & nchar(DS$DSSTDTC) < 10 )%>%
-      select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC","SEQ")))
+    mydf1 <- subset(DS, DS$DSDECOD == "死亡" & !is_sas_na(DS$DSSTDTC) & nchar(DS$DSSTDTC) < 10) %>%
+      select(any_of(c("USUBJID", "DSSCAT", "DSDECOD", "DSSTDTC", "SEQ")))
     mydf2 <- subset(DM, !is_sas_na(DM$DTHDTC) & nchar(DM$DTHDTC) < 10, ) %>%
-      select(any_of(c("USUBJID",  "DTHDTC")))
+      select(any_of(c("USUBJID", "DTHDTC")))
     mydf <- merge(mydf1, mydf2, by = "USUBJID", all = TRUE)
 
     ### Print to report

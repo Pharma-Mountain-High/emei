@@ -27,27 +27,26 @@
 #' )
 #'
 #' check_ae_death(AE)
-#' check_ae_death(AE, preproc =ql_derive_seq)
+#' check_ae_death(AE, preproc = ql_derive_seq)
 #'
 #'
 #' AE$AESDTH[8] <- NA
 #' AE$AEOUT[9] <- NA
 #'
 #' check_ae_death(AE)
-#' check_ae_death(AE, preproc =ql_derive_seq)
-
+#' check_ae_death(AE, preproc = ql_derive_seq)
 check_ae_death <- function(AE, preproc = identity, ...) {
   ### Check that required variables exist and return a message if they don't.
 
-  if (AE %lacks_any% c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH")) {
-    fail(lacks_msg(AE, c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH")))
+  if (AE %lacks_any% c("USUBJID", "AETOXGR", "AEOUT", "AESDTH")) {
+    fail(lacks_msg(AE, c("USUBJID", "AETOXGR", "AEOUT", "AESDTH")))
   } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
 
     ### Subset AE to records with Grade 5 AE but have missing death date, or not marked fatal, or death not indicated
     ae5 <- subset(AE, AE$AETOXGR == "5" & (!grepl("死亡", AE$AEOUT) | is_sas_na(AE$AEOUT) | AE$AESDTH != "是" | is_sas_na(AE$AESDTH)), ) %>%
-      select(any_of(c("USUBJID", "AETOXGR", "AEOUT",  "AESDTH", "AEGRPID", "AESPID","AESEQ")))
+      select(any_of(c("USUBJID", "AETOXGR", "AEOUT", "AESDTH", "AEGRPID", "AESPID", "AESEQ")))
     rownames(ae5) <- NULL
 
     ### Print to report

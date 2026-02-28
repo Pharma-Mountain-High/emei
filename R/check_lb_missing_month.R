@@ -28,7 +28,7 @@
 #'
 #' check_lb_missing_month(LB)
 #'
-#' LB$LBSEQ<- 11:14
+#' LB$LBSEQ <- 11:14
 #'
 #' check_lb_missing_month(LB, preproc = ql_derive_seq)
 #'

@@ -32,13 +32,13 @@
 #'   stringsAsFactors = FALSE
 #' )
 #'
-#' DM<- data.frame(
+#' DM <- data.frame(
 #'   USUBJID = c(1:7),
 #'   DTHDTC = "2020-01-02"
 #' )
 #' # expect pass
-#' check_ae_aesdth_dthdtc(AE,DM)
-#' check_ae_aesdth_dthdtc(AE,DM, preproc = ql_derive_seq)
+#' check_ae_aesdth_dthdtc(AE, DM)
+#' check_ae_aesdth_dthdtc(AE, DM, preproc = ql_derive_seq)
 #'
 #' # expect fail
 #' AE1 <- AE
@@ -64,19 +64,18 @@
 #' DM$DTHDTC <- NULL
 #' check_ae_aesdth_dthdtc(AE1, DM)
 #' check_ae_aesdth_dthdtc(AE1, DM, preproc = ql_derive_seq)
-
 check_ae_aesdth_dthdtc <- function(AE, DM, preproc = identity, ...) {
   # Checks if required variables are present
-  if (AE %lacks_any% c("USUBJID",  "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")) {
-    fail(lacks_msg(AE, c("USUBJID",  "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")))
-  } else if (DM %lacks_any% c("USUBJID",  "DTHDTC")){
-    fail(lacks_msg(DM, c("USUBJID",  "DTHDTC")))
-    }  else {
+  if (AE %lacks_any% c("USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")) {
+    fail(lacks_msg(AE, c("USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")))
+  } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
+  } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
     ae1 <- AE %>%
-      select(any_of(c("USUBJID", "AETERM", "AEDECOD", "AESTDTC",  "AESDTH", "SEQ")))
-    dm1<- DM %>%
+      select(any_of(c("USUBJID", "AETERM", "AEDECOD", "AESTDTC", "AESDTH", "SEQ")))
+    dm1 <- DM %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     ae_dm <- ae1 %>% left_join(dm1, by = c("USUBJID"))
     # Rows where DTHDTC is not NA

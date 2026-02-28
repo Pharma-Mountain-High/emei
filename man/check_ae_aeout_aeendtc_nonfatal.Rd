@@ -41,7 +41,7 @@ AE <- data.frame(
     "", "", "", "", "未好转",
     "好转", "死亡", "痊愈/恢复", "不详", "不详"
   ),
-  AESEQ = 11:20 ,
+  AESEQ = 11:20,
   stringsAsFactors = FALSE
 )
 

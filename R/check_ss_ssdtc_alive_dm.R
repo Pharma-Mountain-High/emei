@@ -64,7 +64,7 @@ check_ss_ssdtc_alive_dm <- function(SS, DM, preproc = identity, ...) {
   } else {
     # Apply optional company specific preprocessing.
     SS <- preproc(SS, ...)
-    
+
     myss <- subset(SS, !is_sas_na(SS$SSDTC) & SS$SSTESTCD == "SURVSTAT" & SS$SSORRES == "存活") %>%
       select(any_of(c("USUBJID", "SSDTC", "SSORRES", "SSTESTCD", "VISIT", "SEQ", "SSSPID")))
     mydm <- subset(DM, !is_sas_na(DM$DTHDTC)) %>%

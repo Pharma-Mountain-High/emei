@@ -30,8 +30,8 @@
 #'   VISIT = c(rep("C1D1", 3), rep("C1D2", 3), rep("C2D1", 4)),
 #'   RSSEQ = 1:10,
 #'   RSSPID = c(sprintf("%02d", 1:6), "01", sprintf("%02d", 1:3)),
-#'   RSEVAL =c(rep( "研究者",10)),
-#'   RSTESTCD =c(rep( "OVRLRESP")),
+#'   RSEVAL = c(rep("研究者", 10)),
+#'   RSTESTCD = c(rep("OVRLRESP")),
 #'   stringsAsFactors = FALSE
 #' )
 #'
@@ -95,7 +95,7 @@ check_rs_rsdtc_across_visit <- function(RS, preproc = identity, ...) {
       select(USUBJID, RSDTC, VISIT, any_of(c("SEQ", "RSTESTCD", "RSLNKGRP", "RSSPID"))) %>%
       filter(!is_sas_na(RSDTC))
     rs_orig <- rssub
-    rssub <- rssub %>% select(-any_of(c("SEQ", "RSLNKGRP", "RSSPID")))  # 保留 RSTESTCD 用于分组
+    rssub <- rssub %>% select(-any_of(c("SEQ", "RSLNKGRP", "RSSPID"))) # 保留 RSTESTCD 用于分组
     if (nrow(rssub) > 0) {
       mypairs <- unique(rssub)
       mypairs$x <- 1

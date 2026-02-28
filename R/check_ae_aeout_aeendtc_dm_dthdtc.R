@@ -26,7 +26,7 @@
 #' @examples
 #'
 #' AE <- data.frame(
-#'  USUBJID = 1:10,
+#'   USUBJID = 1:10,
 #'   DOMAIN = "AE",
 #'   AESEQ = 101:110,
 #'   AEENDTC = c(NA, "NA", rep("2015-03-12", 4), NA, "2020-01-01", NA, ""),
@@ -49,18 +49,17 @@
 #' DM$DTHDTC <- NULL
 #' AE$AEOUT <- NULL
 #' check_ae_aeout_aeendtc_dm_dthdtc(AE, DM)
-
-check_ae_aeout_aeendtc_dm_dthdtc <- function(AE,DM, preproc = identity, ...) {
+check_ae_aeout_aeendtc_dm_dthdtc <- function(AE, DM, preproc = identity, ...) {
   if (AE %lacks_any% c("USUBJID", "AETERM", "AEENDTC", "AESEQ", "AEOUT")) {
     fail(lacks_msg(AE, c("USUBJID", "AETERM", "AEENDTC", "AESEQ", "AEOUT")))
-  }  else if (DM %lacks_any% c("USUBJID",  "DTHDTC")){
-    fail(lacks_msg(DM, c("USUBJID",  "DTHDTC")))
-  }  else  {
+  } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
+  } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
     ae1 <- AE %>%
       select(any_of(c("USUBJID", "AETERM", "AEENDTC", "AESEQ", "AEOUT")))
-    dm1<- DM %>%
+    dm1 <- DM %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     ae_dm <- ae1 %>% left_join(dm1, by = c("USUBJID"))
 

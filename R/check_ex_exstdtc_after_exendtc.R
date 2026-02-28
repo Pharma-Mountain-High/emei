@@ -84,7 +84,7 @@ check_ex_exstdtc_after_exendtc <- function(EX) {
     # Compare at shared precision only (year/month/day/hour/minute based on common substring length).
     mydf <- subset(EX, !is_sas_na(EX$EXSTDTC) & !is_sas_na(EX$EXENDTC) &
       !is_sas_na(EX$startdate) & !is_sas_na(EX$enddate) & (EX$startdate > EX$enddate),
-      select = myvars
+    select = myvars
     )
     rownames(mydf) <- NULL
 

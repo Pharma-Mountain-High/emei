@@ -37,13 +37,13 @@ AE <- data.frame(
   stringsAsFactors = FALSE
 )
 
-DM<- data.frame(
+DM <- data.frame(
   USUBJID = c(1:7),
   DTHDTC = "2020-01-02"
 )
 # expect pass
-check_ae_aesdth_dthdtc(AE,DM)
-check_ae_aesdth_dthdtc(AE,DM, preproc = ql_derive_seq)
+check_ae_aesdth_dthdtc(AE, DM)
+check_ae_aesdth_dthdtc(AE, DM, preproc = ql_derive_seq)
 
 # expect fail
 AE1 <- AE

@@ -53,7 +53,6 @@
 #' check_ds_multdeath_dsstdtc(DS_error2)
 #' check_ds_multdeath_dsstdtc(DS_noerror)
 #' check_ds_multdeath_dsstdtc(DS_error1, preproc = ql_derive_seq)
-
 check_ds_multdeath_dsstdtc <- function(DS, preproc = identity, ...) {
   if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSSTDTC")))

@@ -51,7 +51,6 @@
 #'
 #' # pass for study with newer mapping, as another function (check_dd_death_date.R) covers this
 #' check_dm_dthdtc_ds_death(DM, DS)
-
 check_dm_dthdtc_ds_death <- function(DM, DS) {
   ### First check that required variables exist and return a message if they don't
   if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
@@ -59,7 +58,6 @@ check_dm_dthdtc_ds_death <- function(DM, DS) {
   } else if (DS %lacks_any% c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")) {
     fail(lacks_msg(DS, c("USUBJID", "DSDECOD", "DSTERM", "DSSTDTC")))
   } else {
-
     if ("死亡" %in% DS$DSTERM) {
       ### if yes - then use existing function ###
 

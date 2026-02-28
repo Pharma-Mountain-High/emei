@@ -31,14 +31,14 @@ AE <- data.frame(
 )
 
 check_ae_death(AE)
-check_ae_death(AE, preproc =ql_derive_seq)
+check_ae_death(AE, preproc = ql_derive_seq)
 
 
 AE$AESDTH[8] <- NA
 AE$AEOUT[9] <- NA
 
 check_ae_death(AE)
-check_ae_death(AE, preproc =ql_derive_seq)
+check_ae_death(AE, preproc = ql_derive_seq)
 }
 \author{
 1

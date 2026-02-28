@@ -31,7 +31,7 @@ within your team before querying this issue.
 \examples{
 
 AE <- data.frame(
- USUBJID = 1:10,
+  USUBJID = 1:10,
   DOMAIN = "AE",
   AESEQ = 101:110,
   AEENDTC = c(NA, "NA", rep("2015-03-12", 4), NA, "2020-01-01", NA, ""),
