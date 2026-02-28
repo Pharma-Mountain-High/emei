@@ -37,7 +37,7 @@
 #'     "", "", "", "", "未好转",
 #'     "好转", "死亡", "痊愈/恢复", "不详", "不详"
 #'   ),
-#'   AESEQ = 11:20 ,
+#'   AESEQ = 11:20,
 #'   stringsAsFactors = FALSE
 #' )
 #'
@@ -49,7 +49,6 @@
 #'
 #' AE$AEOUT <- NULL
 #' check_ae_aeout_aeendtc_nonfatal(AE)
-
 check_ae_aeout_aeendtc_nonfatal <- function(AE, preproc = identity, ...) {
   if (AE %lacks_any% c("USUBJID", "AESTDTC", "AETERM", "AEENDTC", "AEOUT")) {
     fail(lacks_msg(AE, c("USUBJID", "AESTDTC", "AETERM", "AEENDTC", "AEOUT")))

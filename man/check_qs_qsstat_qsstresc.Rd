@@ -30,7 +30,7 @@ QS <- data.frame(
   QSSTAT = rep(c("", "未查"), 6),
   QSCAT = rep(c("INDIVIDUAL", "OVERALL", "BFI"), 4),
   QSDTC = "2016-01-01",
-  QSTESTCD = c(rep("QSALL",6),rep("ECOG01",6)),
+  QSTESTCD = c(rep("QSALL", 6), rep("ECOG01", 6)),
   stringsAsFactors = FALSE
 )
 

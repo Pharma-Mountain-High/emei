@@ -68,15 +68,15 @@
 #' check_dd_ae_aeout_dthdtc(AE, DM)
 #' check_dd_ae_aeout_dthdtc(AE, DM, preproc = ql_derive_seq)
 #'
-check_dd_ae_aeout_dthdtc <- function(AE,DM, preproc = identity, ...) {
-  if (AE %lacks_any% c("USUBJID",  "AEOUT", "AEDECOD", "AESTDTC")) {
-    fail(lacks_msg(AE, c("USUBJID",  "AEOUT", "AEDECOD", "AESTDTC")))
+check_dd_ae_aeout_dthdtc <- function(AE, DM, preproc = identity, ...) {
+  if (AE %lacks_any% c("USUBJID", "AEOUT", "AEDECOD", "AESTDTC")) {
+    fail(lacks_msg(AE, c("USUBJID", "AEOUT", "AEDECOD", "AESTDTC")))
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     fail(lacks_msg(AE, c("USUBJID", "DTHDTC")))
-  }else {
+  } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
-    dm1<- DM %>%
+    dm1 <- DM %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     AE <- AE %>% left_join(dm1, by = c("USUBJID"))
 

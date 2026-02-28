@@ -33,14 +33,15 @@
 #'   AEOUT = "死亡",
 #'   AESDTH = c("是", "是", "否", "是", NA),
 #'   AETOXGR = c("5", "5", "5", NA, NA),
-#'   AESEQ =11:15,
+#'   AESEQ = 11:15,
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' DM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' check_ae_fatal(AE, DM)
 #' check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -61,13 +62,14 @@
 #'   AEOUT = "死亡",
 #'   AESDTH = c("是", "是", "否", "是", NA),
 #'   AESEV = c("SEVERE", "MILD", "SEVERE", NA, NA),
-#'   AESEQ =11:15,
+#'   AESEQ = 11:15,
 #'   stringsAsFactors = FALSE
 #' )
 #' DM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DTHDTC = c("01FEB2017", "02FEB2017", "03FEB2017", "04FEB2017", NA),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' check_ae_fatal(AE, DM)
 #' check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -91,7 +93,8 @@
 #' DM <- data.frame(
 #'   USUBJID = 1:7,
 #'   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA, "04FEB2017", "05FEB2017"),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' check_ae_fatal(AE, DM)
 #' check_ae_fatal(AE, DM, preproc = ql_derive_seq)
@@ -111,7 +114,8 @@
 #' DM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #' check_ae_fatal(AE, DM)
 #'
 #' # AETOXGR exists but unmapped AESEV
@@ -130,7 +134,8 @@
 #' DM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #'
 #' check_ae_fatal(AE, DM)
@@ -152,24 +157,24 @@
 #' DM <- data.frame(
 #'   USUBJID = 1:5,
 #'   DTHDTC = c("01FEB2017", NA, "02FEB2017", "03FEB2017", NA),
-#'   stringsAsFactors = FALSE)
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' check_ae_fatal(AE, DM)
 #' check_ae_fatal(AE, DM, preproc = ql_derive_seq)
-
-check_ae_fatal <- function(AE,DM, preproc = identity, ...) {
+check_ae_fatal <- function(AE, DM, preproc = identity, ...) {
   ### First check that required variables exist and return a message if they don't
-  if (AE %lacks_any% c("USUBJID", "AEDECOD", "AESTDTC",  "AEOUT", "AESDTH")) {
-    fail(lacks_msg(AE, c("USUBJID", "AEDECOD", "AESTDTC",  "AEOUT", "AESDTH")))
-  } else if (DM %lacks_any% c("USUBJID",  "DTHDTC")){
-    fail(lacks_msg(DM, c("USUBJID",  "DTHDTC")))
-  }  else {
+  if (AE %lacks_any% c("USUBJID", "AEDECOD", "AESTDTC", "AEOUT", "AESDTH")) {
+    fail(lacks_msg(AE, c("USUBJID", "AEDECOD", "AESTDTC", "AEOUT", "AESDTH")))
+  } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
+    fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
+  } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
 
     outlist <- list() # empty list for results
     ae1 <- AE
-    dm1<- DM %>%
+    dm1 <- DM %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     AE <- ae1 %>% left_join(dm1, by = c("USUBJID"))
 

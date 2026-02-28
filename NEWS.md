@@ -1,13 +1,26 @@
-# r.pkg.template 0.1.0.9179
+# Emei 1.0
 
-### New features
+### 新功能
 
-* Add an initializer script.
+* 实现核心`emei()`函数，提供一键式SDTM数据质量检查
+* 支持14+个SDTM域的全面检查（DM、AE、VS、LB、EX、CM、EC、TR、TU、RS、SS、TS、QS等）
+* 自动SUPP域合并功能
+* Excel报告生成功能，自动生成格式化的检查报告
+* 支持按优先级（High/Medium/Low）和类型（ALL/ONC/PRO）筛选检查项目
 
-### Enhancements
+### 增强功能
 
-* Documentation on how to use the initialize a package.
+* 自动读取SAS数据（.sas7bdat格式）
+* 自动预处理DM、AE、VS域数据
+* 提供详细的运行日志和进度信息
+* 支持自定义报告输出目录
+* 支持保存原始数据为RDS文件
 
-### Bug fixes
+### 测试
 
-* None.
+* 499个测试用例，100%通过率
+* 覆盖所有核心检查函数
+
+### Bug修复
+
+* 修复`check_ex_extrt_exoccur`函数bug

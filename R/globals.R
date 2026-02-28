@@ -13,7 +13,7 @@ utils::globalVariables(c(
   "OELAT", "OELOC", "OERESCAT", "OESCAT", "OESPID", "OESTAT", "OESTRESN", "OESTRESN.x",
   "OESTRESN.y", "OETESTCD", "OETSTDTL", "PARTB_CONST", "PRCAT", "PRENDTC", "PRLAT", "PROCCUR",
   "PRPRESP", "PRSTDTC", "QSCAT", "QSDTC", "QSDTC1", "QSORRES", "QSREASND", "QSSTAT", "QSSTRESC",
-  "QSTESTCD",  "REFTERM", "ROW", "ROWNUM", "RSDTC", "RSEVAL", "RSORRES", "RSSTAT", "SCCAT", "SCDTC","SEQ",
+  "QSTESTCD", "REFTERM", "ROW", "ROWNUM", "RSDTC", "RSEVAL", "RSORRES", "RSSTAT", "SCCAT", "SCDTC", "SEQ",
   "SCORRES", "SCSTRESC", "SCTEST", "SCTESTCD", "SC_STUDYEYE", "SITEID", "SSDTC", "SSORRES", "SSSTAT", "SYSBP",
   "TOTAL", "TOT_1M", "TOT_4M", "TRDTC", "TREVAL", "TRTESTCD", "TSPARMCD", "TSVAL", "TUDTC", "TUEVAL",
   "TULOC", "TUORRES", "USUBJID", "VISIT", "VISITNUM", "VSDTC", "VSDTC.SYSBP", "VSORRES", "VSSPID",
@@ -21,5 +21,5 @@ utils::globalVariables(c(
   "lowvision_ind", "max_STDEND", "num_of_dates", "sdtmchecksmeta", "subj_discont_fl", "subject_id",
   "check", "fxn_in", "LBSTAT", "LBSTRESU",
   "category", "priority", "pdf_title", "xls_title", "domains", "pdf_subtitle", "ui", "server", "runGadget", "viewer", "req",
-  "x", "Status", "ECTRT", "ECDOSE", "ECSTDTC", "ECDOSU", "RSTESTCD", "TUMETHOD","ssdtc_date","dthdtc_date","VSSTAT"
+  "x", "Status", "ECTRT", "ECDOSE", "ECSTDTC", "ECDOSU", "RSTESTCD", "TUMETHOD", "ssdtc_date", "dthdtc_date", "VSSTAT"
 ))

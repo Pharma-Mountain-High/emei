@@ -32,7 +32,7 @@
 #' )
 #'
 #' check_pr_missing_month(PR)
-#' PR$PRSEQ<- 11:13
+#' PR$PRSEQ <- 11:13
 #' check_pr_missing_month(PR, preproc = ql_derive_seq)
 #'
 #' PR$PRENDTC <- NULL

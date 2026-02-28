@@ -33,8 +33,8 @@ RS <- data.frame(
   VISIT = c(rep("C1D1", 3), rep("C1D2", 3), rep("C2D1", 4)),
   RSSEQ = 1:10,
   RSSPID = c(sprintf("\%02d", 1:6), "01", sprintf("\%02d", 1:3)),
-  RSEVAL =c(rep( "研究者",10)),
-  RSTESTCD =c(rep( "OVRLRESP")),
+  RSEVAL = c(rep("研究者", 10)),
+  RSTESTCD = c(rep("OVRLRESP")),
   stringsAsFactors = FALSE
 )
 

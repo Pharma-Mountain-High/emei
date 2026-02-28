@@ -59,27 +59,31 @@ check_ae_death_ds_discon <- function(AE, DS, preproc = identity, ...) {
     # in ae keep rows where the death date is populated
 
     if (AE %has_any% "AETOXGR") {
-      ae0 <- subset(AE,
+      ae0 <- subset(
+        AE,
         AE$AESDTH == "是" |
-        AE$AEOUT == "死亡" |
-        AE$AETOXGR == "5", ) %>%
+          AE$AEOUT == "死亡" |
+          AE$AETOXGR == "5",
+      ) %>%
         select(any_of(c("USUBJID", "AEENDTC", "AETOXGR", "AESDTH", "AEOUT", "AEGRPID", "AESPID", "AESEQ")))
     } else {
-      ae0 <- subset(AE,
+      ae0 <- subset(
+        AE,
         AE$AESDTH == "是" |
-        AE$AEOUT == "死亡", ) %>%
+          AE$AEOUT == "死亡",
+      ) %>%
         select(any_of(c("USUBJID", "AEENDTC", "AESDTH", "AEOUT", "AEGRPID", "AESPID", "AESEQ")))
     }
 
     # find matching patients in DS
     ds0 <- subset(DS, (DS$USUBJID %in% ae0$USUBJID))
     ds1 <- subset(ds0,
-                  (grepl("研究结束", toupper(ds0$DSSCAT)) |
-                     grepl("研究中止", toupper(ds0$DSSCAT))
-                   ) &
-                    (grepl("处置事件", toupper(ds0$DSCAT)) |
-                       grepl("受试者分布事件", toupper(ds0$DSCAT))),
-                  select = c("USUBJID", "DSSCAT", "DSCAT")
+      (grepl("研究结束", toupper(ds0$DSSCAT)) |
+        grepl("研究中止", toupper(ds0$DSSCAT))
+      ) &
+        (grepl("处置事件", toupper(ds0$DSCAT)) |
+          grepl("受试者分布事件", toupper(ds0$DSCAT))),
+      select = c("USUBJID", "DSSCAT", "DSCAT")
     )
 
 

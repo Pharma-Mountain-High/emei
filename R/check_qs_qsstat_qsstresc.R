@@ -27,7 +27,7 @@
 #'   QSSTAT = rep(c("", "未查"), 6),
 #'   QSCAT = rep(c("INDIVIDUAL", "OVERALL", "BFI"), 4),
 #'   QSDTC = "2016-01-01",
-#'   QSTESTCD = c(rep("QSALL",6),rep("ECOG01",6)),
+#'   QSTESTCD = c(rep("QSALL", 6), rep("ECOG01", 6)),
 #'   stringsAsFactors = FALSE
 #' )
 #'
@@ -55,24 +55,24 @@ check_qs_qsstat_qsstresc <- function(QS) {
     # in QS keep rows where QSSTAT = 未查 or QSTESTCD = QSALL
     qsND <- QS %>%
       filter(QSSTAT == "未查" | QSTESTCD == "QSALL") %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD)
+      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD)
 
     qsANS <- QS %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD) %>%
+      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD) %>%
       filter(!is_sas_na(QSSTRESC))
 
     # find matching patients in qsND
     qsNDsub <- qsND %>%
-      select(USUBJID, VISIT, QSSTAT, QSCAT, QSDTC,QSTESTCD)
+      select(USUBJID, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD)
     qsANSsub <- qsANS %>%
-      select(USUBJID, VISIT, QSSTRESC, QSCAT, QSDTC,QSTESTCD)
-    qsPREP <- merge(qsNDsub, qsANSsub, c("USUBJID", "VISIT", "QSCAT", "QSDTC","QSTESTCD"),
+      select(USUBJID, VISIT, QSSTRESC, QSCAT, QSDTC, QSTESTCD)
+    qsPREP <- merge(qsNDsub, qsANSsub, c("USUBJID", "VISIT", "QSCAT", "QSDTC", "QSTESTCD"),
       all.x = TRUE
     )
 
     mydf <- qsPREP %>%
-      filter((QSSTAT == "未查" & !is_sas_na(QSSTRESC)) |  QSTESTCD == "QSALL")  %>%
-      select(USUBJID, VISIT, QSCAT, QSDTC, QSSTAT, QSSTRESC,QSTESTCD)
+      filter((QSSTAT == "未查" & !is_sas_na(QSSTRESC)) | QSTESTCD == "QSALL") %>%
+      select(USUBJID, VISIT, QSCAT, QSDTC, QSSTAT, QSSTRESC, QSTESTCD)
 
     mydf <- unique(mydf)
     rownames(mydf) <- NULL
