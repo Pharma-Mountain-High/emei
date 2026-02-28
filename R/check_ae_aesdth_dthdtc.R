@@ -66,15 +66,24 @@
 #' check_ae_aesdth_dthdtc(AE1, DM, preproc = ql_derive_seq)
 check_ae_aesdth_dthdtc <- function(AE, DM, preproc = identity, ...) {
   # Checks if required variables are present
-  if (AE %lacks_any% c("USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")) {
-    fail(lacks_msg(AE, c("USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC", "AESEQ")))
+  if (AE %lacks_any% c(
+    "USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC",
+    "AESEQ"
+  )) {
+    fail(lacks_msg(AE, c(
+      "USUBJID", "AETERM", "AESDTH", "AEDECOD", "AESTDTC",
+      "AESEQ"
+    )))
   } else if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     fail(lacks_msg(DM, c("USUBJID", "DTHDTC")))
   } else {
     # Apply company specific preprocessing function
     AE <- preproc(AE, ...)
     ae1 <- AE %>%
-      select(any_of(c("USUBJID", "AETERM", "AEDECOD", "AESTDTC", "AESDTH", "SEQ")))
+      select(any_of(c(
+        "USUBJID", "AETERM", "AEDECOD", "AESTDTC", "AESDTH",
+        "SEQ"
+      )))
     dm1 <- DM %>%
       select(any_of(c("USUBJID", "DTHDTC")))
     ae_dm <- ae1 %>% left_join(dm1, by = c("USUBJID"))
@@ -98,7 +107,8 @@ check_ae_aesdth_dthdtc <- function(AE, DM, preproc = identity, ...) {
     if (nrow(df) == 0) {
       pass()
     } else {
-      fail(paste0("AE has ", nrow(df), " record(s) with AESDTH not equal to '是' where DTHDTC of DM has a value. "), df)
+      fail(paste0("AE has ", nrow(df), " record(s) with AESDTH not equal to '是'
+                  where DTHDTC of DM has a value. "), df)
     }
   }
 }
