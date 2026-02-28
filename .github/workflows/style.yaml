@@ -43,6 +43,9 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip style]')
         && github.event.pull_request.draft == false
+    permissions:
+      contents: write
+      pull-requests: write
     container:
       image: ghcr.io/insightsengineering/rstudio:latest
 
@@ -197,3 +200,36 @@ jobs:
           }
           quit(status = 1)
         shell: Rscript {0}
+
+      - name: Show style problems in logs
+        if: always()
+        run: |
+          if [ -f /tmp/style-problems.txt ]; then
+            echo "style-problems.txt:"
+            cat /tmp/style-problems.txt
+          else
+            echo "style-problems.txt not found"
+          fi
+          if [ -f /tmp/style-problems.R ]; then
+            echo "style-problems.R:"
+            cat /tmp/style-problems.R
+          else
+            echo "style-problems.R not found"
+          fi
+        shell: bash
+
+      - name: Copy style problems from container to workspace
+        if: always()
+        run: |
+          cp /tmp/style-problems.* "$GITHUB_WORKSPACE"/ 2>/dev/null || true
+        shell: bash
+
+      - name: Upload style problems artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: style-problems
+          path: |
+            ${{ github.workspace }}/style-problems.txt
+            ${{ github.workspace }}/style-problems.R
+          if-no-files-found: ignore

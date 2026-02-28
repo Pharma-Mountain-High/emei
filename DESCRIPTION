@@ -1,25 +1,34 @@
 Type: Package
-Package: r.pkg.template
-Title: R Package Template
-Version: 0.1.0.9179
+Package: Emei
+Title: EMEI-SDTM Edit-rule Monitoring & Error Inspection
+Version: 1.0
 Date: 2024-08-20
 Authors@R:
     person("insightsengineering", , , "insightsengineering@example.com", role = c("aut", "cre"))
-Description: R package template with GitHub Actions workflows included.
+Description: The purpose of the Emei package is to help detect and investigate 
+    potential analysis relevant issues in SDTM data. This is done using a set of 
+    data check functions. These check functions are intended to be generalizable, 
+    actionable, and meaningful for analysis.
 License: Apache License 2.0 | file LICENSE
 URL: https://github.com/insightsengineering/r.pkg.template/
 BugReports: https://github.com/insightsengineering/r.pkg.template/issues
 Depends:
     R (>= 3.6)
 Imports:
-    plumber,
-    shiny,
-    stringr
+    stringr,
+    dplyr,
+    haven,
+    labelled,
+    openxlsx,
+    parallel,
+    tidyr,
+    tidyselect
 Suggests:
     future,
     httr,
     knitr,
     shinytest2,
+    DT,
     testthat (>= 3.0)
 VignetteBuilder:
     knitr
@@ -27,5 +36,6 @@ biocViews:
 Encoding: UTF-8
 Language: en-US
 LazyData: true
+LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

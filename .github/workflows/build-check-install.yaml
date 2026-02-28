@@ -214,6 +214,11 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd]')
         && github.event.pull_request.draft == false
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
     container:
       image: ${{ matrix.config.image }}:${{ matrix.config.tag }}
     outputs:
@@ -588,12 +593,12 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         id: test-results
         # Second line of the condition skips the step if workflow is running in a fork.
-        if: |
+        if: >-
           steps.check-junit-xml.outputs.files_exists == 'true' && github.event_name == 'pull_request' &&
           github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
         with:
           check_name: Unit Tests Summary
-          junit_files: "${{ env.PKGNAME }}.Rcheck/tests/testthat/junit-result.xml"
+          files: "${{ env.PKGNAME }}.Rcheck/tests/testthat/junit-result.xml"
 
       - name: Fetch JUnit XML reports from ${{ env.junit_xml_storage }} ⤵️
         if: steps.check-junit-xml.outputs.files_exists == 'true' && env.junit_xml_comparison == 'true'

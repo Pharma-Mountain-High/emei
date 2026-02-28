@@ -1,0 +1,19 @@
+test_that("pass 返回 TRUE", {
+  expect_true(pass())
+})
+test_that("fail 返回 FALSE 并带 msg", {
+  x <- fail("oops")
+  expect_false(x)
+  expect_identical(attr(x, "msg"), "oops")
+})
+test_that("is_sas_na 工作正常", {
+  x <- c("a", NA, "NA", ".", "")
+  expect_equal(unname(is_sas_na(x)), c(FALSE, TRUE, TRUE, TRUE, TRUE))
+})
+test_that("impute_day01 补全日", {
+  expect_equal(impute_day01(c("2020-05", "2020-05-02")), c("2020-05-01", "2020-05-02"))
+})
+test_that("missing_month 识别 ---", {
+  expect_true(missing_month("2020---20"))
+  expect_false(missing_month("2020-01-20"))
+})
