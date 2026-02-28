@@ -27,14 +27,14 @@
 devtools::install_github("Pharma-Mountain-High/emei", ref = "v1.0.0")
 # install.packages("remotes")
 remotes::install_github("Pharma-Mountain-High/emei@v1.0.0")
-```
 
-``` r 
-# 2. 下载后再安装
+# 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
+
 https://github.com/Pharma-Mountain-High/emei/releases/tag/v1.0
 ```  
-<img src="images/install1.png" alt="" align="center" height="150"/>
+<img src="images/install1.png" alt="" align="center" height="200"/>
+
 ``` r 
 # 下载的实际位置替换掉xxx
 install.packages("xxx/xxx.tar.gz", repos = NULL, type = "source")
@@ -70,9 +70,9 @@ result <- emei(
 ### 函数参数说明
 
 | 参数           | 类型     | 必需  | 默认值                     | 说明                                          |
-|---------------|---------------|---------------|---------------|---------------|
-| `proj`         | 字符串   | ✅ 是 | \-                         | 项目编号，用于报告文件命名（如"QLG2198_301"） |
-| `folder`       | 字符串   | ✅ 是 | \-                         | SDTM数据目录路径                              |
+|----------------|----------|-------|---------------------------|---------------------|
+| `proj`         | 字符串   | ✅ 是 | -                          | 项目编号，用于报告文件命名（如"QLG2198_301"） |
+| `folder`       | 字符串   | ✅ 是 | -                          | SDTM数据目录路径                              |
 | `priority`     | 字符向量 | 否    | `c("High","Medium","Low")` | 检查优先级筛选                                |
 | `type`         | 字符向量 | 否    | `c("ALL","ONC","PRO")`     | 检查类型筛选                                  |
 | `export_excel` | 逻辑值   | 否    | `TRUE`                     | 是否导出Excel报告                             |
@@ -176,7 +176,9 @@ result <- emei(
 {项目编号}_sdtm_checks_report_{日期}.xlsx
 ```
 
-示例： - `QLC5508-301_sdtm_checks_report_2026-02-27.xlsx`
+示例：
+- `QLC5508-301_sdtm_checks_report_2026-02-27.xlsx`
+
 
 ### 访问报告路径
 
@@ -316,8 +318,8 @@ A: 可以使用`priority`和`type`参数筛选检查项，或设置`export_excel
 
 ## 📞 支持
 
--   问题反馈: [GitHub Issues](https://github.com/your-org/Emei/issues)
--   邮件: [your.email\@example.com](mailto:your.email@example.com){.email}
+-   问题反馈: [GitHub Issues](https://github.com/Pharma-Mountain-High/emei/issues)
+
 
 ## 🔗 相关资源
 
