@@ -22,14 +22,23 @@
 ### 安装
 
 ``` r
-# 从GitHub安装
+# 1.从GitHub安装
 # install.packages("devtools")
-devtools::install_github("your-org/Emei")
-
-# 或从本地源码安装
-devtools::install()
+devtools::install_github("Pharma-Mountain-High/emei", ref = "v1.0.0")
+# install.packages("remotes")
+remotes::install_github("Pharma-Mountain-High/emei@v1.0.0")
 ```
 
+``` r 
+# 2. 下载后再安装
+# 打开网址下载压缩包文件(tar.gz)
+https://github.com/Pharma-Mountain-High/emei/releases/tag/v1.0
+```  
+<img src="images/install1.png" alt="" align="center" height="150"/>
+``` r 
+# 下载的实际位置替换掉xxx
+install.packages("xxx/xxx.tar.gz", repos = NULL, type = "source")
+```    
 ### 加载包
 
 ``` r
