@@ -24,9 +24,9 @@
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
-devtools::install_github("Pharma-Mountain-High/emei", ref = "v1.0.0")
+devtools::install_github("Pharma-Mountain-High/emei", ref = "v1.0")
 # install.packages("remotes")
-remotes::install_github("Pharma-Mountain-High/emei@v1.0.0")
+remotes::install_github("Pharma-Mountain-High/emei@v1.0")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
