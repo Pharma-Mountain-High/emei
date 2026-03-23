@@ -149,70 +149,59 @@ impute_day01 <- function(dates) {
 #' @keywords internal
 #'
 dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
-  # dots are for ordering variables
-  # Subset to only records without missing DTC
   mydf <- dts[!is_sas_na(dts[[dtc]]) &
-    !is_sas_na(dts[["VISIT"]]) &
-    !is_sas_na(dts[["VISITNUM"]]) &
-    substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
-
-  # Subset no duplicated records
-  mydf1 <- mydf[!duplicated(mydf[, vars]), ]
-
-  # Sort by
-  ord <- paste0(
-    "order(", paste0("mydf1[['", list(...), "']]", collapse = ", "),
-    ")"
-  )
+                !is_sas_na(dts[["VISIT"]]) &
+                !is_sas_na(dts[["VISITNUM"]]) &
+                substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
+  mydf1 <- mydf[!duplicated(mydf[, vars, drop = FALSE]), ]
+  # 修正：用 c(...) 替代 list(...)
+  ord_vars <- c(...)
+  ord <- paste0("order(", paste0("mydf1[['", ord_vars, "']]", collapse = ", "), ")")
   mydf2 <- mydf1[eval(parse(text = ord)), ]
-
-  # Add Vis_order
   splitter <- mydf2[groupby]
   mydf2l <- lapply(split(mydf2, splitter, drop = TRUE), function(x) {
     row.names(x) <- NULL
-    # if 1 record then no need for lagging
     if (identical(nrow(x), as.integer(1))) {
-      cbind(
-        x,
-        last.vis.dtc = NA,
-        last.vis = NA,
-        visit.order = 1,
-        stringsAsFactors = FALSE
-      )
-      # if 2 records then just lag using the first record
+      cbind(x, last.vis.dtc = NA, last.vis = NA, visit.order = 1, stringsAsFactors = FALSE)
     } else if (identical(nrow(x), as.integer(2))) {
-      cbind(
-        x,
-        last.vis.dtc = c(NA, x[1, dtc]),
-        last.vis = c(NA, x[1, "VISIT"]),
-        visit.order = seq(1, nrow(x)),
-        stringsAsFactors = FALSE
+      cbind(x,
+            last.vis.dtc = c(NA, x[1, dtc]),
+            last.vis = c(NA, x[1, "VISIT"]),
+            visit.order = seq(1, nrow(x)),
+            stringsAsFactors = FALSE
       )
-      # if more than 2 records then lag and create as many records as in
-      # original
     } else {
-      cbind(
-        x,
-        last.vis.dtc = c(NA, x[2:nrow(x) - 1, dtc]),
-        last.vis = c(NA, x[2:nrow(x) - 1, "VISIT"]),
-        visit.order = seq(1, nrow(x)),
-        stringsAsFactors = FALSE
+      cbind(x,
+            last.vis.dtc = c(NA, x[[dtc]][1:(nrow(x)-1)]),
+            last.vis = c(NA, x[["VISIT"]][1:(nrow(x)-1)]),
+            visit.order = seq(1, nrow(x)),
+            stringsAsFactors = FALSE
       )
     }
   })
-
-  # need to stack all chunks together
   mydf2 <- Reduce(rbind, mydf2l)
-
+  has_time <- function(s) !is.na(s) & grepl("T", as.character(s), fixed = TRUE)
+  get_date <- function(s) sub("T.*", "", as.character(s))
+  # 向量化版本：current 和 last 为整列向量
+  is_earlier <- function(current, last) {
+    na_mask <- is.na(last) | is.na(current)
+    result <- rep(FALSE, length(current))
+    curr_c <- as.character(current)
+    last_c <- as.character(last)
+    both_time <- has_time(curr_c) & has_time(last_c) & !na_mask
+    result[both_time] <- last_c[both_time] > curr_c[both_time]
+    else_case <- (!has_time(curr_c) | !has_time(last_c)) & !na_mask
+    result[else_case] <- get_date(last_c)[else_case] > get_date(curr_c)[else_case]
+    result
+  }
   mydf2$check.flag <- ifelse(
     mydf2$visit.order != 1 & mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
-    ifelse(mydf2$visit.order != 1 & mydf2$last.vis.dtc > mydf2[[dtc]],
-      "Datetime earlier than last Visit", NA
+    ifelse(mydf2$visit.order != 1 & is_earlier(mydf2[[dtc]], mydf2$last.vis.dtc),
+           "Datetime earlier than last Visit", NA
     )
   )
   mydf2
 }
-
 #' Function to check if month is missing while year and day are non-missing
 #' (i.e. would be in the format of "yyyy---dd")
 #'
