@@ -24,14 +24,14 @@
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
-devtools::install_github("Pharma-Mountain-High/emei", ref = "v1.0")
+devtools::install_github("Pharma-Mountain-High/emei")
 # install.packages("remotes")
-remotes::install_github("Pharma-Mountain-High/emei@v1.0")
+remotes::install_github("Pharma-Mountain-High/emei")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
 
-https://github.com/Pharma-Mountain-High/emei/releases/tag/v1.0
+https://github.com/Pharma-Mountain-High/emei/releases
 ```  
 <img src="images/install1.png" alt="" align="center" height="200"/>
 
