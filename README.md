@@ -19,14 +19,14 @@
 
 ## 🚀 快速开始
 
-### 安装
+### 安装(下面任选其中一个)
 
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
 devtools::install_github("Pharma-Mountain-High/emei")
 # install.packages("remotes")
-remotes::install_github("Pharma-Mountain-High/emei")
+# remotes::install_github("Pharma-Mountain-High/emei")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
@@ -61,13 +61,11 @@ result <- emei(
 )
 ```
 
--提示：🔴 如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
+提示：🔴 如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
 
 `Error in XXXX, Data directory does not exist: XXXX`
 
-挂载公盘具体方法：页面左下角，点击Terminal
-
-输入OA密码（输入的密码不会显示），输完回车就可以啦！
+挂载公盘具体方法：页面左下角，点击Terminal，输入OA密码（输入的密码不会显示），输完回车就可以啦！
 
 这个函数会自动完成以下工作：
 
