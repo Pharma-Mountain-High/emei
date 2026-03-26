@@ -61,9 +61,9 @@ result <- emei(
 )
 ```
 
-提示：如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
+-提示：🔴 如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
 
-[Error in XXXX, Data directory does not exist: XXXX]{style="color: red;"}
+`Error in XXXX, Data directory does not exist: XXXX`
 
 挂载公盘具体方法：页面左下角，点击Terminal
 
