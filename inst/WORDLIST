@@ -98,6 +98,7 @@ MISPEC
 MITESTCD
 Mannem
 MedDRA
+OA
 ONC
 OPHTH
 OVRLRESP
@@ -199,12 +200,10 @@ ec
 emei
 exdose
 exoccur
-extrt
 fda
 generalizable
 https
 ie
-initializer
 mcmapply
 metads
 msg
