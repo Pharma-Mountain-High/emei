@@ -28,7 +28,7 @@ TU <- data.frame(
   USUBJID = "1001",
   TUDTC = "2020-05-05",
   VISIT = "C1D1",
-  TUORRES = rep(c("靶病灶", "非靶病灶"),5),
+  TUORRES = rep(c("靶病灶", "非靶病灶"), 5),
   TUSEQ = 1:10,
   TULNKID = sprintf("T\%02d", 1:10),
   TUSPID = sprintf("\%02d", 1:10),
