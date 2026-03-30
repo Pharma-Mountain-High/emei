@@ -65,8 +65,10 @@ check_tr_dup <- function(TR) {
   } else if (TR %lacks_any% "TRLNKID") {
     fail("TR is missing the TRLNKID variable. ")
   } else {
-    myvars <- c("USUBJID", "TRTESTCD", "TRLNKID",
-                names(TR)[names(TR) %in% "TRSPID"], "TRDTC", "TRSTRESC")
+    myvars <- c(
+      "USUBJID", "TRTESTCD", "TRLNKID",
+      names(TR)[names(TR) %in% "TRSPID"], "TRDTC", "TRSTRESC"
+    )
     if (TR %lacks_any% "TREVAL") {
       tr1 <- TR |>
         select(any_of(myvars)) |>
