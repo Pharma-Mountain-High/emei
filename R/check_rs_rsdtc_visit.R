@@ -65,13 +65,13 @@ check_rs_rsdtc_visit <- function(RS) {
       ### Subset to only records with missing RSDTC or missing VISIT
       mydf <- RS %>%
         filter((is_sas_na(RSDTC) | is_sas_na(VISIT)) & !is_sas_na(RSORRES) &
-                 toupper(RSSTAT) != "未查" & toupper(RSORRES) != "否") %>%
+          toupper(RSSTAT) != "未查" & toupper(RSORRES) != "否") %>%
         select(USUBJID, RSDTC, RSORRES, VISIT, RSSTAT)
     } else {
       mydf <- RS %>%
         filter((is_sas_na(RSDTC) | is_sas_na(VISIT)) & !is_sas_na(RSORRES) &
-                 toupper(RSSTAT) != "未查" & toupper(RSORRES) != "否"  &
-                 (toupper(RSEVAL) == "研究者" | is_sas_na(RSEVAL))) %>%
+          toupper(RSSTAT) != "未查" & toupper(RSORRES) != "否" &
+          (toupper(RSEVAL) == "研究者" | is_sas_na(RSEVAL))) %>%
         select(USUBJID, RSDTC, RSORRES, VISIT, RSSTAT, RSEVAL)
     }
 
