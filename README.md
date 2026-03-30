@@ -19,14 +19,14 @@
 
 ## 🚀 快速开始
 
-### 安装
+### 安装(下面任选其中一个)
 
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
 devtools::install_github("Pharma-Mountain-High/emei")
 # install.packages("remotes")
-remotes::install_github("Pharma-Mountain-High/emei")
+# remotes::install_github("Pharma-Mountain-High/emei")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
@@ -61,6 +61,12 @@ result <- emei(
 )
 ```
 
+提示：🔴 如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
+
+`Error in XXXX, Data directory does not exist: XXXX`
+
+挂载公盘具体方法：页面左下角，点击Terminal，输入OA密码（输入的密码不会显示），输完回车就可以啦！
+
 这个函数会自动完成以下工作：
 
 1.  ✅ 读取指定目录下的所有`.sas7bdat`文件
@@ -72,7 +78,7 @@ result <- emei(
 ### 函数参数说明
 
 | 参数           | 类型     | 必需  | 默认值                     | 说明                                          |
-|----------------|----------|-------|----------------------------|-----------------------------------------------|
+|---------------|---------------|---------------|---------------|---------------|
 | `proj`         | 字符串   | ✅ 是 | \-                         | 项目编号，用于报告文件命名（如"QLG2198_301"） |
 | `folder`       | 字符串   | ✅ 是 | \-                         | SDTM数据目录路径                              |
 | `priority`     | 字符向量 | 否    | `c("High","Medium","Low")` | 检查优先级筛选                                |
