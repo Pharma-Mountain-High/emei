@@ -48,7 +48,7 @@ check_ae_withdr_ds_discon <- function(AE, DS, TS, preproc = identity, ...) {
   } else if (DS %lacks_any% c("USUBJID", "DSSCAT", "DSCAT", "DSDECOD")) {
     fail(lacks_msg(DS, c("USUBJID", "DSSCAT", "DSCAT", "DSDECOD")))
   } else if (TS %lacks_any% c("TSPARMCD", "TSVAL")) {
-    fail(lacks_msg(DS, c("TSPARMCD", "TSVAL")))
+    fail(lacks_msg(TS, c("TSPARMCD", "TSVAL")))
   } else {
     # calculate number of drugs in the study
     agent_num <- filter(TS, (TSPARMCD %in% c("TRT", "COMPTRT"))) %>% nrow()
