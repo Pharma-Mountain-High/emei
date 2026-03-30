@@ -2,8 +2,6 @@
 
 <img src="man/figures/logo.png" alt="Emei Logo" align="right" height="139"/>
 
-[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![R Package](https://img.shields.io/badge/R%20package-ready-brightgreen.svg)]()
-
 ## 📋 简介
 
 **Emei** 是一个专门用于临床试验SDTM数据质量检查的R包。它提供了一键式的数据验证功能，能够自动读取、预处理和检查SDTM数据，并生成详细的Excel检查报告。
@@ -196,7 +194,7 @@ result <- emei(
 
 ### 报告文件命名规则
 
-```         
+``` r
 {项目编号}_sdtm_checks_report_{日期}.xlsx
 ```
 
@@ -238,7 +236,7 @@ Emei包执行以下类型的数据质量检查：
 
 ### SDTM数据目录
 
-```         
+``` r
 sdtm/
 ├── dm.sas7bdat          # 人口学域（必需）
 ├── ae.sas7bdat          # 不良事件域
@@ -254,7 +252,7 @@ sdtm/
 
 ### 输出目录结构
 
-```         
+``` r
 report/
 ├── QLG2198_301_sdtm_checks_report_2026-02-27.xlsx
 ├── QL1706_308_sdtm_checks_report_2026-02-27.xlsx
