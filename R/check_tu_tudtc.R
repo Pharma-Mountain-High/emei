@@ -23,7 +23,7 @@
 #'   USUBJID = "1001",
 #'   TUDTC = "2020-05-05",
 #'   VISIT = "C1D1",
-#'   TUORRES = 1:10,
+#'   TUORRES = rep(c("靶病灶", "非靶病灶"), 5),
 #'   TUSEQ = 1:10,
 #'   TULNKID = sprintf("T%02d", 1:10),
 #'   TUSPID = sprintf("%02d", 1:10),
@@ -56,6 +56,7 @@
 #' ## PASS example
 #' TU_PASS <- data.frame(
 #'   USUBJID = c("1001", "1002"),
+#'   TUORRES = c("靶病灶", "非靶病灶"),
 #'   TUDTC = c("2020-05-05", "2020-05-06"),
 #'   VISIT = c("C1D1", "C1D1"),
 #'   TUORRES = c("A", "B"),
@@ -73,7 +74,8 @@ check_tu_tudtc <- function(TU, preproc = identity, ...) {
     TU <- preproc(TU, ...)
     myvars <- c("USUBJID", "VISIT", "TUDTC", "TUORRES", names(TU)[names(TU) %in% c("SEQ", "TUEVAL", "TUTESTCD", "TULNKID", "TUSPID")])
 
-    TU <- subset(TU, select = myvars)
+    TU <- subset(TU, select = myvars) %>%
+      filter(TUORRES %in% c("靶病灶", "非靶病灶", "新病灶"))
 
     if (TU %lacks_any% "TUEVAL") {
       ### Subset TU to only records with missing TUDTC

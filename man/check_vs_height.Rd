@@ -23,6 +23,7 @@ as well as DM patients with no height records at all
 
 DM <- data.frame(
   STUDYID = 1,
+  RFSTDTC = 11:20,
   USUBJID = 1:10
 )
 
@@ -39,6 +40,7 @@ check_vs_height(VS, DM)
 
 DM <- data.frame(
   STUDYID = 1,
+  RFSTDTC = 11:21,
   USUBJID = 1:11
 )
 
@@ -46,6 +48,7 @@ VS$VSSTRESN[1] <- NA
 VS$VSSTRESN[2] <- "NA"
 VS$VSSTRESN[3] <- ""
 VS$VSSTRESN[4] <- "."
+DM$RFSTDTC[1] <- NA
 
 check_vs_height(VS, DM)
 

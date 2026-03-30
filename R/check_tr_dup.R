@@ -55,29 +55,31 @@
 #'
 check_tr_dup <- function(TR) {
   if (TR %lacks_any% c(
-    "USUBJID", "TRCAT", "TRTESTCD", "TRDTC",
+    "USUBJID", "TRTESTCD", "TRDTC",
     "TRSTRESC"
   )) {
     fail(lacks_msg(TR, c(
-      "USUBJID", "TRCAT", "TRTESTCD",
+      "USUBJID", "TRTESTCD",
       "TRDTC", "TRSTRESC"
     )))
   } else if (TR %lacks_any% "TRLNKID") {
     fail("TR is missing the TRLNKID variable. ")
   } else {
-    myvars <- c("USUBJID", "TRCAT", "TRTESTCD", "TRLNKID", names(TR)[names(TR) %in%
-      "TRSPID"], "TRDTC", "TRSTRESC")
+    myvars <- c(
+      "USUBJID", "TRTESTCD", "TRLNKID",
+      names(TR)[names(TR) %in% "TRSPID"], "TRDTC", "TRSTRESC"
+    )
     if (TR %lacks_any% "TREVAL") {
-      tr1 <- TR %>%
-        select(any_of(myvars)) %>%
-        group_by_all() %>%
+      tr1 <- TR |>
+        select(any_of(myvars)) |>
+        group_by_all() |>
         filter(n() > 1)
     } else {
-      tr1 <- TR %>%
+      tr1 <- TR |>
         filter(toupper(TREVAL) == "研究者" |
-          is_sas_na(TREVAL)) %>%
-        select(any_of(myvars)) %>%
-        group_by_all() %>%
+          is_sas_na(TREVAL)) |>
+        select(any_of(myvars)) |>
+        group_by_all() |>
         filter(n() > 1)
     }
     dups <- subset(tr1, duplicated(tr1), myvars)

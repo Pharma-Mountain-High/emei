@@ -2,31 +2,29 @@
 
 <img src="man/figures/logo.png" alt="Emei Logo" align="right" height="139"/>
 
-[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![R Package](https://img.shields.io/badge/R%20package-ready-brightgreen.svg)]()
-
 ## 📋 简介
 
 **Emei** 是一个专门用于临床试验SDTM数据质量检查的R包。它提供了一键式的数据验证功能，能够自动读取、预处理和检查SDTM数据，并生成详细的Excel检查报告。
 
 ### 核心特点
 
--   ✅ **一键执行** - 单个函数完成所有检查流程
--   ✅ **自动化处理** - 自动读取SAS数据、合并SUPP域、预处理
--   ✅ **全面检查** - 覆盖DM、AE、VS、LB、EX、CM、EC、TR、TU、RS、SS、TS、QS等主要域
--   ✅ **灵活配置** - 可按优先级和类型筛选检查项目
--   ✅ **Excel报告** - 自动生成格式化的检查报告
--   ✅ **生产级质量** - 499个测试用例，100%通过率
+- ✅ **一键执行** - 单个函数完成所有检查流程
+- ✅ **自动化处理** - 自动读取SAS数据、合并SUPP域、预处理
+- ✅ **全面检查** - 覆盖DM、AE、VS、LB、EX、CM、EC、TR、TU、RS、SS、TS、QS等主要域
+- ✅ **灵活配置** - 可按优先级和类型筛选检查项目
+- ✅ **Excel报告** - 自动生成格式化的检查报告
+- ✅ **生产级质量** - 499个测试用例，100%通过率
 
 ## 🚀 快速开始
 
-### 安装
+### 安装(下面任选其中一个)
 
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
 devtools::install_github("Pharma-Mountain-High/emei")
 # install.packages("remotes")
-remotes::install_github("Pharma-Mountain-High/emei")
+# remotes::install_github("Pharma-Mountain-High/emei")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
@@ -61,18 +59,24 @@ result <- emei(
 )
 ```
 
+提示：🔴 如果第一次在R server上运行上述code报下面的ERROR，表示您还未在R server上挂载公盘
+
+`Error in XXXX, Data directory does not exist: XXXX`
+
+挂载公盘具体方法：页面左下角，点击Terminal，输入OA密码（输入的密码不会显示），输完回车就可以啦！
+
 这个函数会自动完成以下工作：
 
-1.  ✅ 读取指定目录下的所有`.sas7bdat`文件
-2.  ✅ 自动合并SUPP数据集到主域
-3.  ✅ 对DM、AE、VS域进行标准化预处理
-4.  ✅ 执行全面的数据质量检查
-5.  ✅ 生成Excel格式的检查报告
+1. ✅ 读取指定目录下的所有`.sas7bdat`文件
+2. ✅ 自动合并SUPP数据集到主域
+3. ✅ 对DM、AE、VS域进行标准化预处理
+4. ✅ 执行全面的数据质量检查
+5. ✅ 生成Excel格式的检查报告
 
 ### 函数参数说明
 
 | 参数           | 类型     | 必需  | 默认值                     | 说明                                          |
-|----------------|----------|-------|----------------------------|-----------------------------------------------|
+|---------------|---------------|---------------|---------------|---------------|
 | `proj`         | 字符串   | ✅ 是 | \-                         | 项目编号，用于报告文件命名（如"QLG2198_301"） |
 | `folder`       | 字符串   | ✅ 是 | \-                         | SDTM数据目录路径                              |
 | `priority`     | 字符向量 | 否    | `c("High","Medium","Low")` | 检查优先级筛选                                |
@@ -182,15 +186,15 @@ result <- emei(
 
 自动生成的Excel报告包含：
 
--   **检查摘要** - 通过/失败的检查项统计
--   **详细结果** - 每项检查的具体结果
--   **问题记录** - 未通过检查的具体数据记录
--   **优先级标记** - High/Medium/Low分类
--   **检查类型** - ALL/ONC/PRO分类
+- **检查摘要** - 通过/失败的检查项统计
+- **详细结果** - 每项检查的具体结果
+- **问题记录** - 未通过检查的具体数据记录
+- **优先级标记** - High/Medium/Low分类
+- **检查类型** - ALL/ONC/PRO分类
 
 ### 报告文件命名规则
 
-```         
+``` r
 {项目编号}_sdtm_checks_report_{日期}.xlsx
 ```
 
@@ -202,37 +206,37 @@ Emei包执行以下类型的数据质量检查：
 
 ### 通用检查 (ALL)
 
--   ✅ **DM域** - 受试者人口学信息一致性
--   ✅ **AE域** - 不良事件数据完整性和逻辑性
--   ✅ **VS域** - 生命体征数据合理性
--   ✅ **LB域** - 实验室检查数据完整性
--   ✅ **EX域** - 暴露数据一致性
--   ✅ **CM域** - 合并用药数据完整性
--   ✅ **DS域** - 处置数据逻辑性
+- ✅ **DM域** - 受试者人口学信息一致性
+- ✅ **AE域** - 不良事件数据完整性和逻辑性
+- ✅ **VS域** - 生命体征数据合理性
+- ✅ **LB域** - 实验室检查数据完整性
+- ✅ **EX域** - 暴露数据一致性
+- ✅ **CM域** - 合并用药数据完整性
+- ✅ **DS域** - 处置数据逻辑性
 
 ### 肿瘤相关检查 (ONC)
 
--   ✅ **TU域** - 肿瘤识别数据
--   ✅ **TR域** - 肿瘤评估数据
--   ✅ **RS域** - 疾病反应评估
--   ✅ **EC域** - 暴露-合并用药数据
+- ✅ **TU域** - 肿瘤识别数据
+- ✅ **TR域** - 肿瘤评估数据
+- ✅ **RS域** - 疾病反应评估
+- ✅ **EC域** - 暴露-合并用药数据
 
 ### PRO检查 (PRO)
 
--   ✅ **QS域** - 问卷数据完整性
+- ✅ **QS域** - 问卷数据完整性
 
 ### 支持的检查类型
 
--   数据完整性检查（缺失值、必需变量）
--   数据一致性检查（跨域关联）
--   逻辑性检查（日期顺序、数值范围）
--   CDISC标准符合性检查
+- 数据完整性检查（缺失值、必需变量）
+- 数据一致性检查（跨域关联）
+- 逻辑性检查（日期顺序、数值范围）
+- CDISC标准符合性检查
 
 ## 📁 目录结构要求
 
 ### SDTM数据目录
 
-```         
+``` r
 sdtm/
 ├── dm.sas7bdat          # 人口学域（必需）
 ├── ae.sas7bdat          # 不良事件域
@@ -248,7 +252,7 @@ sdtm/
 
 ### 输出目录结构
 
-```         
+``` r
 report/
 ├── QLG2198_301_sdtm_checks_report_2026-02-27.xlsx
 ├── QL1706_308_sdtm_checks_report_2026-02-27.xlsx
@@ -297,12 +301,12 @@ A: 可以使用`priority`和`type`参数筛选检查项，或设置`export_excel
 
 ## 📞 支持
 
--   问题反馈: [GitHub Issues](https://github.com/Pharma-Mountain-High/emei/issues)
+- 问题反馈: [GitHub Issues](https://github.com/Pharma-Mountain-High/emei/issues)
 
 ## 🔗 相关资源
 
--   [CDISC SDTM标准](https://www.cdisc.org/standards/foundational/sdtm)
--   [R语言官方文档](https://www.r-project.org/)
+- [CDISC SDTM标准](https://www.cdisc.org/standards/foundational/sdtm)
+- [R语言官方文档](https://www.r-project.org/)
 
 ------------------------------------------------------------------------
 

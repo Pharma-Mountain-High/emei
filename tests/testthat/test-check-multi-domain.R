@@ -167,6 +167,7 @@ test_that("check_vs_height returns pass when all patients have height records", 
   DM <- data.frame(
     STUDYID = 1,
     USUBJID = 1:5,
+    RFSTDTC = 1:5,
     stringsAsFactors = FALSE
   )
   VS <- data.frame(
@@ -186,6 +187,7 @@ test_that("check_vs_height returns fail when patients in DM have no height", {
   DM <- data.frame(
     STUDYID = 1,
     USUBJID = 1:5,
+    RFSTDTC = 1:5,
     stringsAsFactors = FALSE
   )
   VS <- data.frame(
@@ -206,6 +208,7 @@ test_that("check_vs_height handles missing VSSTRESN in height records", {
   DM <- data.frame(
     STUDYID = 1,
     USUBJID = 1:5,
+    RFSTDTC = 1:5,
     stringsAsFactors = FALSE
   )
   VS <- data.frame(
@@ -224,6 +227,7 @@ test_that("check_vs_height handles missing VSSTRESN in height records", {
 test_that("check_vs_height handles case insensitive VSTESTCD", {
   DM <- data.frame(
     USUBJID = 1:3,
+    RFSTDTC = 1:3,
     stringsAsFactors = FALSE
   )
   VS <- data.frame(

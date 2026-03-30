@@ -19,6 +19,7 @@
 #'
 #' DM <- data.frame(
 #'   STUDYID = 1,
+#'   RFSTDTC = 11:20,
 #'   USUBJID = 1:10
 #' )
 #'
@@ -35,6 +36,7 @@
 #'
 #' DM <- data.frame(
 #'   STUDYID = 1,
+#'   RFSTDTC = 11:21,
 #'   USUBJID = 1:11
 #' )
 #'
@@ -42,6 +44,7 @@
 #' VS$VSSTRESN[2] <- "NA"
 #' VS$VSSTRESN[3] <- ""
 #' VS$VSSTRESN[4] <- "."
+#' DM$RFSTDTC[1] <- NA
 #'
 #' check_vs_height(VS, DM)
 #'
@@ -59,6 +62,7 @@ check_vs_height <- function(VS, DM) {
 
     ### Obtain list of patients in DM
     dm_pats <- DM %>%
+      filter(!is_sas_na(RFSTDTC)) %>%
       select(USUBJID)
 
     ### Obtain patients in dm_pats who don't appear in vs_pats
