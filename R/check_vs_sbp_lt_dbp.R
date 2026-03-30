@@ -32,16 +32,20 @@
 #' check_vs_sbp_lt_dbp(VS = vs0)
 #'
 check_vs_sbp_lt_dbp <- function(VS) {
-  ### First check that required variables exist and return a message if they don't
-  if (VS %lacks_any% c("USUBJID", "VISIT", "VSDTC", "VSTESTCD", "VSSTRESN", "VSSPID")) {
-    fail(lacks_msg(VS, c("USUBJID", "VISIT", "VSDTC", "VSTESTCD", "VSSTRESN", "VSSPID")))
+  req_always <- c("USUBJID", "VISIT", "VSDTC", "VSTESTCD", "VSSTRESN")
+  if (VS %lacks_any% req_always) {
+    fail(lacks_msg(VS, req_always))
   } else {
-    ### select records for blood pressure
-    ### ignore VSPOS for now but revisit
-    ### VSTPT consideration
+    has_vsspid <- "VSSPID" %in% names(VS)
+
+    vs_cols <- if (has_vsspid) {
+      c("USUBJID", "VISIT", "VSDTC", "VSTESTCD", "VSSTRESN", "VSSPID")
+    } else {
+      c("USUBJID", "VISIT", "VSDTC", "VSTESTCD", "VSSTRESN")
+    }
 
     vs0 <- VS %>%
-      select(USUBJID, VISIT, VSDTC, VSTESTCD, VSSTRESN, VSSPID)
+      select(all_of(vs_cols))
 
     sbp <- vs0 %>%
       filter(VSTESTCD == "SYSBP") %>%
@@ -51,20 +55,23 @@ check_vs_sbp_lt_dbp <- function(VS) {
       filter(VSTESTCD == "DIABP") %>%
       rename(VSDTC.DIABP = VSDTC, DIABP = VSSTRESN)
 
-    mydf0 <- merge(sbp, dbp, by = c("USUBJID", "VISIT", "VSSPID"))
+    merge_by <- if (has_vsspid) {
+      c("USUBJID", "VISIT", "VSSPID")
+    } else {
+      c("USUBJID", "VISIT")
+    }
+
+    mydf0 <- merge(sbp, dbp, by = merge_by)
 
     mydf <- mydf0 %>%
-      filter(mydf0$DIABP > SYSBP & SYSBP > 0 & DIABP > 0) %>%
+      filter(DIABP > SYSBP, SYSBP > 0, DIABP > 0) %>%
       select(USUBJID, VISIT, VSDTC.SYSBP, SYSBP, DIABP) %>%
       rename(VSDTC = VSDTC.SYSBP)
 
-    ######### If there are no VS records that qualify for the check ###########
     if (nrow(mydf) == 0) {
       pass()
-
-      ######### If there are VS records that qualify ###########
     } else if (nrow(mydf) > 0) {
-      fail(paste("VS has ", nrow(mydf), " records with Systolic BP < Diastolic BP. ", sep = ""), mydf)
+      fail(paste0("VS has ", nrow(mydf), " records with Systolic BP < Diastolic BP. "), mydf)
     }
   }
 }
