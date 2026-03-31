@@ -47,7 +47,7 @@ check_ec_ecoccur_mis_ecdose_nonmis <- function(EC) {
   }
 
   # 再进行筛选，避免缺列时报错
-  EC <- EC %>% filter(ECMOOD == "已执行", ECOCCUR != "是")
+  EC <- EC %>% filter(ECMOOD == "已执行", ECOCCUR == "")
 
   if (length(EC$USUBJID) == 0) {
     return(pass())
