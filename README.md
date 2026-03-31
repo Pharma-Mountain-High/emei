@@ -22,9 +22,7 @@
 ``` r
 # 1.从GitHub安装
 # install.packages("devtools")
-devtools::install_github("Pharma-Mountain-High/emei")
-# install.packages("remotes")
-# remotes::install_github("Pharma-Mountain-High/emei")
+devtools::install_github("Pharma-Mountain-High/emei",upgrade = "never")
 
 # 2.下载后再安装
 # 打开网址下载压缩包文件(tar.gz)
