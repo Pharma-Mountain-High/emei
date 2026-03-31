@@ -80,7 +80,7 @@ check_ae_death_ds_discon <- function(AE, DS, preproc = identity, ...) {
     ds1 <- subset(ds0,
       (grepl("研究结束", toupper(ds0$DSSCAT)) |
         grepl("终止研究", toupper(ds0$DSSCAT))|
-         grepl("终止研究", toupper(ds0$DSSCAT))
+         grepl("研究终止", toupper(ds0$DSSCAT))
       ) &
         (grepl("处置事件", toupper(ds0$DSCAT)) |
           grepl("受试者分布事件", toupper(ds0$DSCAT))),
