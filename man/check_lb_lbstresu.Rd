@@ -23,7 +23,7 @@ test failed
 This check identifies records where original lab values (LBORRES)
 exist but standard lab units (LBSTRESU) are not populated, excluding
 qualitative results (LBMETHOD) and excluding records when LBTESTCD in
-("PH" "SPGRAV")
+("PH" "SPGRAV" "INR")
 }
 \examples{
 

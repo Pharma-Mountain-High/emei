@@ -47,7 +47,13 @@
 #'
 check_qs_qsdtc_visit_ordinal_error <- function(QS) {
   class(QS) <- "data.frame"
-  vars <- c("USUBJID", "QSCAT", "QSTESTCD", "VISITNUM", "VISIT", "QSDTC")
+  has_qscat <- "QSCAT" %in% names(QS)
+  vars <- if (has_qscat) {
+    c("USUBJID", "QSCAT", "QSTESTCD", "VISITNUM", "VISIT", "QSDTC")
+  } else {
+    c("USUBJID", "QSTESTCD", "VISITNUM", "VISIT", "QSDTC")
+  }
+
   ### First check that required variables exist and return a message if they don't
   if (QS %lacks_any% vars) {
     fail(lacks_msg(QS, vars))
@@ -56,20 +62,34 @@ check_qs_qsdtc_visit_ordinal_error <- function(QS) {
   } else if (length(unique(QS[["VISITNUM"]])) <= 1) {
     fail(msg = "VISITNUM exists but only a single value. ")
   } else {
-    mydf2 <- dtc_dupl_early(
-      dts = subset(QS, !grepl("计划外", toupper(QS$VISIT)), ),
-      vars = vars,
-      ### groupby variables used for grouping and visit.order derivation
-      groupby = vars[c(1, 2, 3)],
-      dtc = vars[6],
-      ### variables used for ordering before visit.order derivation
-      vars[1],
-      vars[2],
-      vars[3],
-      vars[4],
-      vars[5],
-      vars[6]
-    )
+    mydf2 <- if (has_qscat) {
+      dtc_dupl_early(
+        dts = subset(QS, !grepl("计划外", toupper(QS$VISIT)), ),
+        vars = vars,
+        ### groupby variables used for grouping and visit.order derivation
+        groupby = vars[c(1, 2, 3)],
+        dtc = vars[6],
+        ### variables used for ordering before visit.order derivation
+        vars[1],
+        vars[2],
+        vars[3],
+        vars[4],
+        vars[5],
+        vars[6]
+      )
+    } else {
+      dtc_dupl_early(
+        dts = subset(QS, !grepl("计划外", toupper(QS$VISIT)), ),
+        vars = vars,
+        groupby = vars[c(1, 2)],
+        dtc = vars[5],
+        vars[1],
+        vars[2],
+        vars[3],
+        vars[4],
+        vars[5]
+      )
+    }
 
     ### Subset if Vis_order not equal Dtc_order
     myout <- mydf2[!is.na(mydf2$check.flag), ]

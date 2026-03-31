@@ -37,27 +37,35 @@
 #' check_qs_dup(QS = QS2)
 #'
 check_qs_dup <- function(QS) {
-  # Checks whether required variables are in dataset
-  if (QS %lacks_any% c("USUBJID", "QSCAT", "QSTESTCD", "QSDTC", "VISIT")) {
-    fail(lacks_msg(QS, c("USUBJID", "QSCAT", "QSTESTCD", "QSDTC", "VISIT")))
+  req_vars <- c("USUBJID", "QSTESTCD", "QSDTC", "VISIT")
+  if (QS %lacks_any% req_vars) {
+    fail(lacks_msg(QS, req_vars))
   } else {
-    # Remove time
+    has_qscat <- "QSCAT" %in% names(QS)
     QS <- mutate(QS, QSDTC1 = substr(QSDTC, 1, 10))
-    # Get unique records by category, date, visit
 
-    df <- QS %>%
-      select(USUBJID, QSCAT, QSTESTCD, QSDTC1, VISIT) %>%
-      rename(QSDTC = QSDTC1) %>%
-      group_by(USUBJID, QSCAT, QSTESTCD, QSDTC) %>%
-      slice(1)
+    if (has_qscat) {
+      df <- QS %>%
+        select(USUBJID, QSCAT, QSTESTCD, QSDTC1, VISIT) %>%
+        rename(QSDTC = QSDTC1) %>%
+        group_by(USUBJID, QSCAT, QSTESTCD, QSDTC) %>%
+        slice(1)
+      df <- subset(df, !grepl("计划外", toupper(df$VISIT)))
+      df2 <- df %>%
+        group_by(USUBJID, QSCAT, QSTESTCD, VISIT) %>%
+        filter(n() > 1)
+    } else {
+      df <- QS %>%
+        select(USUBJID, QSTESTCD, QSDTC1, VISIT) %>%
+        rename(QSDTC = QSDTC1) %>%
+        group_by(USUBJID, QSTESTCD, QSDTC) %>%
+        slice(1)
+      df <- subset(df, !grepl("计划外", toupper(df$VISIT)))
+      df2 <- df %>%
+        group_by(USUBJID, QSTESTCD, VISIT) %>%
+        filter(n() > 1)
+    }
 
-    # Get duplicates records by category, date
-    df <- subset(df, !grepl("计划外", toupper(df$VISIT)), )
-    df2 <- df %>%
-      group_by(USUBJID, QSCAT, QSTESTCD, VISIT) %>%
-      filter(n() > 1)
-
-    # Outputs a resulting message depending on whether there are duplicates
     if (nrow(df2) != 0) {
       fail("Multiple dates for the same visit in QS. ", df2)
     } else {
