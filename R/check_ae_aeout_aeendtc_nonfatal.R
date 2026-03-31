@@ -2,9 +2,9 @@
 #'
 #' @description Check for inconsistency between AE outcome (AEOUT) and
 #' AE end date (AEENDTC) for non-fatal AEs (based on AEOUT). AE flagged if AEENDTC
-#' not populated when AEOUT is "RECOVERED/RESOLVED", "IMPROVED", "RECOVERED/RESOLVED WITH SEQUELAE", "RECOVERED/RESOLVED TO BASELINE".
+#' not populated when AEOUT is "痊愈/恢复", "好转", "痊愈/恢复伴有后遗症", "痊愈/恢复至基线".
 #' AE also flagged if AEENDTC is populated when AEOUT is
-#' "UNKNOWN", "NOT IMPROVED".
+#' "不详", "未好转".
 #'
 #' @param AE Adverse Events SDTM dataset with variables USUBJID, AETERM, AESTDTC, AEENDTC, AEOUT
 #' @param preproc An optional company specific preprocessing script

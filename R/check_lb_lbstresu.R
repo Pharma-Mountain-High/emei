@@ -3,7 +3,7 @@
 #' @description This check identifies records where original lab values (LBORRES)
 #' exist but standard lab units (LBSTRESU) are not populated, excluding
 #' qualitative results (LBMETHOD) and excluding records when LBTESTCD in
-#' ("PH" "SPGRAV")
+#' ("PH" "SPGRAV" "INR")
 #'
 #' @param LB Lab SDTM dataset with variables USUBJID, LBSTRESC, LBSTRESN,
 #'   LBORRES, LBSTRESU, LBTESTCD, LBDTC, LBMETHOD (optional),
@@ -76,8 +76,8 @@ check_lb_lbstresu <- function(LB, preproc = identity, ...) {
       "LBSTRESU", "LBSTRESC", "LBDTC", "SEQ", "VISIT"
     )))
     df <- df %>%
-      filter(LBTESTCD != "PH" & LBTESTCD != "SPGRAV" &
-        !grepl("(-|\\+|阴性|阳性|未见)", LBORRES))
+      filter(LBTESTCD != "PH" & LBTESTCD != "SPGRAV" & LBTESTCD != "INR" &
+        !grepl("(-|\\+|阴性|阳性|未见|弱阳性|弱阳|阳|阴)", LBORRES))
 
     missingunit <- df %>% filter(is_sas_na(LBSTRESU) & !is_sas_na(LBORRES))
     rownames(missingunit) <- NULL

@@ -74,12 +74,13 @@ check_tr_trdtc_across_visit <- function(TR, preproc = identity, ...) {
 
     if (TR %lacks_any% "TREVAL") {
       trsub <- TR %>%
-        filter(TRTESTCD %in% c("LDIAM", "SUMDIAM", "DIAMTETER", "TUMSTATE")) %>%
+        filter(TRTESTCD %in% c("LDIAM", "SUMDIAM", "DIAMTETER", "TUMSTATE") &
+          !is_sas_na(TRDTC)) %>%
         select(USUBJID, TRDTC, VISIT, TRTESTCD, any_of(c("SEQ", "TRLNKID", "TRSPID")))
     } else {
       trsub <- TR %>%
         filter(TRTESTCD %in% c("LDIAM", "SUMDIAM", "DIAMTETER", "TUMSTATE") &
-          (toupper(TREVAL) == "研究者" | is_sas_na(TREVAL))) %>%
+          (toupper(TREVAL) == "研究者" | is_sas_na(TREVAL)) & !is_sas_na(TRDTC)) %>%
         select(USUBJID, TRDTC, VISIT, TRTESTCD, any_of(c("SEQ", "TRLNKID", "TRSPID")))
     }
 

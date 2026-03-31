@@ -67,10 +67,13 @@ check_ds_dsdecod_death <- function(DS, preproc = identity, ...) {
     # find patients that have a STUDY DISCONTINUATION record
     discon <- DS %>%
       filter(
-        grepl("研究", toupper(DSSCAT)),
-        grepl("结束", toupper(DSSCAT)),
         !grepl("药物", toupper(DSSCAT)),
-        !grepl("治疗", toupper(DSSCAT))
+        !grepl("治疗", toupper(DSSCAT)),
+        (
+          (grepl("研究", toupper(DSSCAT)) & grepl("结束", toupper(DSSCAT))) |
+            grepl("终止研究", toupper(DSSCAT)) |
+            grepl("研究终止", toupper(DSSCAT))
+        )
       ) %>%
       mutate(DISCFL = "Y") %>%
       select(USUBJID, DISCFL)

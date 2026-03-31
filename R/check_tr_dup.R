@@ -26,6 +26,7 @@
 #'   TRLNKID = c(1, 1, 2, 2),
 #'   TRDTC = c(rep("2016-01-01", 2), rep("2016-06-01", 2)),
 #'   TRSTRESC = c(1, 1, 2, 2),
+#'   VISIT = c(rep("W6", 2), rep("W10", 2)),
 #'   TRSPID = "FORMNAME-R:19/L:19XXXX",
 #'   TREVAL = "研究者",
 #'   stringsAsFactors = FALSE
@@ -56,18 +57,18 @@
 check_tr_dup <- function(TR) {
   if (TR %lacks_any% c(
     "USUBJID", "TRTESTCD", "TRDTC",
-    "TRSTRESC"
+    "TRSTRESC", "VISIT"
   )) {
     fail(lacks_msg(TR, c(
       "USUBJID", "TRTESTCD",
-      "TRDTC", "TRSTRESC"
+      "TRDTC", "TRSTRESC", "VISIT"
     )))
   } else if (TR %lacks_any% "TRLNKID") {
     fail("TR is missing the TRLNKID variable. ")
   } else {
     myvars <- c(
       "USUBJID", "TRTESTCD", "TRLNKID",
-      names(TR)[names(TR) %in% "TRSPID"], "TRDTC", "TRSTRESC"
+      names(TR)[names(TR) %in% "TRSPID"], "TRDTC", "TRSTRESC", "VISIT"
     )
     if (TR %lacks_any% "TREVAL") {
       tr1 <- TR |>
