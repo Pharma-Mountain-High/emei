@@ -28,6 +28,7 @@ TR <- data.frame(
   TRLNKID = c(1, 1, 2, 2),
   TRDTC = c(rep("2016-01-01", 2), rep("2016-06-01", 2)),
   TRSTRESC = c(1, 1, 2, 2),
+  VISIT = c(rep("W6", 2), rep("W10", 2)),
   TRSPID = "FORMNAME-R:19/L:19XXXX",
   TREVAL = "研究者",
   stringsAsFactors = FALSE

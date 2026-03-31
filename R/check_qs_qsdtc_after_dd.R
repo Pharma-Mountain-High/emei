@@ -74,13 +74,15 @@ check_qs_qsdtc_after_dd <- function(DM, QS) {
   if (DM %lacks_any% c("USUBJID", "DTHDTC")) {
     lacks_msgs <- c(lacks_msgs, lacks_msg(DM, c("USUBJID", "DTHDTC")))
   }
-  if (QS %lacks_any% c("USUBJID", "QSDTC", "QSCAT", "QSORRES")) {
-    lacks_msgs <- c(lacks_msgs, lacks_msg(QS, c("USUBJID", "QSDTC", "QSCAT", "QSORRES")))
+  if (QS %lacks_any% c("USUBJID", "QSDTC", "QSORRES")) {
+    lacks_msgs <- c(lacks_msgs, lacks_msg(QS, c("USUBJID", "QSDTC", "QSORRES")))
   }
 
   if (length(lacks_msgs) > 0) {
     fail(msg = paste0(lacks_msgs, collapse = ". "))
   } else {
+    has_qscat <- "QSCAT" %in% names(QS)
+
     # Add day of "01" to dates that are in the format of "yyyy-mm"
     DM$DTHDTC <- impute_day01(DM$DTHDTC)
     QS$QSDTC <- impute_day01(QS$QSDTC)
@@ -115,9 +117,15 @@ check_qs_qsdtc_after_dd <- function(DM, QS) {
         )
       }
 
+      out_cols <- c("USUBJID", "QSDTC", "QSTESTCD", "VISIT", "QSEVAL")
+      if (has_qscat) {
+        out_cols <- c(out_cols, "QSCAT")
+      }
+      out_cols <- c(out_cols, "DTHDTC")
+
       mydf <- mydf0 %>%
         filter(as.Date(DTHDTC) < as.Date(QSDTC)) %>%
-        select(any_of(c("USUBJID", "QSDTC", "QSTESTCD", "VISIT", "QSEVAL", "QSCAT", "DTHDTC")))
+        select(any_of(out_cols))
 
       if (nrow(mydf) == 0) {
         pass()

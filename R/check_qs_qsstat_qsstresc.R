@@ -42,37 +42,65 @@
 #' check_qs_qsstat_qsstresc(QS)
 #'
 check_qs_qsstat_qsstresc <- function(QS) {
-  ### First check that required variables exist and return a message if they don't
-  if (QS %lacks_any% c(
-    "USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSCAT",
-    "QSDTC", "QSTESTCD"
-  )) {
-    fail(lacks_msg(QS, c(
-      "USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSCAT",
-      "QSDTC", "QSTESTCD"
-    )))
+  has_qscat <- "QSCAT" %in% names(QS)
+
+  req <- if (has_qscat) {
+    c("USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSCAT", "QSDTC", "QSTESTCD")
   } else {
+    c("USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSDTC", "QSTESTCD")
+  }
+
+  ### First check that required variables exist and return a message if they don't
+  if (QS %lacks_any% req) {
+    fail(lacks_msg(QS, req))
+  } else {
+    sel_all <- if (has_qscat) {
+      c("USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSCAT", "QSDTC", "QSTESTCD")
+    } else {
+      c("USUBJID", "QSSTRESC", "VISIT", "QSSTAT", "QSDTC", "QSTESTCD")
+    }
+
+    merge_by <- if (has_qscat) {
+      c("USUBJID", "VISIT", "QSCAT", "QSDTC", "QSTESTCD")
+    } else {
+      c("USUBJID", "VISIT", "QSDTC", "QSTESTCD")
+    }
+
+    sel_nd <- if (has_qscat) {
+      c("USUBJID", "VISIT", "QSSTAT", "QSCAT", "QSDTC", "QSTESTCD")
+    } else {
+      c("USUBJID", "VISIT", "QSSTAT", "QSDTC", "QSTESTCD")
+    }
+
+    sel_ans <- if (has_qscat) {
+      c("USUBJID", "VISIT", "QSSTRESC", "QSCAT", "QSDTC", "QSTESTCD")
+    } else {
+      c("USUBJID", "VISIT", "QSSTRESC", "QSDTC", "QSTESTCD")
+    }
+
+    sel_out <- if (has_qscat) {
+      c("USUBJID", "VISIT", "QSCAT", "QSDTC", "QSSTAT", "QSSTRESC", "QSTESTCD")
+    } else {
+      c("USUBJID", "VISIT", "QSDTC", "QSSTAT", "QSSTRESC", "QSTESTCD")
+    }
+
     # in QS keep rows where QSSTAT = 未查 or QSTESTCD = QSALL
     qsND <- QS %>%
       filter(QSSTAT == "未查" | QSTESTCD == "QSALL") %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD)
+      select(all_of(sel_all))
 
     qsANS <- QS %>%
-      select(USUBJID, QSSTRESC, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD) %>%
+      select(all_of(sel_all)) %>%
       filter(!is_sas_na(QSSTRESC))
 
-    # find matching patients in qsND
-    qsNDsub <- qsND %>%
-      select(USUBJID, VISIT, QSSTAT, QSCAT, QSDTC, QSTESTCD)
-    qsANSsub <- qsANS %>%
-      select(USUBJID, VISIT, QSSTRESC, QSCAT, QSDTC, QSTESTCD)
-    qsPREP <- merge(qsNDsub, qsANSsub, c("USUBJID", "VISIT", "QSCAT", "QSDTC", "QSTESTCD"),
-      all.x = TRUE
-    )
+    qsNDsub <- qsND %>% select(all_of(sel_nd))
+    qsANSsub <- qsANS %>% select(all_of(sel_ans))
+
+    qsPREP <- merge(qsNDsub, qsANSsub, merge_by, all.x = TRUE)
 
     mydf <- qsPREP %>%
       filter((QSSTAT == "未查" & !is_sas_na(QSSTRESC)) | QSTESTCD == "QSALL") %>%
-      select(USUBJID, VISIT, QSCAT, QSDTC, QSSTAT, QSSTRESC, QSTESTCD)
+      select(all_of(sel_out))
 
     mydf <- unique(mydf)
     rownames(mydf) <- NULL
