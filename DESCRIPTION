@@ -22,11 +22,14 @@ Imports:
     openxlsx,
     parallel,
     tidyr,
-    tidyselect
+    tidyselect,
+    rmarkdown, 
+    knitr, 
+    kableExtra,
+    shiny
 Suggests:
     future,
     httr,
-    knitr,
     shinytest2,
     DT,
     testthat (>= 3.0)

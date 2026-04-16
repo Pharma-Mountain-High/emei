@@ -21,11 +21,16 @@
 #'   to create if it doesn't exist.
 #' @param save_rds Logical value, whether to additionally save the read source data list as
 #'  \code{source_data_\{proj\}.rds}. Default \code{FALSE}.
+#' @param PDFYN Logical value, whether to generate a PDF report. Default \code{TRUE}.
+#'   The PDF is saved to the same directory as the Excel file (\code{outdir}).
+#'   An intermediate RDS of the check results is saved to \code{data/rds/} under
+#'   the current working directory.
 #' @param verbose Logical value, whether to output runtime information. Default `TRUE`.
 #'
 #' @return Returns the result object from `run_all_checks()`. If `export_excel = TRUE`,
 #'   the returned object will have an `outfile` attribute containing the full path to
-#'   the generated Excel file.
+#'   the generated Excel file. If `PDFYN = TRUE`, a PDF report is also generated in
+#'   \code{outdir} and an intermediate RDS is saved to \code{data/rds/}.
 #'
 #' @examples
 #' \dontrun{
@@ -53,6 +58,10 @@
 #' )
 #' }
 #' @export
+#'
+#'
+#'
+#'
 emei <- function(proj,
                  folder,
                  priority = c("High", "Medium", "Low"),
@@ -60,14 +69,15 @@ emei <- function(proj,
                  export_excel = TRUE,
                  outdir = "report",
                  save_rds = FALSE,
+                 PDFYN = TRUE,
                  verbose = TRUE) {
   # Parameter validation
   if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
-    nchar(proj) == 0) {
+      nchar(proj) == 0) {
     stop("Parameter 'proj' must be a non-empty character string.")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-    nchar(folder) == 0) {
+      nchar(folder) == 0) {
     stop("Parameter 'folder' must be a non-empty character string.")
   }
   if (!dir.exists(folder)) {
@@ -78,6 +88,9 @@ emei <- function(proj,
   }
   if (!is.logical(save_rds) || length(save_rds) != 1) {
     stop("Parameter 'save_rds' must be a logical scalar.")
+  }
+  if (!is.logical(PDFYN) || length(PDFYN) != 1) {
+    stop("Parameter 'PDFYN' must be a logical scalar.")
   }
   if (!is.logical(verbose) || length(verbose) != 1) {
     stop("Parameter 'verbose' must be a logical scalar.")
@@ -104,12 +117,12 @@ emei <- function(proj,
   }
 
   priority <- normalize_char_opt(priority,
-    allowed = c("High", "Medium", "Low"),
-    case = "title"
+                                 allowed = c("High", "Medium", "Low"),
+                                 case = "title"
   )
   type <- normalize_char_opt(type,
-    allowed = c("ALL", "ONC", "PRO"),
-    case = "asis"
+                             allowed = c("ALL", "ONC", "PRO"),
+                             case = "asis"
   )
 
   # Read .sas7bdat files
@@ -177,10 +190,49 @@ emei <- function(proj,
     ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
     attr(sdtmreport, "outfile") <- normalizePath(outfile,
-      winslash = "/",
-      mustWork = FALSE
+                                                 winslash = "/",
+                                                 mustWork = FALSE
     )
     if (verbose) message(sprintf("Report generated: %s", attr(sdtmreport, "outfile")))
+  }
+
+  # Optional PDF export
+  if (isTRUE(PDFYN)) {
+    # Ensure outdir exists (in case export_excel = FALSE)
+    if (!dir.exists(outdir)) {
+      ok <- try(dir.create(outdir, recursive = TRUE), silent = TRUE)
+      if (inherits(ok, "try-error") || !dir.exists(outdir)) {
+        stop(sprintf("Cannot create output directory: %s", outdir))
+      }
+    }
+
+    # Save intermediate RDS to rds/ subfolder under outdir
+    rds_dir <- file.path(outdir, "rds")
+    if (!dir.exists(rds_dir)) {
+      ok <- try(dir.create(rds_dir, recursive = TRUE), silent = TRUE)
+      if (inherits(ok, "try-error") || !dir.exists(rds_dir)) {
+        stop(sprintf("Cannot create RDS directory: %s", rds_dir))
+      }
+    }
+    rds_file <- file.path(rds_dir, sprintf(
+      "%s_sdtmreport_%s.rds", proj, as.character(Sys.Date())
+    ))
+    saveRDS(sdtmreport, file = rds_file)
+    if (verbose) message(sprintf("Intermediate RDS saved: %s", rds_file))
+
+    # Generate PDF report
+    pdf_outfile <- file.path(outdir, sprintf(
+      "%s_sdtm_checks_report_%s.pdf", proj, as.character(Sys.Date())
+    ))
+    generate_pdf_report(
+      all_rec     = sdtmreport,
+      output_file = pdf_outfile,
+      mystudy     = proj,
+      category    = type,
+      priority    = priority,
+      data_path   = folder
+    )
+    if (verbose) message(sprintf("PDF report generated: %s", normalizePath(pdf_outfile, winslash = "/", mustWork = FALSE)))
   }
 
   return(sdtmreport)

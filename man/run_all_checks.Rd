@@ -7,7 +7,7 @@
 run_all_checks(
   metads = sdtmchecksmeta,
   priority = c("High", "Medium", "Low"),
-  type = c("ALL", "ONC", "COVID", "PRO", "OPHTH"),
+  type = c("ALL", "ONC", "PRO"),
   verbose = TRUE,
   ncores = 1
 )

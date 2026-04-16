@@ -12,6 +12,7 @@ emei(
   export_excel = TRUE,
   outdir = "report",
   save_rds = FALSE,
+  PDFYN = TRUE,
   verbose = TRUE
 )
 }
@@ -37,12 +38,18 @@ to create if it doesn't exist.}
 \item{save_rds}{Logical value, whether to additionally save the read source data list as
 \code{source_data_\{proj\}.rds}. Default \code{FALSE}.}
 
+\item{PDFYN}{Logical value, whether to generate a PDF report. Default \code{TRUE}.
+The PDF is saved to the same directory as the Excel file (\code{outdir}).
+An intermediate RDS of the check results is saved to \code{data/rds/} under
+the current working directory.}
+
 \item{verbose}{Logical value, whether to output runtime information. Default \code{TRUE}.}
 }
 \value{
 Returns the result object from \code{run_all_checks()}. If \code{export_excel = TRUE},
 the returned object will have an \code{outfile} attribute containing the full path to
-the generated Excel file.
+the generated Excel file. If \code{PDFYN = TRUE}, a PDF report is also generated in
+\code{outdir} and an intermediate RDS is saved to \code{data/rds/}.
 }
 \description{
 Reads SDTM \code{.sas7bdat} files from a specified directory, automatically merges SUPP datasets

@@ -133,6 +133,7 @@ RSSPID
 RSSTAT
 RSSTRESC
 RSTESTCD
+Rmd
 SBP
 SDTM
 SDTMv
@@ -208,6 +209,7 @@ mcmapply
 metads
 msg
 pos
+rds
 rpt
 sas
 sdtmchecks
