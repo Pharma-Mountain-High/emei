@@ -67,7 +67,7 @@ options(tibble.width = Inf)
 -   Check Priority: `r mypriority`
 -   MedDRA Version: `r mymeddra`
 -   Data Location: `r data.path`
--   Date/Time Report Generated: `r paste(mytime,"北京时间")`
+-   Date/Time Report Generated: `r paste(mytime,"Beijing Time")`
 
 ### Package Info
 
