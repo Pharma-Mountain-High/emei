@@ -200,7 +200,6 @@ for (i in 1:length(all_rec)) {
   }
 
 
-
   cat("  \n")
   cat("\n\n\\pagebreak\n")
 }

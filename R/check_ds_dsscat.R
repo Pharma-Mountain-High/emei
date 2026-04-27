@@ -37,7 +37,7 @@ check_ds_dsscat <- function(DS) {
       select("USUBJID", "DSSCAT") %>%
       filter(
         (grepl("研究", toupper(DSSCAT)) & grepl("结束", toupper(DSSCAT)) &
-           !grepl("药物", toupper(DSSCAT)) & !grepl("治疗", toupper(DSSCAT))) |
+          !grepl("药物", toupper(DSSCAT)) & !grepl("治疗", toupper(DSSCAT))) |
           DSSCAT == "终止研究"
       )
     if (nrow(myds) == 0) {
