@@ -177,26 +177,26 @@ report_to_xlsx <- function(res,
 
       # Row=1: HYPERLINK back to 'Summary results'; data starts at row 2
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-                startRow = 2, startCol = 1
+        startRow = 2, startCol = 1
       )
 
       # 汇总页该行 → 独立 Tab 超链接
       # i+1 是因为汇总页第1行为列名
       writeFormula(wb,
-                   sheet = "Summary results", startRow = i + 1, startCol = 1,
-                   x = makeHyperlinkString(
-                     sheet = res[[i]]$xls_title, row = 1,
-                     col = 1, text = res[[i]]$xls_title
-                   )
+        sheet = "Summary results", startRow = i + 1, startCol = 1,
+        x = makeHyperlinkString(
+          sheet = res[[i]]$xls_title, row = 1,
+          col = 1, text = res[[i]]$xls_title
+        )
       )
 
       # 独立 Tab 第1行 → 汇总页返回超链接
       writeFormula(wb,
-                   sheet = res[[i]]$xls_title, startRow = 1,
-                   x = makeHyperlinkString(
-                     sheet = "Summary results",
-                     row = i + 1, col = 5, text = "Link to Summary Tab"
-                   )
+        sheet = res[[i]]$xls_title, startRow = 1,
+        x = makeHyperlinkString(
+          sheet = "Summary results",
+          row = i + 1, col = 5, text = "Link to Summary Tab"
+        )
       )
 
       # 各独立页添加 PDF 子标题注释

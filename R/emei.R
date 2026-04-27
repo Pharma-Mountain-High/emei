@@ -73,11 +73,11 @@ emei <- function(proj,
                  verbose = TRUE) {
   # Parameter validation
   if (missing(proj) || !is.character(proj) || length(proj) != 1 ||
-      nchar(proj) == 0) {
+    nchar(proj) == 0) {
     stop("Parameter 'proj' must be a non-empty character string.")
   }
   if (missing(folder) || !is.character(folder) || length(folder) != 1 ||
-      nchar(folder) == 0) {
+    nchar(folder) == 0) {
     stop("Parameter 'folder' must be a non-empty character string.")
   }
   if (!dir.exists(folder)) {
@@ -117,12 +117,12 @@ emei <- function(proj,
   }
 
   priority <- normalize_char_opt(priority,
-                                 allowed = c("High", "Medium", "Low"),
-                                 case = "title"
+    allowed = c("High", "Medium", "Low"),
+    case = "title"
   )
   type <- normalize_char_opt(type,
-                             allowed = c("ALL", "ONC", "PRO"),
-                             case = "asis"
+    allowed = c("ALL", "ONC", "PRO"),
+    case = "asis"
   )
 
   # Read .sas7bdat files
@@ -190,8 +190,8 @@ emei <- function(proj,
     ))
     report_to_xlsx(res = sdtmreport, outfile = outfile)
     attr(sdtmreport, "outfile") <- normalizePath(outfile,
-                                                 winslash = "/",
-                                                 mustWork = FALSE
+      winslash = "/",
+      mustWork = FALSE
     )
     if (verbose) message(sprintf("Report generated: %s", attr(sdtmreport, "outfile")))
   }

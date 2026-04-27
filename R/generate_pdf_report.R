@@ -35,18 +35,19 @@
 #'
 #'
 generate_pdf_report <- function(all_rec,
-                                output_file  = "sdtmchecks_report.pdf",
-                                mystudy      = "Unknown",
-                                category     = c("ALL", "ONC", "PRO"),
-                                priority     = c("High", "Medium", "Low"),
-                                data_path    = getwd(),
-                                server_name  = "Local",
-                                rmd_path     = NULL) {
-
+                                output_file = "sdtmchecks_report.pdf",
+                                mystudy = "Unknown",
+                                category = c("ALL", "ONC", "PRO"),
+                                priority = c("High", "Medium", "Low"),
+                                data_path = getwd(),
+                                server_name = "Local",
+                                rmd_path = NULL) {
   # --- Validate inputs --------------------------------------------------------
   if (!is.list(all_rec) || length(all_rec) == 0) {
-    stop("'all_rec' must be a non-empty list of check results ",
-         "(as returned by Emei::run_all_checks()).")
+    stop(
+      "'all_rec' must be a non-empty list of check results ",
+      "(as returned by Emei::run_all_checks())."
+    )
   }
 
   # --- Locate the Rmd template ------------------------------------------------
@@ -63,8 +64,10 @@ generate_pdf_report <- function(all_rec,
     }
   }
   if (!file.exists(rmd_path)) {
-    stop("Cannot find Emei.Rmd template at: ", rmd_path,
-         "\nPlease provide the correct path via the 'rmd_path' argument.")
+    stop(
+      "Cannot find Emei.Rmd template at: ", rmd_path,
+      "\nPlease provide the correct path via the 'rmd_path' argument."
+    )
   }
 
   # --- Prepare check metadata (metads) in the global environment --------------
