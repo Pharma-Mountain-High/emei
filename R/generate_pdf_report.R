@@ -1,7 +1,7 @@
 #' Generate a PDF report from sdtmchecks results
 #'
-#' This function takes the output of \code{sdtmchecks::run_all_checks()} and
-#' renders it into a landscape-oriented PDF report using the sdtmchecks.Rmd
+#' This function takes the output of \code{Emei::run_all_checks()} and
+#' renders it into a landscape-oriented PDF report using the Emei.Rmd
 #' template.
 #'
 #' @param all_rec      List. Check results as returned by
@@ -21,7 +21,7 @@
 #'                     checks were run (shown in the report header).
 #' @param server_name  Character. Server display name for the report header
 #'                     (default: \code{"Local"}).
-#' @param rmd_path     Character. Path to the \code{sdtmchecks.Rmd} template.
+#' @param rmd_path     Character. Path to the \code{Emei.Rmd} template.
 #'                     By default it looks for the file in the same directory
 #'                     as this script.
 #'
@@ -46,24 +46,24 @@ generate_pdf_report <- function(all_rec,
   # --- Validate inputs --------------------------------------------------------
   if (!is.list(all_rec) || length(all_rec) == 0) {
     stop("'all_rec' must be a non-empty list of check results ",
-         "(as returned by sdtmchecks::run_all_checks()).")
+         "(as returned by Emei::run_all_checks()).")
   }
 
   # --- Locate the Rmd template ------------------------------------------------
   if (is.null(rmd_path)) {
-    # Try to find sdtmchecks.Rmd relative to this script's location,
+    # Try to find Emei.Rmd relative to this script's location,
     # falling back to the current working directory.
     script_dir <- tryCatch(
       dirname(sys.frame(1)$ofile),
       error = function(e) getwd()
     )
-    rmd_path <- file.path(script_dir, "sdtmchecks.Rmd")
+    rmd_path <- file.path(script_dir, "Emei.Rmd")
     if (!file.exists(rmd_path)) {
-      rmd_path <- file.path(getwd(), "sdtmchecks.Rmd")
+      rmd_path <- file.path(getwd(), "Emei.Rmd")
     }
   }
   if (!file.exists(rmd_path)) {
-    stop("Cannot find sdtmchecks.Rmd template at: ", rmd_path,
+    stop("Cannot find Emei.Rmd template at: ", rmd_path,
          "\nPlease provide the correct path via the 'rmd_path' argument.")
   }
 
@@ -77,7 +77,7 @@ generate_pdf_report <- function(all_rec,
   }
   metads <- metads %>%
     filter(category %in% !!category & priority %in% !!priority)
-  assign("metads", metads, envir = globalenv())
+  # assign("metads", metads, envir = globalenv())
 
   # --- Ensure `nickname` is accessible in the global environment --------------
   # `nickname` is a data object exported by the sdtmchecks package.  Loading
@@ -98,7 +98,7 @@ generate_pdf_report <- function(all_rec,
   # --- Copy Rmd template to a temp directory ----------------------------------
   # This avoids write-permission issues in the project directory and mirrors
   # the approach used in the Shiny app (app.R lines 634-635).
-  temp_rmd <- file.path(tempdir(), "sdtmchecks.Rmd")
+  temp_rmd <- file.path(tempdir(), "Emei.Rmd")
   file.copy(rmd_path, temp_rmd, overwrite = TRUE)
 
   # --- Assemble the params list expected by the Rmd template ------------------
@@ -121,12 +121,26 @@ generate_pdf_report <- function(all_rec,
   # --- Render the PDF ---------------------------------------------------------
   message("Rendering PDF report to: ", output_file)
 
+  render_env <- new.env(parent = globalenv())
+  render_env$metads <- metads
+
+  if (exists("nickname", where = asNamespace("Emei"))) {
+    render_env$nickname <- get("nickname", envir = asNamespace("Emei"))
+  }
+
   rmarkdown::render(
     input       = temp_rmd,
     output_file = output_file,
     params      = params,
-    envir       = new.env(parent = globalenv())
+    envir       = render_env
   )
+
+  # rmarkdown::render(
+  #   input       = temp_rmd,
+  #   output_file = output_file,
+  #   params      = params,
+  #   envir       = new.env(parent = globalenv())
+  # )
 
   message("PDF report generated successfully: ", output_file)
   invisible(output_file)

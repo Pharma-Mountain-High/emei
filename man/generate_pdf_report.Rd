@@ -40,7 +40,7 @@ checks were run (shown in the report header).}
 \item{server_name}{Character. Server display name for the report header
 (default: \code{"Local"}).}
 
-\item{rmd_path}{Character. Path to the \code{sdtmchecks.Rmd} template.
+\item{rmd_path}{Character. Path to the \code{Emei.Rmd} template.
 By default it looks for the file in the same directory
 as this script.}
 }
@@ -48,7 +48,7 @@ as this script.}
 Invisibly returns the path to the generated PDF file.
 }
 \description{
-This function takes the output of \code{sdtmchecks::run_all_checks()} and
-renders it into a landscape-oriented PDF report using the sdtmchecks.Rmd
+This function takes the output of \code{Emei::run_all_checks()} and
+renders it into a landscape-oriented PDF report using the Emei.Rmd
 template.
 }
