@@ -22,23 +22,23 @@ This check looks for drug overdose
 \examples{
 
 AE_clean <- data.frame(
- USUBJID = c("001", "002", "003"),
- AETERM  = c("头痛", "恶心", "皮疹"),
- AEDECOD = c("Headache", "Nausea", "Rash"),
- AESTDTC = c("2024-01-01", "2024-01-05", "2024-01-10"),
- AEENDTC = c("2024-01-03", "2024-01-06", "2024-01-12"),
- stringsAsFactors = FALSE
+  USUBJID = c("001", "002", "003"),
+  AETERM = c("头痛", "恶心", "皮疹"),
+  AEDECOD = c("Headache", "Nausea", "Rash"),
+  AESTDTC = c("2024-01-01", "2024-01-05", "2024-01-10"),
+  AEENDTC = c("2024-01-03", "2024-01-06", "2024-01-12"),
+  stringsAsFactors = FALSE
 )
 check_ae_drug_overdose(AE_clean)
 # 期望：pass()，无问题
 
 AE_overdose <- data.frame(
- USUBJID = c("001", "002", "003"),
- AETERM  = c("头痛", "药物过量", "恶心"),
- AEDECOD = c("Headache", "Drug overdose", "Nausea"),
- AESTDTC = c("2024-01-01", "2024-02-10", "2024-01-05"),
- AEENDTC = c("2024-01-03", "2024-02-11", "2024-01-06"),
- stringsAsFactors = FALSE
+  USUBJID = c("001", "002", "003"),
+  AETERM = c("头痛", "药物过量", "恶心"),
+  AEDECOD = c("Headache", "Drug overdose", "Nausea"),
+  AESTDTC = c("2024-01-01", "2024-02-10", "2024-01-05"),
+  AEENDTC = c("2024-01-03", "2024-02-11", "2024-01-06"),
+  stringsAsFactors = FALSE
 )
 
 check_ae_drug_overdose(AE_overdose)

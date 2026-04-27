@@ -1,4 +1,4 @@
-# Emei 1.0
+# Emei 0.6
 
 ### 新功能
 
@@ -24,3 +24,8 @@
 ### Bug修复
 
 * 修复`check_ex_extrt_exoccur`函数bug
+
+# Emei 0.7
+
+* 增加药物过量不良事件输出
+* 增加PDF输出，超链接功能
