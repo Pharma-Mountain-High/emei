@@ -22,6 +22,9 @@ params:
 ---
 
 ```{r, echo=FALSE}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+
 # The `params` object is available in the document.
 # making its items to be available for the rest of the code
 
@@ -131,9 +134,8 @@ for (i in 1:length(all_rec)) {
 
   if ("data" %in% names(myattrib) & nrow(myattrib$data) > 0) {
     # Remove long flag variable from PDF
-    myattrib$data <- myattrib$data %>%
-      select(-any_of("check_stat"))
-
+    myattrib$data <- myattrib$data %>% 
+      dplyr::select(-dplyr::any_of("check_stat"))
     # Convert certain problem vars to ASCII to avoid latex issues
     # Also truncate them when they are long (e.g >50)
 
@@ -161,7 +163,7 @@ for (i in 1:length(all_rec)) {
     } # end of if checking for any vars
 
     # Print the fail message
-    cat("\n\n", paste0("**", myattrib$msg, "**", col.names = ""))
+    cat("\n\n", paste0("**", myattrib$msg, "**"))
 
     # Print check results (limited to 50 recs)
     df <- head(myattrib$data, 50)
