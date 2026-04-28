@@ -172,45 +172,34 @@ report_to_xlsx <- function(res,
   # loop through the data checks results and write them into separated sheet
   # in xls file.
   for (i in 1:length(res)) {
-    # do not create xls sheet for data checks with 0 results
     if (res[[i]]$nrec != 0) {
       addWorksheet(wb, res[[i]]$xls_title)
 
-
-      # Begin writing individual xls tab at row 2.
-      # Row=1 will be used to create a HYPERLINK back to 'Summary results'
-      # sheet. writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-      # startRow = 2, startCol = 1)
+      # Row=1: HYPERLINK back to 'Summary results'; data starts at row 2
       writeData(wb, res[[i]]$xls_title, as.data.frame(res[[i]]$data),
-        startRow = 1, startCol = 1
+        startRow = 2, startCol = 1
       )
 
-      # create a HYPERLINK between a row on 'Summary results'
-      # sheet and individual tab
-      # need to have i+1 because the 1st row on 'Summary results' sheet
-      # has column names
-
-      # writeFormula(wb, sheet="Summary results", startRow=i+1, startCol=1,
-      #              x=makeHyperlinkString(sheet=res[[i]]$xls_title, row=1,
-      # col=1, text=res[[i]]$xls_title ))
-
-      writeData(
-        wb,
-        sheet = "Summary results",
-        startRow = i + 1,
-        startCol = 1,
-        x = res[[i]]$xls_title
+      # 汇总页该行 → 独立 Tab 超链接
+      # i+1 是因为汇总页第1行为列名
+      writeFormula(wb,
+        sheet = "Summary results", startRow = i + 1, startCol = 1,
+        x = makeHyperlinkString(
+          sheet = res[[i]]$xls_title, row = 1,
+          col = 1, text = res[[i]]$xls_title
+        )
       )
 
+      # 独立 Tab 第1行 → 汇总页返回超链接
+      writeFormula(wb,
+        sheet = res[[i]]$xls_title, startRow = 1,
+        x = makeHyperlinkString(
+          sheet = "Summary results",
+          row = i + 1, col = 5, text = "Link to Summary Tab"
+        )
+      )
 
-      # create a HYPERLINK between an individual tab and the row on
-      # 'Summary results' sheet need to have i+1 because the 1st row on
-      # 'Summary results' sheet has column names
-      # writeFormula(wb, sheet=res[[i]]$xls_title, startRow=1,
-      #              x=makeHyperlinkString(sheet="Summary results",
-      # row=i+1, col=5, text="Link to Summary Tab" ))
-
-      # Add comments with PDF sub titles to each individual page
+      # 各独立页添加 PDF 子标题注释
       writeComment(
         wb, res[[i]]$xls_title,
         col = 1, row = 1,
@@ -222,8 +211,8 @@ report_to_xlsx <- function(res,
           height = 4
         )
       )
-    } # end of if
-  } # end of loop
+    }
+  }
 
   saveWorkbook(wb, file = outfile, overwrite = TRUE)
   return(invisible())

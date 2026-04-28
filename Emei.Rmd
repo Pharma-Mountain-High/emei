@@ -1,0 +1,206 @@
+---
+title: "Emei"
+documentclass: ctexart
+geometry: "left=2cm,right=2cm,top=2cm,bottom=2cm"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: '4'
+  rticles: ctex
+classoption: landscape
+header-includes: \usepackage{longtable}
+params:
+  all_rec: NA
+  data.path: NA
+  checks.path: NA
+  mystudy: NA
+  mycat: NA
+  mypriority: NA
+  myserver: NA
+  cwd: NA
+---
+
+```{r, echo=FALSE}
+# The `params` object is available in the document.
+# making its items to be available for the rest of the code
+
+all_rec <- params$all_rec
+mystudy <- params$mystudy
+mycat <- params$mycat
+mypriority <- params$mypriority
+myserver <- params$myserver
+data.path <- params$data.path
+checks.path <- params$checks.path
+
+### Get system time to print to document
+mytime <- as.character(as.POSIXct(format(Sys.time(), tz = "Asia/Shanghai", usetz = TRUE)))
+
+#### Get MedDRA version
+#### ts conflits with R function ts so need to check if it is data instead
+#### of does not exist
+if (!(exists("ts") & "data.frame" %in% class(ts))) {
+  mymeddra <- "TS Not Found"
+} else {
+  mymeddra0 <- subset(ts, ts$TSPARMCD == "AEDICT", grepl("TSVAL", names(ts)))
+  if (nrow(mymeddra0) > 0) {
+    mymeddra <- as.character(mymeddra0)
+    mymeddra <- subset(mymeddra, mymeddra != "")
+  } else {
+    mymeddra <- "Not Found"
+  }
+}
+
+options(tibble.print_max = Inf)
+options(tibble.width = Inf)
+```
+
+\newpage
+
+## Study Info, Assumptions, and Caveats
+
+### Study Info
+
+-   Server: `r myserver`
+-   Study: `r mystudy`
+-   Check Type: `r mycat`
+-   Check Priority: `r mypriority`
+-   MedDRA Version: `r mymeddra`
+-   Data Location: `r data.path`
+-   Date/Time Report Generated: `r paste(mytime,"Beijing Time")`
+
+### Package Info
+
+-   [Click here for a link to the `Emei` package public site](https://github.com/Pharma-Mountain-High/emei)
+
+### Assumptions
+
+-   These checks look for common SDTM data issues encountered by study teams 
+-   Data is assumed to follow SDTMv standards
+-   Data is assumed to be saved as an uncompressed .sas7bdat files
+
+### Caveats
+
+-   ***For blinded studies, please be cautious of potential unblinding when sharing this report***
+-   These checks are not comprehensive so some data issues may not be reported
+-   Some checks may report false positives due to study specific differences
+-   This report is meant to supplement, not replace, running Pinnacle 21 (P21) on SDTM. P21 should still be run early and often
+
+### Report generated via [Pharma-Mountain-High/emei](https://github.com/Pharma-Mountain-High/emei)
+
+\newpage
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+varsthatneedcleaning <- c("AETERM", "CMTRT", "CMINDC", "CMDECOD", "DSTERM", "DVREAS", "LBORRES", "PRINDC", "PRTRT", "RSORRES", "VISIT", "last.vis")
+MAX_COLS <- 10 # max columns per table in landscape layout
+KEY_COLS <- 2 # number of leading key columns to repeat in each split part
+mycnt2 <- 0
+
+for (i in 1:length(all_rec)) {
+  mycnt2 <- mycnt2 + 1
+
+  # ignore incProgress() when running outside Shiny app
+  if (shiny::isRunning() == TRUE) {
+    incProgress(1, detail = paste(mycnt2, "of", length(all_rec)))
+  }
+
+
+  cat("  \n##", as.character(metads[metads$check == names(all_rec)[i], "pdf_title"]), " \n")
+  cat("### Study", mystudy, " \n")
+  # cat("### Date/Time Generated:", mytime, " \n" )
+  cat("  \n", as.character(metads[metads$check == names(all_rec)[i], "pdf_subtitle"]), " \n")
+  # cat("  \n")
+
+
+  myattrib <- all_rec[[i]]
+
+  ###
+  # Add a note that records are truncated to 50 as needed
+  ###
+
+  if ("data" %in% names(myattrib) & nrow(myattrib$data) > 50) {
+    if (identical(myattrib$msg, character(0))) {
+      myattrib$msg <- ""
+    } # in case message wasn't set
+    myattrib$msg <- paste(myattrib$msg, "More than 50 records found, only first 50 records displayed.  Please run the Excel report to obtain all records.")
+  }
+
+  ###
+  # Output
+  ###
+
+  if ("data" %in% names(myattrib) & nrow(myattrib$data) > 0) {
+    # Remove long flag variable from PDF
+    myattrib$data <- myattrib$data %>%
+      select(-any_of("check_stat"))
+
+    # Convert certain problem vars to ASCII to avoid latex issues
+    # Also truncate them when they are long (e.g >50)
+
+    vars_to_be_cleaned <- intersect(varsthatneedcleaning, names(myattrib$data))
+    if (length(vars_to_be_cleaned) > 0) { # check if any vars need to be cleaned
+
+      # Add a note re: ascii conversion and truncation
+      # if(identical(myattrib$msg,character(0))){myattrib$msg=""}#in case message wasn't set
+
+      # myattrib$msg = paste(myattrib$msg,
+      # "Note: The following variables may have been modified in this report to improve display:",
+      # paste(vars_to_be_cleaned,collapse=",")
+      # )
+
+      cat(
+        "  \n", "* Note: The following variables may have been truncated in this report to improve display:",
+        paste(vars_to_be_cleaned, collapse = ","), " \n"
+      )
+
+      for (cleanthisvar in vars_to_be_cleaned) { # iterate over each variable that needs to be cleaned
+
+        # 只进行截断，不再转换为ASCII字符
+        myattrib$data <- truncate_var_strings(dt = myattrib$data, var_name = cleanthisvar, trunc_length = 50) # truncate var at 50 characters
+      } # end of for iterating over each var to be cleaned
+    } # end of if checking for any vars
+
+    # Print the fail message
+    cat("\n\n", paste0("**", myattrib$msg, "**", col.names = ""))
+
+    # Print check results (limited to 50 recs)
+    df <- head(myattrib$data, 50)
+
+    if (ncol(df) <= MAX_COLS) {
+      print(
+        knitr::kable(df, row.names = FALSE, longtable = TRUE, format = "latex") %>%
+          kableExtra::kable_styling(latex_options = c("repeat_header"), font_size = 8, position = "left")
+      )
+    } else {
+      # Split wide table into column chunks, repeating the first KEY_COLS columns
+      key_idx <- seq_len(min(KEY_COLS, ncol(df)))
+      rest_idx <- seq(KEY_COLS + 1, ncol(df))
+      chunk_w <- MAX_COLS - length(key_idx)
+      chunks <- split(rest_idx, ceiling(seq_along(rest_idx) / chunk_w))
+      n_parts <- length(chunks)
+
+      for (p in seq_len(n_parts)) {
+        col_idx <- if (p == 1) seq_len(MAX_COLS) else c(key_idx, chunks[[p]])
+        col_idx <- col_idx[col_idx <= ncol(df)]
+        sub_df <- df[, col_idx, drop = FALSE]
+
+        cat(sprintf("\n\n**(Part %d / %d)**\n\n", p, n_parts))
+        print(
+          knitr::kable(sub_df, row.names = FALSE, longtable = TRUE, format = "latex") %>%
+            kableExtra::kable_styling(latex_options = c("repeat_header"), font_size = 8, position = "left")
+        )
+      }
+    }
+  } else if (!identical(myattrib$msg, character(0))) { # Fail message exists but no associated data
+    cat("\n\n", paste0("**", myattrib$msg, "**"))
+  } else if (trimws(myattrib$notes) != "") { # Check not run due to missing domain
+    cat("\n\n", paste0("**", gsub("ATTENTION! ", "", myattrib$notes), "**"))
+  } else {
+    cat("\n\n", paste0("**", "No issues detected", "**"))
+  }
+
+
+  cat("  \n")
+  cat("\n\n\\pagebreak\n")
+}
+```

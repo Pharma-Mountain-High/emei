@@ -19,7 +19,7 @@ utils::globalVariables(c(
   "TULOC", "TUORRES", "USUBJID", "VISIT", "VISITNUM", "VSDTC", "VSDTC.SYSBP", "VSORRES", "VSSPID",
   "VSSTRESN", "VSTEST", "VSTESTCD", "Var1", "Var2", "check_stat", "icdate", "issue",
   "lowvision_ind", "max_STDEND", "num_of_dates", "sdtmchecksmeta", "subj_discont_fl", "subject_id",
-  "check", "fxn_in", "LBSTAT", "LBSTRESU",
+  "check", "fxn_in_qilu", "fxn_in", "LBSTAT", "LBSTRESU", "metads", "nickname",
   "category", "priority", "pdf_title", "xls_title", "domains", "pdf_subtitle", "ui", "server", "runGadget", "viewer", "req",
   "x", "Status", "ECTRT", "ECDOSE", "ECSTDTC", "ECDOSU", "RSTESTCD", "TUMETHOD", "ssdtc_date", "dthdtc_date", "VSSTAT"
 ))

@@ -150,9 +150,9 @@ impute_day01 <- function(dates) {
 #'
 dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   mydf <- dts[!is_sas_na(dts[[dtc]]) &
-                !is_sas_na(dts[["VISIT"]]) &
-                !is_sas_na(dts[["VISITNUM"]]) &
-                substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
+    !is_sas_na(dts[["VISIT"]]) &
+    !is_sas_na(dts[["VISITNUM"]]) &
+    substr(dts[["VISIT"]], 1, 5) != "UNSCH", vars]
   mydf1 <- mydf[!duplicated(mydf[, vars, drop = FALSE]), ]
   # 修正：用 c(...) 替代 list(...)
   ord_vars <- c(...)
@@ -165,17 +165,17 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
       cbind(x, last.vis.dtc = NA, last.vis = NA, visit.order = 1, stringsAsFactors = FALSE)
     } else if (identical(nrow(x), as.integer(2))) {
       cbind(x,
-            last.vis.dtc = c(NA, x[1, dtc]),
-            last.vis = c(NA, x[1, "VISIT"]),
-            visit.order = seq(1, nrow(x)),
-            stringsAsFactors = FALSE
+        last.vis.dtc = c(NA, x[1, dtc]),
+        last.vis = c(NA, x[1, "VISIT"]),
+        visit.order = seq(1, nrow(x)),
+        stringsAsFactors = FALSE
       )
     } else {
       cbind(x,
-            last.vis.dtc = c(NA, x[[dtc]][1:(nrow(x)-1)]),
-            last.vis = c(NA, x[["VISIT"]][1:(nrow(x)-1)]),
-            visit.order = seq(1, nrow(x)),
-            stringsAsFactors = FALSE
+        last.vis.dtc = c(NA, x[[dtc]][1:(nrow(x) - 1)]),
+        last.vis = c(NA, x[["VISIT"]][1:(nrow(x) - 1)]),
+        visit.order = seq(1, nrow(x)),
+        stringsAsFactors = FALSE
       )
     }
   })
@@ -197,7 +197,7 @@ dtc_dupl_early <- function(dts, vars, groupby, dtc, ...) {
   mydf2$check.flag <- ifelse(
     mydf2$visit.order != 1 & mydf2$last.vis.dtc == mydf2[[dtc]], "Duplicated",
     ifelse(mydf2$visit.order != 1 & is_earlier(mydf2[[dtc]], mydf2$last.vis.dtc),
-           "Datetime earlier than last Visit", NA
+      "Datetime earlier than last Visit", NA
     )
   )
   mydf2

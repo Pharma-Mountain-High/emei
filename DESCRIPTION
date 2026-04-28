@@ -1,7 +1,7 @@
 Type: Package
 Package: Emei
 Title: EMEI-SDTM Edit-rule Monitoring & Error Inspection
-Version: 1.0
+Version: 0.7
 Date: 2024-08-20
 Authors@R:
     person("insightsengineering", , , "insightsengineering@example.com", role = c("aut", "cre"))
@@ -22,11 +22,14 @@ Imports:
     openxlsx,
     parallel,
     tidyr,
-    tidyselect
+    tidyselect,
+    rmarkdown, 
+    knitr, 
+    kableExtra,
+    shiny
 Suggests:
     future,
     httr,
-    knitr,
     shinytest2,
     DT,
     testthat (>= 3.0)
